@@ -1243,13 +1243,10 @@
 
         <!-- Audio Player with Birthday Song - Auto Play -->
         <div class="audio-player">
-            <button id="music-toggle" class="music-btn playing">
-                <i class="fa-solid fa-pause"></i>
-                <span>Pause Song</span>
-            </button>
-            <audio id="birthday-audio" loop autoplay>
-                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-            </audio>
+            <!-- Put your saiyaara file at assets/saiyaara.mp3 or update the src to a URL/file you have -->
+            <audio id="birthday-audio" src="assets/saiyaara.mp3" preload="auto"></audio>
+            <!-- Button shown if autoplay is blocked (or to toggle playback) -->
+            <button id="music-toggle" class="music-btn" aria-label="Toggle music" style="display:none;">▶️ Play music</button>
         </div>
 
         <!-- Interactive Cake Cutting Feature -->
@@ -1496,29 +1493,53 @@
         // Audio Player Control - Auto Play
         const audioPlayer = document.getElementById('birthday-audio');
         const musicToggle = document.getElementById('music-toggle');
-        let isPlaying = true;
+        let isPlaying = false;
 
-        // Auto-play music when countdown ends
-        setTimeout(() => {
-            audioPlayer.play().catch(e => {
-                console.log('Auto-play blocked, user interaction required');
-                isPlaying = false;
-                musicToggle.innerHTML = '<i class="fa-solid fa-music"></i><span>Play Birthday Song</span>';
-                musicToggle.classList.remove('playing');
-            });
-        }, 5500);
+        function tryAutoplay() {
+            if (!audioPlayer) return;
+            audioPlayer.volume = 0.8;
+            const playPromise = audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Autoplay succeeded
+                    isPlaying = true;
+                    musicToggle.textContent = '⏸️ Pause music';
+                    musicToggle.classList.add('playing');
+                    musicToggle.style.display = 'inline-block';
+                }).catch(() => {
+                    // Autoplay blocked — show play button so user can start music
+                    isPlaying = false;
+                    musicToggle.textContent = '▶️ Play music';
+                    musicToggle.style.display = 'inline-block';
+                });
+            } else {
+                // Older browsers: show toggle
+                musicToggle.style.display = 'inline-block';
+            }
+        }
+
+        // Try autoplay on load (most browsers may block; toggle will appear)
+        window.addEventListener('load', tryAutoplay);
+
+        // Also try again after a short delay (useful if overlay/animation blocks immediate play)
+        setTimeout(tryAutoplay, 1000);
 
         musicToggle.addEventListener('click', function() {
+            if (!audioPlayer) return;
             if (isPlaying) {
                 audioPlayer.pause();
-                musicToggle.innerHTML = '<i class="fa-solid fa-music"></i><span>Play Birthday Song</span>';
+                isPlaying = false;
+                musicToggle.textContent = '▶️ Play music';
                 musicToggle.classList.remove('playing');
             } else {
-                audioPlayer.play();
-                musicToggle.innerHTML = '<i class="fa-solid fa-pause"></i><span>Pause Song</span>';
-                musicToggle.classList.add('playing');
+                audioPlayer.play().then(() => {
+                    isPlaying = true;
+                    musicToggle.textContent = '⏸️ Pause music';
+                    musicToggle.classList.add('playing');
+                }).catch(() => {
+                    // ignore errors
+                });
             }
-            isPlaying = !isPlaying;
         });
 
         // Cake Cutting Feature
@@ -1607,7 +1628,7 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.particles = [];
+                               this.particles = [];
                 this.createParticles();
             }
 
