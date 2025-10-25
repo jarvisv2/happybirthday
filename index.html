@@ -1,20 +1,614 @@
+
+Birthday Countdown
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday | Jarvis7777">
-    <meta name="github" content="https://github.com/jarvisv2/happybirthday.git">
     <title>HBD | Jarvis7777</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-primary: #ff69b4;
+            --color-secondary: #ff1493;
+            --color-accent: #ffd700;
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Countdown Timer Overlay */
+        #countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        #countdown-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .countdown-container {
+            text-align: center;
+            color: white;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .countdown-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-number {
+            font-size: 4rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            min-width: 120px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .countdown-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .countdown-message {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Main Content Styles */
+        #wrapper {
+            position: relative;
+            min-height: 100vh;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #wrapper.show {
+            opacity: 1;
+        }
+
+        .flag__birthday {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        .flag__left {
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .flag__right {
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            gap: 4rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .left {
+            text-align: center;
+        }
+
+        .title {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .happy, .birthday {
+            font-size: 5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin: 0;
+        }
+
+        .happy span, .birthday span {
+            display: inline-block;
+            animation: bounce var(--t) ease-in-out infinite;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .hat {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: hatBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes hatBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .date__of__birth {
+            font-size: 2rem;
+            color: var(--color-accent);
+            margin: 2rem 0;
+            font-weight: bold;
+            min-height: 3rem;
+        }
+
+        .date__of__birth i {
+            margin: 0 10px;
+            animation: starTwinkle 1s ease-in-out infinite;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .btn button {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+            font-weight: bold;
+        }
+
+        .btn button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.6);
+        }
+
+        .btn i {
+            margin-left: 10px;
+        }
+
+        .right {
+            position: relative;
+        }
+
+        .box__account {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: visible;
+        }
+
+        .image img {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+        }
+
+        .name {
+            margin-top: 1.5rem;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .name i {
+            color: #ff1493;
+            animation: heartBeat 1s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+        }
+
+        .balloon_one, .balloon_two {
+            position: absolute;
+            animation: floatBalloon 4s ease-in-out infinite;
+        }
+
+        .balloon_one {
+            top: -50px;
+            left: -40px;
+        }
+
+        .balloon_two {
+            bottom: -50px;
+            right: -40px;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatBalloon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .cricle {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .text__cricle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .text__cricle span {
+            position: absolute;
+            left: 50%;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+            transform-origin: 0 100px;
+            transform: rotate(calc(24deg * var(--i)));
+        }
+
+        .cricle i {
+            font-size: 3rem;
+            color: #ff1493;
+            animation: heartBeat 1s ease-in-out infinite;
+        }
+
+        .decorate_star {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--color-accent);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: starFall var(--t) ease-in-out infinite;
+        }
+
+        .star1 { top: 10%; left: 10%; }
+        .star2 { top: 20%; right: 15%; animation-delay: 0.5s; }
+        .star3 { top: 40%; left: 5%; animation-delay: 1s; }
+        .star4 { bottom: 30%; right: 10%; animation-delay: 1.5s; }
+        .star5 { bottom: 15%; left: 20%; animation-delay: 2s; }
+
+        @keyframes starFall {
+            0%, 100% { opacity: 0; transform: translateY(-50px) rotate(0deg); }
+            50% { opacity: 1; transform: translateY(0) rotate(360deg); }
+        }
+
+        .decorate_flower--one,
+        .decorate_flower--two,
+        .decorate_flower--three {
+            position: absolute;
+            animation: flowerFloat var(--t) ease-in-out infinite;
+        }
+
+        .decorate_flower--one { top: 15%; right: 25%; }
+        .decorate_flower--two { top: 60%; left: 15%; }
+        .decorate_flower--three { bottom: 20%; right: 30%; }
+
+        @keyframes flowerFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .decorate_bottom {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .smiley__icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .box__letter {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .letter__border {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .title__letter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .title__letter i {
+            margin-left: 10px;
+            animation: heartBeat 1s ease-in-out infinite;
+        }
+
+        .content__letter {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .content__letter .left {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        #heart__letter {
+            width: 150px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #heart__letter.animationOp {
+            opacity: 1;
+        }
+
+        .heart {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .heart.animation {
+            animation: heartFloat var(--t) ease-in-out infinite;
+        }
+
+        .heart_1 { top: 20px; left: -30px; }
+        .heart_2 { top: 60px; left: -40px; }
+        .heart_3 { top: 100px; left: -35px; }
+        .heart_4 { top: 140px; left: -30px; }
+
+        @keyframes heartFloat {
+            0%, 100% { opacity: 0; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-20px); }
+        }
+
+        .content__letter .right {
+            flex: 1;
+        }
+
+        .love__img {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .love__img.animationOp {
+            opacity: 1;
+        }
+
+        .text__letter {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        #mewmew {
+            display: block;
+            margin: 1.5rem auto 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #mewmew.animationOp {
+            opacity: 1;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            transform: scale(1.1);
+            background: var(--color-primary);
+        }
+
+        .close i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        #copy {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .happy, .birthday {
+                font-size: 3rem;
+            }
+            .content {
+                gap: 2rem;
+            }
+            .content__letter {
+                flex-direction: column;
+            }
+            .countdown-number {
+                font-size: 2.5rem;
+                padding: 1rem 1.5rem;
+                min-width: 80px;
+            }
+            .countdown-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Countdown Overlay -->
+    <div id="countdown-overlay">
+        <div class="countdown-container">
+            <div class="countdown-title">Get Ready! 🎉</div>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="countdown-seconds">5</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            <div class="countdown-message">Something special is coming...</div>
+        </div>
+    </div>
+
     <div id="wrapper">
         <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='200' viewBox='0 0 350 200'%3E%3Cpath d='M0,0 L175,150 L0,200 Z' fill='%23ff69b4' opacity='0.7'/%3E%3Cpath d='M0,0 L175,150 L0,200 Z' fill='%23ffd700' opacity='0.5' transform='translate(20,0)'/%3E%3C/svg%3E" alt="" width="350" class="flag__left">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='200' viewBox='0 0 350 200'%3E%3Cpath d='M350,0 L175,150 L350,200 Z' fill='%23ff69b4' opacity='0.7'/%3E%3Cpath d='M350,0 L175,150 L350,200 Z' fill='%23ffd700' opacity='0.5' transform='translate(-20,0)'/%3E%3C/svg%3E" alt="" width="350" class="flag__right">
         </div>
         <div class="content">
             <div class="left">
@@ -37,7 +631,7 @@
                         <span style="--t: 6.4s;">y</span>
                     </h1>
                     <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130' viewBox='0 0 130 130'%3E%3Cpolygon points='65,10 30,80 100,80' fill='%23ff69b4'/%3E%3Cellipse cx='65' cy='80' rx='40' ry='10' fill='%23ff1493'/%3E%3Ccircle cx='65' cy='15' r='8' fill='%23ffd700'/%3E%3C/svg%3E" alt="" width="130">
                     </div>
                 </div>
                 <div class="date__of__birth">
@@ -53,7 +647,7 @@
             <div class="right">
                 <div class="box__account">
                     <div class="image">
-                        <img src="./images/r5.png" alt="">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 250 250'%3E%3Ccircle cx='125' cy='125' r='125' fill='%23e0e0e0'/%3E%3Ccircle cx='125' cy='100' r='50' fill='%23ffc0cb'/%3E%3Ccircle cx='105' cy='90' r='8' fill='%23333'/%3E%3Ccircle cx='145' cy='90' r='8' fill='%23333'/%3E%3Cpath d='M 100 120 Q 125 140 150 120' stroke='%23ff69b4' stroke-width='3' fill='none'/%3E%3C/svg%3E" alt="Profile">
                     </div>
                     <div class="name">
                         <i class="fa-solid fa-heart"></i>
@@ -61,10 +655,10 @@
                         <i class="fa-solid fa-heart"></i>
                     </div>
                     <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
+                        <img width="100px" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='150' viewBox='0 0 100 150'%3E%3Cellipse cx='50' cy='50' rx='35' ry='50' fill='%23ff69b4'/%3E%3Cpath d='M 50 100 Q 45 110 45 120 L 50 140' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">
                     </div>
                     <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
+                        <img width="100px" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='150' viewBox='0 0 100 150'%3E%3Cellipse cx='50' cy='50' rx='35' ry='50' fill='%2387ceeb'/%3E%3Cpath d='M 50 100 Q 45 110 45 120 L 50 140' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="">
                     </div>
                 </div>
                 <div class="cricle">
@@ -95,22 +689,20 @@
         <div class="decorate_star star4" style="--t: 15.6s;"></div>
         <div class="decorate_star star5" style="--t: 15.8s;"></div>
         <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
+            <img width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='3' fill='%23ffd700'/%3E%3Ccircle cx='10' cy='5' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='15' cy='10' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='10' cy='15' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='5' cy='10' r='3' fill='%23ff69b4'/%3E%3C/svg%3E" alt="">
         </div>
         <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
+            <img width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='3' fill='%23ffd700'/%3E%3Ccircle cx='10' cy='5' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='15' cy='10' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='10' cy='15' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='5' cy='10' r='3' fill='%23ff69b4'/%3E%3C/svg%3E" alt="">
         </div>
         <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
+            <img width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='3' fill='%23ffd700'/%3E%3Ccircle cx='10' cy='5' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='15' cy='10' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='10' cy='15' r='3' fill='%23ff69b4'/%3E%3Ccircle cx='5' cy='10' r='3' fill='%23ff69b4'/%3E%3C/svg%3E" alt="">
         </div>
         <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M 0 25 Q 25 0 50 25 T 100 25' stroke='%23ffd700' stroke-width='3' fill='none'/%3E%3C/svg%3E" alt="" width="100">
         </div>
         <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ffd700'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23333'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23333'/%3E%3Cpath d='M 30 60 Q 50 75 70 60' stroke='%23333' stroke-width='3' fill='none'/%3E%3C/svg%3E" alt="" width="100">
         </div>
-
-        
 
         <div class="box__letter">
             <div class="letter__border">
@@ -120,10 +712,10 @@
                     <div class="content__letter">
                         <div class="left">
                             <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10,18 L2,10 C0,8 0,5 2,3 C4,1 7,1 9,3 L10,4 L11,3 C13,1 16,1 18,3 C20,5 20,8 18,10 Z' fill='%23ff1493'/%3E%3C/svg%3E" alt="">
+                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10,18 L2,10 C0,8 0,5 2,3 C4,1 7,1 9,3 L10,4 L11,3 C13,1 16,1 18,3 C20,5 20,8 18,10 Z' fill='%23ff1493'/%3E%3C/svg%3E" alt="">
+                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10,18 L2,10 C0,8 0,5 2,3 C4,1 7,1 9,3 L10,4 L11,3 C13,1 16,1 18,3 C20,5 20,8 18,10 Z' fill='%23ff1493'/%3E%3C/svg%3E" alt="">
+                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10,18 L2,10 C0,8 0,5 2,3 C4,1 7,1 9,3 L10,4 L11,3 C13,1 16,1 18,3 C20,5 20,8 18,10 Z' fill='%23ff1493'/%3E%3C/svg%3E" alt="">
                         </div>
                         <div class="right">
                             <div class="love__img">
@@ -132,7 +724,7 @@
                             <div class="text__letter">
                                  <p></p>
                             </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
+                            <img id="mewmew" width="80" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='45' r='25' fill='%23ffc0cb'/%3E%3Ccircle cx='32' cy='40' r='4' fill='%23333'/%3E%3Ccircle cx='48' cy='40' r='4' fill='%23333'/%3E%3Cpath d='M 32 50 Q 40 55 48 50' stroke='%23ff69b4' stroke-width='2' fill='none'/%3E%3Cpolygon points='20,30 25,20 30,30' fill='%23ffc0cb'/%3E%3Cpolygon points='50,30 55,20 60,30' fill='%23ffc0cb'/%3E%3C/svg%3E" alt="">
                         </div>
                     </div>
                 </div>
@@ -144,96 +736,119 @@
     </div>
 
     <div id="copy">
-		<p class="text-center text-white text-sm">darkshadeoflove <a
-			href="https://www.instagram.com/darkshadeoflove"></a></p>
-	  </div>
-</body>
-<script>
-    let datetxt = "2 Nov 1999";
-    let datatxtletter = "💖 You’re not just special today, you are special every day but today, the world gets to see it too. Happy Birthday!"
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-    setTimeout(function(){
-        timeDatetxt = setInterval(function(){
-            if(currentIndex < charArrDate.length){
-                date__of__birth.textContent += charArrDate[currentIndex];
-                currentIndex++;
-            }
-            else{
-                let i = document.createElement("i");
-                i.className = "fa-solid fa-star"
-                document.querySelector(".date__of__birth").prepend(i)
-                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                clearInterval(timeDatetxt)
-            }
-        },100)
-    },12000)
+        <p class="text-center text-white text-sm">darkshadeoflove <a href="https://www.instagram.com/darkshadeoflove"></a></p>
+    </div>
 
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
+    <script>
+        // Countdown Timer Logic
+        let countdownSeconds = 5;
+        const countdownElement = document.getElementById('countdown-seconds');
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const wrapper = document.getElementById('wrapper');
+
+        const countdownInterval = setInterval(() => {
+            countdownSeconds--;
+            countdownElement.textContent = countdownSeconds;
+            
+            if (countdownSeconds <= 0) {
+                clearInterval(countdownInterval);
+                countdownOverlay.classList.add('fade-out');
+                setTimeout(() => {
+                    countdownOverlay.style.display = 'none';
+                    wrapper.classList.add('show');
+                }, 500);
+            }
+        }, 1000);
+
+        // Original Birthday Code
+        let datetxt = "2 Nov 1999";
+        let datatxtletter = "💖 You're not just special today, you are special every day but today, the world gets to see it too. Happy Birthday!"
+        let titleLetter = "To you";
+        let charArrDate = datetxt.split('');
+        let charArrDateLetter = datatxtletter.split('');
+        let charArrTitle = titleLetter.split('');
+        let currentIndex = 0;
+        let currentIndexLetter = 0;
+        let currentIndexTitle = 0;
+        let date__of__birth = document.querySelector(".date__of__birth span");
+        let text__letter = document.querySelector(".text__letter p");
+        
         setTimeout(function(){
-            $(".letter__border").slideDown();
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
+            timeDatetxt = setInterval(function(){
+                if(currentIndex < charArrDate.length){
+                    date__of__birth.textContent += charArrDate[currentIndex];
+                    currentIndex++;
                 }
                 else{
-                    clearInterval(intervalTitle)
+                    let i = document.createElement("i");
+                    i.className = "fa-solid fa-star"
+                    document.querySelector(".date__of__birth").prepend(i)
+                    document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
+                    clearInterval(timeDatetxt)
                 }
             },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
+        },12000)
+
+        var intervalContent;
+        var intervalTitle;
+        
+        document.getElementById("btn__letter").addEventListener("click", function(){
+            document.querySelector(".box__letter").style.display = "flex";
+            setTimeout(function(){
+                document.querySelector(".letter__border").style.display = "block";
+            },1000)
+            setTimeout(function(){
+                intervalTitle = setInterval(function(){
+                    if(currentIndexTitle < charArrTitle.length){
+                        document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                        let i = document.createElement("i");
+                        i.className = "fa-solid fa-heart"
+                        document.querySelector(".title__letter").appendChild(i)
+                        currentIndexTitle++;
+                    }
+                    else{
+                        clearInterval(intervalTitle)
+                    }
+                },100)
+            },2000)
+            setTimeout(function(){
+                document.querySelector("#heart__letter").classList.add("animationOp");
+                document.querySelector(".love__img").classList.add("animationOp");
+                document.querySelector("#mewmew").classList.add("animationOp");
+            },2800)
+            setTimeout(function(){
+                document.querySelectorAll(".heart").forEach((item)=>{
+                    item.classList.add("animation")
+                })
+            },3500)
+            setTimeout(function(){
+                intervalContent = setInterval(function(){
+                    if(currentIndexLetter < charArrDateLetter.length){
+                        text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                        currentIndexLetter++;
+                    }
+                    else{
+                        clearInterval(intervalContent)
+                    }
+                },50)
+            },6000)
+        })
+        
+        document.querySelector(".close").addEventListener("click", function(){
+            clearInterval(intervalContent)
+            document.querySelector(".title__letter").textContent = "";
+            text__letter.textContent = "";
+            currentIndexLetter = 0
+            currentIndexTitle = 0
+            document.querySelector("#heart__letter").classList.remove("animationOp");
+            document.querySelector(".love__img").classList.remove("animationOp");
+            document.querySelector("#mewmew").classList.remove("animationOp");
             document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
-    })
-    $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
                 item.classList.remove("animation")
             })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
-    })
-</script>
-
+            document.querySelector(".box__letter").style.display = "none";
+            document.querySelector(".letter__border").style.display = "none";
+        })
+    </script>
+</body>
 </html>
