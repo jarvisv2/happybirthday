@@ -1,5 +1,3 @@
-
-Birthday Countdown
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -414,6 +412,320 @@ Birthday Countdown
             50% { transform: translateY(-20px) rotate(180deg); }
         }
 
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--color-accent);
+            animation: confettiFall 3s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        .confetti:nth-child(1) {
+            left: 10%;
+            top: -50px;
+            background: #ff69b4;
+            animation-delay: 0s;
+        }
+
+        .confetti:nth-child(2) {
+            left: 20%;
+            top: -50px;
+            background: #ffd700;
+            animation-delay: 0.5s;
+        }
+
+        .confetti:nth-child(3) {
+            left: 30%;
+            top: -50px;
+            background: #87ceeb;
+            animation-delay: 1s;
+        }
+
+        .confetti:nth-child(4) {
+            left: 40%;
+            top: -50px;
+            background: #ff1493;
+            animation-delay: 1.5s;
+        }
+
+        .confetti:nth-child(5) {
+            left: 50%;
+            top: -50px;
+            background: #98fb98;
+            animation-delay: 2s;
+        }
+
+        .confetti:nth-child(6) {
+            left: 60%;
+            top: -50px;
+            background: #ff69b4;
+            animation-delay: 2.5s;
+        }
+
+        .confetti:nth-child(7) {
+            left: 70%;
+            top: -50px;
+            background: #ffd700;
+            animation-delay: 0.3s;
+        }
+
+        .confetti:nth-child(8) {
+            left: 80%;
+            top: -50px;
+            background: #87ceeb;
+            animation-delay: 0.8s;
+        }
+
+        .confetti:nth-child(9) {
+            left: 90%;
+            top: -50px;
+            background: #ff1493;
+            animation-delay: 1.3s;
+        }
+
+        .confetti:nth-child(10) {
+            left: 95%;
+            top: -50px;
+            background: #98fb98;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Birthday Cake Animation */
+        .birthday-cake {
+            position: absolute;
+            bottom: 100px;
+            left: 50px;
+            animation: cakeBounce 3s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes cakeBounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+            }
+        }
+
+        /* Gift Boxes Animation */
+        .gift-box {
+            position: absolute;
+            animation: giftShake 2s ease-in-out infinite;
+        }
+
+        .gift-1 {
+            bottom: 80px;
+            right: 80px;
+        }
+
+        .gift-2 {
+            top: 150px;
+            left: 80px;
+            animation-delay: 1s;
+        }
+
+        @keyframes giftShake {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(-5deg) scale(1.05);
+            }
+            75% {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+
+        /* Music Notes Animation */
+        .music-note {
+            position: absolute;
+            font-size: 2rem;
+            animation: musicFloat 4s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .note-1 {
+            top: 25%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .note-2 {
+            top: 45%;
+            right: 20%;
+            animation-delay: 1s;
+        }
+
+        .note-3 {
+            bottom: 35%;
+            left: 25%;
+            animation-delay: 2s;
+        }
+
+        .note-4 {
+            bottom: 25%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        @keyframes musicFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) rotate(15deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Cake Cutting Container Styles */
+        .cake-cutting-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5000;
+        }
+
+        .cake-overlay {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .cake-overlay.hidden {
+            display: none;
+        }
+
+        .cake-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .cake-title {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .interactive-cake {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin: 2rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .interactive-cake:hover {
+            transform: scale(1.05);
+        }
+
+        .interactive-cake.cut {
+            animation: shakeCake 0.5s ease;
+        }
+
+        @keyframes shakeCake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .knife-container {
+            position: absolute;
+            top: -80px;
+            right: -60px;
+            opacity: 0;
+            transform: rotate(-45deg);
+            transition: all 0.8s ease;
+        }
+
+        .knife-container.cutting {
+            opacity: 1;
+            top: 100px;
+            right: 80px;
+            transform: rotate(20deg);
+        }
+
+        .knife {
+            width: 100px;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
+        }
+
+        .cake-instruction {
+            font-size: 1.5rem;
+            color: var(--color-accent);
+            font-weight: bold;
+            margin: 2rem 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .cut-message {
+            font-size: 2rem;
+            color: #32cd32;
+            font-weight: bold;
+            margin: 2rem 0;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+        }
+
+        .cut-message.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-cake-btn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            margin-top: 2rem;
+        }
+
+        .close-cake-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .close-cake-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.6);
+        }
+
         .decorate_bottom {
             position: absolute;
             bottom: 0;
@@ -569,6 +881,194 @@ Birthday Countdown
             color: white;
         }
 
+        /* Audio Player Styles */
+        .audio-player {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .music-btn {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5);
+            transition: all 0.3s ease;
+            animation: musicPulse 2s ease-in-out infinite;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.7);
+        }
+
+        .music-btn.playing {
+            background: linear-gradient(135deg, #32cd32, #228b22);
+            animation: none;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5); }
+            50% { box-shadow: 0 8px 35px rgba(255, 105, 180, 0.8); }
+        }
+
+        /* Fireworks Canvas */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Photo Memories Slideshow */
+        .memories-slideshow {
+            position: relative;
+            max-width: 500px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+
+        .memory-slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: fadeSlide 0.5s ease-in-out;
+        }
+
+        .memory-slide.active {
+            display: block;
+        }
+
+        .memory-slide img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-caption {
+            margin-top: 1rem;
+            font-size: 1.3rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .slideshow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .slideshow-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn {
+            left: 10px;
+        }
+
+        .next-btn {
+            right: 10px;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Wishes Container */
+        .wishes-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .wishes-title {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .wish-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: wishFloat 3s ease-in-out infinite;
+        }
+
+        .wish-card:nth-child(1) { animation-delay: 0s; }
+        .wish-card:nth-child(2) { animation-delay: 0.5s; }
+        .wish-card:nth-child(3) { animation-delay: 1s; }
+        .wish-card:nth-child(4) { animation-delay: 1.5s; }
+
+        .wish-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.4);
+        }
+
+        .wish-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .wish-text {
+            font-size: 1.1rem;
+            color: white;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        @keyframes wishFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         @media (max-width: 768px) {
             .happy, .birthday {
                 font-size: 3rem;
@@ -586,6 +1086,43 @@ Birthday Countdown
             }
             .countdown-title {
                 font-size: 2rem;
+            }
+            .birthday-cake {
+                bottom: 50px;
+                left: 20px;
+            }
+            .gift-1 {
+                bottom: 40px;
+                right: 30px;
+            }
+            .gift-2 {
+                top: 100px;
+                left: 30px;
+            }
+            .birthday-cake img {
+                width: 80px;
+            }
+            .gift-box img {
+                width: 50px;
+            }
+            .wishes-title {
+                font-size: 2rem;
+            }
+            .wishes-grid {
+                grid-template-columns: 1fr;
+            }
+            .audio-player {
+                bottom: 20px;
+            }
+            .music-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            .slideshow-container {
+                height: 280px;
+            }
+            .memory-slide img {
+                height: 230px;
             }
         }
     </style>
@@ -703,6 +1240,112 @@ Birthday Countdown
         <div class="smiley__icon">
             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ffd700'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23333'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23333'/%3E%3Cpath d='M 30 60 Q 50 75 70 60' stroke='%23333' stroke-width='3' fill='none'/%3E%3C/svg%3E" alt="" width="100">
         </div>
+
+        <!-- Audio Player with Birthday Song - Auto Play -->
+        <div class="audio-player">
+            <button id="music-toggle" class="music-btn playing">
+                <i class="fa-solid fa-pause"></i>
+                <span>Pause Song</span>
+            </button>
+            <audio id="birthday-audio" loop autoplay>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <!-- Interactive Cake Cutting Feature -->
+        <div class="cake-cutting-container">
+            <div class="cake-overlay" id="cake-overlay">
+                <div class="cake-content">
+                    <h2 class="cake-title">🎂 Time to Cut the Cake! 🎂</h2>
+                    <div class="interactive-cake" id="interactive-cake">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='350' viewBox='0 0 300 350'%3E%3Crect x='50' y='175' width='200' height='125' fill='%23ff69b4' rx='10'/%3E%3Crect x='37' y='155' width='226' height='30' fill='%23ff1493'/%3E%3Crect x='75' y='100' width='150' height='62' fill='%23ffb6c1' rx='10'/%3E%3Crect x='62' y='87' width='176' height='25' fill='%23ff69b4'/%3E%3Cline x1='100' y1='87' x2='100' y2='50' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='150' y1='87' x2='150' y2='37' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='200' y1='87' x2='200' y2='50' stroke='%23fff' stroke-width='4'/%3E%3Cellipse cx='100' cy='45' rx='8' ry='16' fill='%23ffd700'/%3E%3Cellipse cx='150' cy='32' rx='8' ry='16' fill='%23ffd700'/%3E%3Cellipse cx='200' cy='45' rx='8' ry='16' fill='%23ffd700'/%3E%3Cpolygon points='100,25 95,45 105,45' fill='%23ff6347'/%3E%3Cpolygon points='150,12 145,32 155,32' fill='%23ff6347'/%3E%3Cpolygon points='200,25 195,45 205,45' fill='%23ff6347'/%3E%3C/svg%3E" alt="Birthday Cake">
+                        <div class="knife-container" id="knife-container">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='200' viewBox='0 0 100 200'%3E%3Crect x='45' y='0' width='10' height='140' fill='%23c0c0c0'/%3E%3Cpolygon points='50,140 30,180 70,180' fill='%23a0a0a0'/%3E%3Crect x='42' y='180' width='16' height='20' fill='%238b4513' rx='3'/%3E%3C/svg%3E" alt="Knife" class="knife">
+                        </div>
+                    </div>
+                    <p class="cake-instruction">🔪 Click on the cake to cut it! 🔪</p>
+                    <div class="cut-message" id="cut-message">🎉 Cake Cut Successfully! 🎉</div>
+                    <button class="close-cake-btn" id="close-cake-btn">Continue Celebration</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fireworks Canvas -->
+        <canvas id="fireworks-canvas"></canvas>
+
+        <!-- Photo Memories Slideshow -->
+        <div class="memories-slideshow">
+            <div class="slideshow-container">
+                <div class="memory-slide active">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect fill='%23ffb6c1' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='30' text-anchor='middle' fill='%23fff'%3EMemory 1%3C/text%3E%3C/svg%3E" alt="Memory 1">
+                    <div class="memory-caption">Beautiful Moments Together</div>
+                </div>
+                <div class="memory-slide">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect fill='%2387ceeb' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='30' text-anchor='middle' fill='%23fff'%3EMemory 2%3C/text%3E%3C/svg%3E" alt="Memory 2">
+                    <div class="memory-caption">Special Times & Smiles</div>
+                </div>
+                <div class="memory-slide">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect fill='%23ffd700' width='400' height='300'/%3E%3Ctext x='200' y='150' font-size='30' text-anchor='middle' fill='%23fff'%3EMemory 3%3C/text%3E%3C/svg%3E" alt="Memory 3">
+                    <div class="memory-caption">Unforgettable Adventures</div>
+                </div>
+            </div>
+            <button class="slideshow-btn prev-btn" onclick="changeSlide(-1)">❮</button>
+            <button class="slideshow-btn next-btn" onclick="changeSlide(1)">❯</button>
+        </div>
+
+        <!-- Wishes Collection -->
+        <div class="wishes-container">
+            <h2 class="wishes-title">Birthday Wishes 💝</h2>
+            <div class="wishes-grid">
+                <div class="wish-card">
+                    <div class="wish-icon">🎂</div>
+                    <p class="wish-text">"May your birthday be filled with sunshine, smiles, laughter, love and like all things good &amp; beautiful!"</p>
+                </div>
+                <div class="wish-card">
+                    <div class="wish-icon">🌟</div>
+                    <p class="wish-text">"Wishing you a day filled with happiness and a year filled with joy. Happy Birthday!"</p>
+                </div>
+                <div class="wish-card">
+                    <div class="wish-icon">💖</div>
+                    <p class="wish-text">"You deserve all the wonderful things that life has to offer. Have a fantastic birthday!"</p>
+                </div>
+                <div class="wish-card">
+                    <div class="wish-icon">🎉</div>
+                    <p class="wish-text">"Another adventure filled year awaits you. Welcome it by celebrating your birthday with pomp and splendor!"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Confetti -->
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+
+        <!-- Animated Cake -->
+        <div class="birthday-cake">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='140' viewBox='0 0 120 140'%3E%3Crect x='20' y='70' width='80' height='50' fill='%23ff69b4' rx='5'/%3E%3Crect x='15' y='60' width='90' height='15' fill='%23ff1493'/%3E%3Crect x='30' y='40' width='60' height='25' fill='%23ffb6c1' rx='5'/%3E%3Crect x='25' y='35' width='70' height='10' fill='%23ff69b4'/%3E%3Cline x1='40' y1='35' x2='40' y2='20' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='60' y1='35' x2='60' y2='15' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='80' y1='35' x2='80' y2='20' stroke='%23fff' stroke-width='2'/%3E%3Cellipse cx='40' cy='18' rx='4' ry='8' fill='%23ffd700'/%3E%3Cellipse cx='60' cy='13' rx='4' ry='8' fill='%23ffd700'/%3E%3Cellipse cx='80' cy='18' rx='4' ry='8' fill='%23ffd700'/%3E%3C/svg%3E" alt="Birthday Cake" width="120">
+        </div>
+
+        <!-- Gift Boxes -->
+        <div class="gift-box gift-1">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect x='10' y='25' width='60' height='50' fill='%23ff69b4' rx='3'/%3E%3Crect x='5' y='20' width='70' height='10' fill='%23ff1493'/%3E%3Cpath d='M 40 20 L 40 75' stroke='%23ffd700' stroke-width='8'/%3E%3Cpath d='M 10 40 L 70 40' stroke='%23ffd700' stroke-width='8'/%3E%3Cpath d='M 30 20 Q 25 10 30 5 Q 35 0 40 5 Q 45 0 50 5 Q 55 10 50 20' fill='%23ffd700'/%3E%3C/svg%3E" alt="Gift">
+        </div>
+        <div class="gift-box gift-2">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 80 80'%3E%3Crect x='10' y='25' width='60' height='50' fill='%2387ceeb' rx='3'/%3E%3Crect x='5' y='20' width='70' height='10' fill='%234682b4'/%3E%3Cpath d='M 40 20 L 40 75' stroke='%23ff69b4' stroke-width='8'/%3E%3Cpath d='M 10 40 L 70 40' stroke='%23ff69b4' stroke-width='8'/%3E%3Cpath d='M 30 20 Q 25 10 30 5 Q 35 0 40 5 Q 45 0 50 5 Q 55 10 50 20' fill='%23ff69b4'/%3E%3C/svg%3E" alt="Gift">
+        </div>
+
+        <!-- Music Notes -->
+        <div class="music-note note-1">🎵</div>
+        <div class="music-note note-2">🎶</div>
+        <div class="music-note note-3">🎵</div>
+        <div class="music-note note-4">🎶</div>
 
         <div class="box__letter">
             <div class="letter__border">
@@ -849,6 +1492,211 @@ Birthday Countdown
             document.querySelector(".box__letter").style.display = "none";
             document.querySelector(".letter__border").style.display = "none";
         })
+
+        // Audio Player Control - Auto Play
+        const audioPlayer = document.getElementById('birthday-audio');
+        const musicToggle = document.getElementById('music-toggle');
+        let isPlaying = true;
+
+        // Auto-play music when countdown ends
+        setTimeout(() => {
+            audioPlayer.play().catch(e => {
+                console.log('Auto-play blocked, user interaction required');
+                isPlaying = false;
+                musicToggle.innerHTML = '<i class="fa-solid fa-music"></i><span>Play Birthday Song</span>';
+                musicToggle.classList.remove('playing');
+            });
+        }, 5500);
+
+        musicToggle.addEventListener('click', function() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                musicToggle.innerHTML = '<i class="fa-solid fa-music"></i><span>Play Birthday Song</span>';
+                musicToggle.classList.remove('playing');
+            } else {
+                audioPlayer.play();
+                musicToggle.innerHTML = '<i class="fa-solid fa-pause"></i><span>Pause Song</span>';
+                musicToggle.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Cake Cutting Feature
+        const cakeOverlay = document.getElementById('cake-overlay');
+        const interactiveCake = document.getElementById('interactive-cake');
+        const knifeContainer = document.getElementById('knife-container');
+        const cutMessage = document.getElementById('cut-message');
+        const closeCakeBtn = document.getElementById('close-cake-btn');
+        let cakeCut = false;
+
+        // Show cake cutting after 15 seconds
+        setTimeout(() => {
+            cakeOverlay.classList.remove('hidden');
+        }, 15000);
+
+        interactiveCake.addEventListener('click', function() {
+            if (!cakeCut) {
+                cakeCut = true;
+                
+                // Animate knife cutting
+                knifeContainer.classList.add('cutting');
+                interactiveCake.classList.add('cut');
+                
+                // Show success message
+                setTimeout(() => {
+                    cutMessage.classList.add('show');
+                    closeCakeBtn.classList.add('show');
+                }, 800);
+                
+                // Create confetti explosion
+                for (let i = 0; i < 50; i++) {
+                    createCakeConfetti();
+                }
+            }
+        });
+
+        closeCakeBtn.addEventListener('click', function() {
+            cakeOverlay.classList.add('hidden');
+        });
+
+        function createCakeConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.background = ['#ff69b4', '#ffd700', '#87ceeb', '#ff1493', '#98fb98'][Math.floor(Math.random() * 5)];
+            confetti.style.left = '50%';
+            confetti.style.top = '50%';
+            confetti.style.borderRadius = '50%';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '6000';
+            
+            document.body.appendChild(confetti);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 5 + Math.random() * 10;
+            let x = 0;
+            let y = 0;
+            let opacity = 1;
+            
+            const animate = () => {
+                x += Math.cos(angle) * velocity;
+                y += Math.sin(angle) * velocity + 2;
+                opacity -= 0.02;
+                
+                confetti.style.transform = `translate(${x}px, ${y}px)`;
+                confetti.style.opacity = opacity;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    confetti.remove();
+                }
+            };
+            
+            animate();
+        }
+
+        // Fireworks Animation
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.particles = [];
+                this.createParticles();
+            }
+
+            createParticles() {
+                const particleCount = 50;
+                const colors = ['#ff69b4', '#ffd700', '#87ceeb', '#ff1493', '#98fb98'];
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: this.x,
+                        y: this.y,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        alpha: 1,
+                        color: colors[Math.floor(Math.random() * colors.length)]
+                    });
+                }
+            }
+
+            update() {
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1;
+                    p.alpha -= 0.01;
+                });
+                this.particles = this.particles.filter(p => p.alpha > 0);
+            }
+
+            draw() {
+                this.particles.forEach(p => {
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        let fireworks = [];
+        
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.5;
+            fireworks.push(new Firework(x, y));
+        }
+
+        function animateFireworks() {
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            fireworks.forEach((fw, index) => {
+                fw.update();
+                fw.draw();
+                if (fw.particles.length === 0) {
+                    fireworks.splice(index, 1);
+                }
+            });
+            
+            requestAnimationFrame(animateFireworks);
+        }
+
+        setInterval(createFirework, 1500);
+        animateFireworks();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Photo Slideshow Control
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.memory-slide');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Auto-advance slideshow
+        setInterval(() => {
+            changeSlide(1);
+        }, 4000);
     </script>
 </body>
 </html>
