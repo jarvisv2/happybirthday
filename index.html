@@ -1,44 +1,228 @@
-<script>
-  // Fixed 5‑second countdown (no target date)
-  const START_SECONDS = 5;
-
-  // message rotation (optional – keep from previous file)
-  const messages = [
-    "Just a little more… A small gift for my favorite person 💗",
-    "Counting every second to celebrate with you 🎉",
-    "Thank you for being you. Can’t wait! 🌸"
-  ];
-  let msgIndex = 0;
-  const msgBox = document.getElementById("message");
-  const pagerDots = msgBox.querySelectorAll?.(".dot") ?? [];
-  setInterval(() => {
-    msgIndex = (msgIndex + 1) % messages.length;
-    msgBox.firstChild.nodeValue = messages[msgIndex] + " ";
-    pagerDots.forEach((d,i)=> d.classList.toggle("active", i===msgIndex));
-  }, 3500);
-
-  // Grab number elements
-  const ids = ["days","hours","minutes","seconds"];
-  const $ = id => document.getElementById(id);
-
-  // Always show 0 for days/hours/minutes; count only seconds
-  $("days").textContent = 0;
-  $("hours").textContent = 0;
-  $("minutes").textContent = 0;
-
-  let remaining = START_SECONDS;
-  $("seconds").textContent = remaining;
-
-  const tick = setInterval(() => {
-    remaining -= 1;
-    if (remaining <= 0) {
-      $("seconds").textContent = 0;
-      msgBox.firstChild.nodeValue = "It’s time! Your surprise is ready 🎉";
-      clearInterval(tick);
-      return;
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Special Day – 5s Timer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-top:#ffe0ea;
+      --bg-bottom:#e9d7ff;
+      --card:#fff5fb;
+      --text:#c2185b;
+      --muted:#9b4d97;
+      --chip:#ffffff;
+      --shadow:0 10px 24px rgba(194,24,91,.15);
+      --dot1:#ff8fb3;
+      --dot2:#ffd58a;
+      --dot3:#c9b6ff;
+      --dot4:#ffb1c8;
     }
-    $("seconds").textContent = remaining;
-  }, 1000);
 
-  // Optional floating hearts from earlier code can remain unchanged
-</script>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:"Baloo 2",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+      overflow:hidden;
+    }
+
+    /* floating confetti/hearts background dots */
+    .bg-dots{
+      position:fixed; inset:0; pointer-events:none;
+    }
+    .dot{
+      position:absolute; border-radius:50%;
+      opacity:.75; filter:blur(.2px);
+      animation: float 12s linear infinite;
+    }
+    @keyframes float{
+      from{transform:translateY(10vh)}
+      to{transform:translateY(-110vh)}
+    }
+
+    .wrap{
+      width:min(680px,92vw);
+      background:var(--card);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:34px 28px 28px;
+      text-align:center;
+    }
+
+    .title{
+      font-size:28px; line-height:1.25; margin:0 0 18px;
+      letter-spacing:.2px;
+    }
+    .title .heart{color:#ff4d8a}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      justify-items:center;
+      margin:8px auto 18px;
+      width:min(520px,100%);
+    }
+
+    .chip{
+      background:var(--chip);
+      border-radius:14px;
+      padding:14px 6px 12px;
+      min-width:100px;
+      box-shadow:0 6px 14px rgba(0,0,0,.06);
+    }
+    .value{
+      font-size:30px; font-weight:800; line-height:1;
+      margin-bottom:6px;
+    }
+    .label{
+      font-size:12px; color:var(--muted); letter-spacing:.4px;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+
+    .note{
+      width:min(440px,90%);
+      margin:12px auto 0;
+      background:#ffe9f2;
+      color:#9b336e;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      line-height:1.4;
+      display:inline-block;
+      box-shadow:0 6px 14px rgba(255, 77, 138, .12);
+    }
+
+    .paging{
+      margin-top:8px; display:flex; gap:8px; justify-content:center;
+    }
+    .paging .b{
+      width:8px; height:8px; border-radius:50%;
+      background:#f6b0c9; opacity:.7;
+    }
+    .paging .b.active{ background:#ff4d8a; opacity:1 }
+
+    /* subtle pulse on the seconds chip */
+    .chip.seconds{
+      animation:pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform:translateY(0); box-shadow:0 6px 14px rgba(0,0,0,.06) }
+      50%{ transform:translateY(-2px); box-shadow:0 10px 18px rgba(255,77,138,.18) }
+    }
+
+    /* small icons via CSS content */
+    .ico{ font-size:14px }
+  </style>
+</head>
+<body>
+  <!-- floating background dots -->
+  <div class="bg-dots" id="bg"></div>
+
+  <main class="wrap" role="main" aria-live="polite">
+    <h1 class="title">
+      Your Special Day is Almost Here <span class="heart">💕</span>
+    </h1>
+
+    <section class="grid" aria-label="Timer blocks">
+      <div class="chip">
+        <div class="value" id="days">0</div>
+        <div class="label"><span class="ico">♡</span> Days</div>
+      </div>
+      <div class="chip">
+        <div class="value" id="hours">0</div>
+        <div class="label"><span class="ico">🎁</span> Hours</div>
+      </div>
+      <div class="chip">
+        <div class="value" id="minutes">0</div>
+        <div class="label"><span class="ico">🗓️</span> Minutes</div>
+      </div>
+      <div class="chip seconds">
+        <div class="value" id="seconds">5</div>
+        <div class="label"><span class="ico">⭐</span> Seconds</div>
+      </div>
+    </section>
+
+    <p class="note" id="note">
+      Just a little more… A small gift for my favorite person 💖
+    </p>
+    <div class="paging">
+      <span class="b"></span>
+      <span class="b active"></span>
+      <span class="b"></span>
+    </div>
+  </main>
+
+  <script>
+    // Background decorative dots (hearts/confetti-like)
+    (function makeDots(){
+      const bg = document.getElementById('bg');
+      const colors = ['var(--dot1)','var(--dot2)','var(--dot3)','var(--dot4)'];
+      const sizes = [6,8,10,12,14];
+      for(let i=0;i<40;i++){
+        const d = document.createElement('span');
+        d.className = 'dot';
+        const size = sizes[Math.floor(Math.random()*sizes.length)];
+        d.style.width = d.style.height = size+'px';
+        d.style.left = Math.random()*100+'vw';
+        d.style.top = Math.random()*100+'vh';
+        d.style.background = colors[Math.floor(Math.random()*colors.length)];
+        const dur = 10 + Math.random()*10;
+        d.style.animationDuration = dur+'s';
+        d.style.animationDelay = (-Math.random()*dur)+'s';
+        bg.appendChild(d);
+      }
+    })();
+
+    // Simple repeating 5-second timer
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const noteEl = document.getElementById('note');
+
+    // Keep static zeroes for D/H/M to match layout
+    daysEl.textContent = 0;
+    hoursEl.textContent = 0;
+    minutesEl.textContent = 0;
+
+    let remaining = 5; // seconds
+    const messages = [
+      'Just a little more… A small gift for my favorite person 💖',
+      'Counting happy moments with you 💗',
+      'Almost there… smile for me 💞'
+    ];
+    let msgIndex = 0;
+
+    function tick(){
+      secondsEl.textContent = remaining;
+      remaining--;
+      if(remaining < 0){
+        // cycle
+        remaining = 5;
+        // optional: rotate the mini message dots and text
+        msgIndex = (msgIndex + 1) % messages.length;
+        noteEl.textContent = messages[msgIndex];
+        // small “blink” effect on cycle
+        secondsEl.parentElement.style.animation = 'none';
+        // Force reflow to restart CSS animation pulse
+        void secondsEl.parentElement.offsetWidth;
+        secondsEl.parentElement.style.animation = '';
+      }
+    }
+
+    // start ticking immediately and then every 1s
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
