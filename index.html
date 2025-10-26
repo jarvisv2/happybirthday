@@ -1,497 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="title" content="Happy Birthday | darkshadeoflove">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday | darkshadeoflove</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    /* Overlay */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; color: #fff; text-align: center; }
-    .overlay.show { display: flex; }
-    .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .base-timer { width: 180px; height: 180px; }
-    .base-timer__circle { fill: none; stroke: none; }
-    .base-timer__path-elapsed { stroke-width: 8px; stroke: #333; }
-    .base-timer__path-remaining { stroke-width: 8px; stroke-linecap: round; transform: rotate(90deg); transform-origin: center; transition: 1s linear all; fill: none; }
-    .base-timer__path-remaining.green { stroke: #41b883; }
-    .base-timer__path-remaining.orange { stroke: orange; }
-    .base-timer__path-remaining.red { stroke: #e74c3c; }
-    #countdownCircle { position: relative; }
-    #countdownLabel { position: absolute; inset: 0; display: grid; place-items: center; font: 700 48px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Arial; }
-    .countdown-text { opacity: 0.85; font: 500 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+<style>
+    /* Background YouTube layer */
+    .bg-video-wrap {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        background: #000;
+    }
+    .bg-video-wrap iframe, .bg-video-wrap .yt-holder {
+        position: absolute;
+        width: 120vw;
+        height: 120vh;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        pointer-events: none;
+        opacity: 0.25;
+        filter: blur(0px) saturate(120%);
+    }
+    /* Countdown bar */
+    .countdown-bar {
+        position: fixed;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.55);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 14px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        z-index: 5;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+    .countdown-bar .label {
+        color: #ffd166;
+        letter-spacing: 0.3px;
+    }
+    .countdown {
+        display: flex;
+        gap: 8px;
+        font-variant-numeric: tabular-nums;
+    }
+    .cd-box {
+        background: rgba(255,255,255,0.08);
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+    .cd-box span {
+        color: #90e0ef;
+    }
+    .play-audio-toggle {
+        margin-left: 10px;
+        border: 0;
+        border-radius: 10px;
+        padding: 6px 10px;
+        cursor: pointer;
+        background: #06d6a0;
+        color: #073b4c;
+        font-weight: 700;
+    }
 
-    /* Helpers */
-    .hidden { display: none !important; }
-
-    /* Actions bar */
-    .actions { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; display: flex; gap: 12px; z-index: 11000; }
-    .actions button { background: #ff4d6d; color: #fff; border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    .actions button:hover { filter: brightness(1.1); }
-
-    /* Unmute prompt */
-    .unmute { position: fixed; right: 12px; bottom: 84px; z-index: 11000; }
-    .unmute button { background: #1e88e5; color: #fff; border: 0; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-    /* Player hidden container */
-    .player { position: absolute; width:0; height:0; overflow:hidden; }
-
-    /* Confetti canvas is topmost visual layer */
-    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 12000; }
-
-    /* Cake layer: separate from background; sits under UI, above main content */
-    .cake-layer {
-      position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none;
-      z-index: 10500;
+    /* Cake container */
+    .cake-wrap {
+        position: relative;
+        width: 360px;
+        margin: 20px auto 0;
+        z-index: 2;
+    }
+    .cake-stage {
+        position: relative;
+        width: 100%;
+        height: 300px;
     }
     .cake {
-      width: 220px; height: 220px; border-radius: 12px;
-      background: radial-gradient(ellipse at center, #ffd1dc 0%, #ffc2cc 60%, #ff9bb1 100%);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-      position: relative; pointer-events: none;
-      transition: transform 200ms ease, filter 200ms ease;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 240px;
+        height: 180px;
     }
-    .cake:after { /* plate */
-      content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: -14px;
-      width: 240px; height: 20px; background: #e0e0e0; border-radius: 12px; filter: blur(0.4px);
+    .layer {
+        height: 60px;
+        width: 240px;
+        margin: 0 auto;
+        border-radius: 10px;
+        background-repeat: repeat;
+        background-size: 100% 100%, 60px 100px;
+        background-position: 28px 0;
+        background-image: linear-gradient(transparent 40px, #e3a953 40px, #e3a953 50px, transparent 50px), radial-gradient(circle at 30px 5px, #713e16 30px, #eac284 31px);
+        position: relative;
+        box-shadow: inset 0 -6px 0 rgba(0,0,0,0.08);
     }
+    .layer.middle { transform: scale(0.88); margin-top: 8px; }
+    .layer.top { transform: scale(0.75); margin-top: 8px; }
+
+    /* Candle */
     .candle {
-      position: absolute; width: 10px; height: 50px; background: repeating-linear-gradient(180deg, #fff, #fff 6px, #ffd54f 6px, #ffd54f 12px);
-      left: 50%; top: 24px; transform: translateX(-50%);
-      border-radius: 4px;
+        position: absolute;
+        width: 16px;
+        height: 48px;
+        background: repeating-linear-gradient(45deg, #fd3018 0, #fd3018 5px, #ffa89e 5px, #ffa89e 10px);
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 140px;
+        border-radius: 4px;
+        box-shadow: 0 2px 0 rgba(0,0,0,0.15);
     }
     .flame {
-      position: absolute; width: 14px; height: 22px; background: radial-gradient(circle at 50% 30%, #fff59d 0%, #ffca28 60%, rgba(255,87,34,0.9) 100%);
-      border-radius: 50% 50% 50% 50%;
-      left: 50%; transform: translateX(-50%); top: -18px;
-      animation: flicker 0.12s infinite alternate;
-      opacity: 1;
+        position: absolute;
+        top: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 24px;
+        background: radial-gradient(ellipse at center, #fff59d 0%, #ffb703 50%, rgba(255,183,3,0.05) 70%);
+        border-radius: 50% 50% 50% 50%;
+        animation: flicker 0.8s infinite ease-in-out;
+        filter: drop-shadow(0 0 8px #ffd166);
     }
     @keyframes flicker {
-      from { transform: translateX(-50%) scale(1) }
-      to { transform: translateX(-50%) scale(1.05) }
-    }
-    .flame.off { opacity: 0; transition: opacity 300ms ease; }
-    .slice {
-      position: absolute; width: 120px; height: 120px; background: #ffe4ea; border: 2px dashed #ff7a90; border-radius: 12px;
-      bottom: 30px; right: 20px; transform: rotate(20deg) translate(0,0);
-      opacity: 0;
-    }
-    .slice.show { opacity: 1; transform: rotate(20deg) translate(18px,-8px); transition: transform 250ms ease, opacity 220ms ease; }
-  </style>
-</head>
-<body>
-  <!-- Countdown overlay -->
-  <div id="countdownOverlay" class="overlay show">
-    <div class="overlay-inner">
-      <div id="countdownCircle">
-        <svg class="base-timer" viewBox="0 0 100 100">
-          <g class="base-timer__circle">
-            <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
-            <path id="base-timer-path-remaining" stroke-dasharray="283" class="base-timer__path-remaining green"
-              d="M 50, 50 m -45, 0 a 45,45 0 1,0 90,0 a 45,45 0 1,0 -90,0">
-            </path>
-          </g>
-        </svg>
-        <span id="countdownLabel">5</span>
-      </div>
-      <div class="countdown-text">A surprise is coming…</div>
-    </div>
-  </div>
-
-  <!-- Autoplay YouTube (hidden, will play after countdown) -->
-  <div id="playerContainer" class="player hidden">
-    <iframe id="ytplayer" width="0" height="0"
-      src="https://www.youtube.com/embed/kcGojPJzh1k?enablejsapi=1&autoplay=1&mute=1&rel=0&playsinline=1"
-      title="Birthday song"
-      allow="autoplay; encrypted-media"
-      frameborder="0"></iframe>
-  </div>
-
-  <!-- Unmute button (shows until audio is unmuted) -->
-  <div id="unmuteBar" class="unmute hidden">
-    <button id="btnUnmute">Unmute music 🔊</button>
-  </div>
-
-  <!-- Celebration controls -->
-  <div id="actionsBar" class="actions hidden">
-    <button id="btnBlow">Blow Candles 🎂</button>
-    <button id="btnCut">Cut Cake 🔪</button>
-  </div>
-
-  <!-- Confetti top canvas -->
-  <canvas id="confettiCanvas" class="confetti hidden"></canvas>
-
-  <!-- Cake separate layer (no overlap with UI) -->
-  <div id="cakeLayer" class="cake-layer hidden" aria-hidden="true">
-    <div class="cake" id="cake">
-      <div class="candle">
-        <div class="flame" id="flame"></div>
-      </div>
-      <div class="slice" id="slice"></div>
-    </div>
-  </div>
-
-  <!-- BEGIN ORIGINAL CONTENT (unchanged) -->
-  <div id="mainContent" class="hidden">
-    <div id="wrapper">
-      <div class="flag__birthday">
-        <img src="./images/1.png" alt="" width="350" class="flag__left">
-        <img src="./images/1.png" alt="" width="350" class="flag__right">
-      </div>
-      <div class="content">
-        <div class="left">
-          <div class="title">
-            <h1 class="happy">
-              <span style="--t: 4s;">H</span>
-              <span style="--t: 4.2s;">a</span>
-              <span style="--t: 4.4s;">p</span>
-              <span style="--t: 4.6s;">p</span>
-              <span style="--t: 4.8s;">y</span>
-            </h1>
-            <h1 class="birthday">
-              <span style="--t: 5s;">B</span>
-              <span style="--t: 5.2s;">i</span>
-              <span style="--t: 5.4s;">r</span>
-              <span style="--t: 5.6s;">t</span>
-              <span style="--t: 5.8s;">h</span>
-              <span style="--t: 6s;">d</span>
-              <span style="--t: 6.2s;">a</span>
-              <span style="--t: 6.4s;">y</span>
-            </h1>
-            <div class="hat">
-              <img src="./images/hat.png" alt="" width="130">
-            </div>
-          </div>
-          <div class="date__of__birth">
-            <span></span>
-          </div>
-          <div class="btn">
-            <button id="btn__letter">
-              Click here Supriya ❤️
-              <i class="fa-regular fa-envelope"></i>
-            </button>
-          </div>
-        </div>
-        <div class="right">
-          <div class="box__account">
-            <div class="image">
-              <img src="./images/r5.png" alt="">
-            </div>
-            <div class="name">
-              <i class="fa-solid fa-heart"></i>
-              <span>Supriya ❤️</span>
-              <i class="fa-solid fa-heart"></i>
-            </div>
-            <div class="balloon_one">
-              <img width="100px" src="./images/balloon1.png" alt="">
-            </div>
-            <div class="balloon_two">
-              <img width="100px" src="./images/balloon2.png" alt="">
-            </div>
-          </div>
-          <div class="cricle">
-            <div class="text__cricle">
-              <span style="--i: 1;">h</span>
-              <span style="--i: 2;">a</span>
-              <span style="--i: 3;">p</span>
-              <span style="--i: 4;">p</span>
-              <span style="--i: 5;">y</span>
-              <span style="--i: 6;">-</span>
-              <span style="--i: 7;">b</span>
-              <span style="--i: 8;">i</span>
-              <span style="--i: 9;">r</span>
-              <span style="--i: 10;">t</span>
-              <span style="--i: 11;">h</span>
-              <span style="--i: 12;">d</span>
-              <span style="--i: 13;">a</span>
-              <span style="--i: 14;">y</span>
-              <span style="--i: 15;">-</span>
-            </div>
-            <i class="fa-solid fa-heart"></i>
-          </div>
-        </div>
-      </div>
-      <div class="decorate_star star1" style="--t: 15s;"></div>
-      <div class="decorate_star star2" style="--t: 15.2s;"></div>
-      <div class="decorate_star star3" style="--t: 15.4s;"></div>
-      <div class="decorate_star star4" style="--t: 15.6s;"></div>
-      <div class="decorate_star star5" style="--t: 15.8s;"></div>
-      <div class="decorate_flower--one" style="--t: 15s;">
-        <img width="20" src="./images/decorate_flower.png" alt="">
-      </div>
-      <div class="decorate_flower--two" style="--t: 15.3s;">
-        <img width="20" src="./images/decorate_flower.png" alt="">
-      </div>
-      <div class="decorate_flower--three" style="--t: 15.6s;">
-        <img width="20" src="./images/decorate_flower.png" alt="">
-      </div>
-      <div class="decorate_bottom">
-        <img src="./images/decorate.png" alt="" width="100">
-      </div>
-      <div class="smiley__icon">
-        <img src="./images/smiley_icon.png" alt="" width="100">
-      </div>
-
-      <div class="box__letter">
-        <div class="letter__border">
-          <div class="letter">
-            <div class="title__letter"></div>
-            <div class="content__letter">
-              <div class="left">
-                <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-              </div>
-              <div class="right">
-                <div class="love__img">
-                  <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                </div>
-                <div class="text__letter">
-                  <p></p>
-                </div>
-                <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-              </div>
-            </div>
-          </div>
-          <div class="close">
-            <i class="fa-solid fa-xmark"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="copy">
-      <p class="text-center text-white text-sm">darkshadeoflove<a href="https://www.instagram.com/@darkshadeoflove"></a></p>
-    </div>
-  </div>
-  <!-- END ORIGINAL CONTENT -->
-
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <script>
-    // ===== Countdown settings =====
-    const COUNTDOWN_SECONDS = 5; // change if needed
-    const FULL_DASH_ARRAY = 283;
-    let timeLeft = COUNTDOWN_SECONDS;
-
-    const label = document.getElementById('countdownLabel');
-    const pathRemaining = document.getElementById('base-timer-path-remaining');
-    const overlay = document.getElementById('countdownOverlay');
-    const mainContent = document.getElementById('mainContent');
-    const actionsBar = document.getElementById('actionsBar');
-    const unmuteBar = document.getElementById('unmuteBar');
-
-    function setCircle(timeLeft) {
-      const rawFraction = timeLeft / COUNTDOWN_SECONDS;
-      const circleDasharray = `${(rawFraction * FULL_DASH_ARRAY).toFixed(0)} ${FULL_DASH_ARRAY}`;
-      pathRemaining.setAttribute('stroke-dasharray', circleDasharray);
-      pathRemaining.classList.remove('green','orange','red');
-      if (rawFraction <= 0.33) pathRemaining.classList.add('red');
-      else if (rawFraction <= 0.66) pathRemaining.classList.add('orange');
-      else pathRemaining.classList.add('green');
+        0% { transform: translateX(-50%) scale(1); opacity: 0.95; }
+        50% { transform: translateX(-50%) scale(1.05); opacity: 1; }
+        100% { transform: translateX(-50%) scale(0.98); opacity: 0.9; }
     }
 
-    function startCountdown() {
-      label.textContent = timeLeft;
-      setCircle(timeLeft);
-      const tick = setInterval(() => {
-        timeLeft--;
-        label.textContent = timeLeft;
-        setCircle(timeLeft);
-        if (timeLeft <= 0) {
-          clearInterval(tick);
-          finishCountdown();
-        }
-      }, 1000);
+    /* Knife and cut effect */
+    .knife {
+        position: absolute;
+        top: 10px;
+        right: -40px;
+        width: 120px;
+        height: 16px;
+        background: linear-gradient(90deg, #c0c0c0, #e0e0e0 60%, #9c6644 60%, #7f5539);
+        border-radius: 4px;
+        transform-origin: left center;
+        transform: rotate(15deg);
+        opacity: 0;
+    }
+    .cutting .knife {
+        animation: slice-in 1.4s ease forwards;
+    }
+    @keyframes slice-in {
+        0% { opacity: 0; transform: translate(0,0) rotate(15deg); }
+        30% { opacity: 1; }
+        60% { transform: translate(-140px,110px) rotate(-25deg); }
+        100% { transform: translate(-160px,120px) rotate(-25deg); opacity: 0; }
     }
 
-    function finishCountdown() {
-      overlay.classList.remove('show');
-      document.getElementById('playerContainer').classList.remove('hidden');
-      actionsBar.classList.remove('hidden');
-      unmuteBar.classList.remove('hidden');
-      mainContent.classList.remove('hidden');
-      document.getElementById('cakeLayer').classList.remove('hidden');
-      startYouTube();
+    .cutting .layer.top::after {
+        content: "";
+        position: absolute;
+        width: 3px;
+        height: 100%;
+        left: 50%;
+        top: 0;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 0 10px rgba(255,255,255,0.6);
+        animation: cutline 1.4s ease forwards;
+    }
+    @keyframes cutline {
+        0% { opacity: 0; }
+        30% { opacity: 1; }
+        100% { opacity: 0; }
     }
 
-    // ===== YouTube IFrame API control (muted autoplay + clear unmute gesture) =====
-    let ytPlayer, isUnmuted = false;
-    function startYouTube() {
-      if (!window.YT) {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-        window.onYouTubeIframeAPIReady = initYTPlayer;
-      } else {
-        initYTPlayer();
-      }
+    /* Slice separation */
+    .slice-left, .slice-right {
+        position: absolute;
+        width: 120px;
+        height: 60px;
+        bottom: 128px;
+        background: #e3a953;
+        border-radius: 10px;
+        opacity: 0;
     }
-    function initYTPlayer() {
-      ytPlayer = new YT.Player('ytplayer', { events: { 'onReady': onPlayerReady } });
+    .slice-left { left: 30px; }
+    .slice-right { right: 30px; }
+    .cutting .slice-left {
+        animation: move-left 0.9s 0.7s ease forwards;
     }
-    function onPlayerReady(event) {
-      // Autoplay muted to pass policy
-      try { event.target.mute(); event.target.playVideo(); } catch (e) {}
-      // Show unmute bar until user unmutes
-      unmuteBar.classList.remove('hidden');
+    .cutting .slice-right {
+        animation: move-right 0.9s 0.7s ease forwards;
     }
-    function attemptUnmute() {
-      if (ytPlayer && ytPlayer.unMute) {
-        try {
-          ytPlayer.unMute();
-          isUnmuted = true;
-          unmuteBar.classList.add('hidden');
-        } catch (e) {}
-      }
+    @keyframes move-left {
+        to { transform: translateX(-26px) rotate(-4deg); opacity: 1; }
     }
-    document.getElementById('btnUnmute').addEventListener('click', attemptUnmute);
-
-    // Also treat any celebration click as user gesture to unmute
-    function gestureUnmute() { if (!isUnmuted) attemptUnmute(); }
-
-    // ===== Confetti helpers (top layer) =====
-    const confettiCanvas = document.getElementById('confettiCanvas');
-    const confettiInstance = confetti.create(confettiCanvas, { resize: true, useWorker: true });
-
-    function burstConfetti() {
-      confettiCanvas.classList.remove('hidden');
-      confettiInstance({ particleCount: 180, spread: 75, origin: { y: 0.7 } });
-      setTimeout(() => confettiCanvas.classList.add('hidden'), 1800);
-    }
-    function fireworks() {
-      confettiCanvas.classList.remove('hidden');
-      const end = Date.now() + 1200;
-      (function frame() {
-        confettiInstance({ particleCount: 24, angle: 60, spread: 55, origin: { x: 0 } });
-        confettiInstance({ particleCount: 24, angle: 120, spread: 55, origin: { x: 1 } });
-        if (Date.now() < end) requestAnimationFrame(frame);
-        else confettiCanvas.classList.add('hidden');
-      }());
+    @keyframes move-right {
+        to { transform: translateX(26px) rotate(4deg); opacity: 1; }
     }
 
-    // ===== Cake separate layer logic =====
-    const flame = document.getElementById('flame');
-    const cake = document.getElementById('cake');
-    const slice = document.getElementById('slice');
-
-    function blowCandles() {
-      flame.classList.add('off');    // hide flame
-      cake.style.filter = 'brightness(0.97)';
-      setTimeout(() => cake.style.filter = 'brightness(1)', 300);
-      burstConfetti();
+    /* Blow out flame on cut */
+    .cutting .flame {
+        animation: blow 0.4s 0.8s ease forwards;
+        filter: blur(2px) brightness(1.2);
     }
-    function cutCake() {
-      slice.classList.add('show');   // reveal slice
-      cake.style.transform = 'scale(0.98)';
-      setTimeout(() => cake.style.transform = 'scale(1)', 220);
-      fireworks();
+    @keyframes blow {
+        to { opacity: 0; transform: translateX(-10px) translateY(-10px) scale(0.4); }
     }
 
-    // Buttons
-    document.getElementById('btnBlow').addEventListener('click', () => { gestureUnmute(); blowCandles(); });
-    document.getElementById('btnCut').addEventListener('click', () => { gestureUnmute(); cutCake(); });
-
-    // ===== Your original scripted behavior (kept as-is) =====
-    let datetxt = "2 Nov 1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-
-    setTimeout(function(){
-      timeDatetxt = setInterval(function(){
-        if(currentIndex < charArrDate.length){
-          date__of__birth.textContent += charArrDate[currentIndex];
-          currentIndex++;
-        }
-        else{
-          let i = document.createElement("i");
-          i.className = "fa-solid fa-star"
-          document.querySelector(".date__of__birth").prepend(i)
-          document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-          clearInterval(timeDatetxt)
-        }
-      },100)
-    },12000)
-
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-      $(".box__letter").slideDown()
-      setTimeout(function(){
-        $(".letter__border").slideDown();
-      },1000)
-      setTimeout(function(){
-        intervalTitle = setInterval(function(){
-          if(currentIndexTitle < charArrTitle.length){
-            document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-            let i = document.createElement("i");
-            i.className = "fa-solid fa-heart"
-            document.querySelector(".title__letter").appendChild(i)
-            currentIndexTitle++;
-          }
-          else{
-            clearInterval(intervalTitle)
-          }
-        },100)
-      },2000)
-      setTimeout(function(){
-        document.querySelector("#heart__letter").classList.add("animationOp");
-        document.querySelector(".love__img").classList.add("animationOp");
-        document.querySelector("#mewmew").classList.add("animationOp");
-      },2800)
-      setTimeout(function(){
-        document.querySelectorAll(".heart").forEach((item)=>{
-          item.classList.add("animation")
-        })
-      },3500)
-      setTimeout(function(){
-        intervalContent = setInterval(function(){
-          if(currentIndexLetter < charArrDateLetter.length){
-            text__letter.textContent += charArrDateLetter[currentIndexLetter];
-            currentIndexLetter++;
-          }
-          else{
-            clearInterval(intervalContent)
-          }
-        },50)
-      },6000)
-    })
-    $(".close").on("click", function(){
-      clearInterval(intervalContent)
-      document.querySelector(".title__letter").textContent = "";
-      text__letter.textContent = "";
-      currentIndexLetter = 0
-      currentIndexTitle = 0
-      document.querySelector("#heart__letter").classList.remove("animationOp");
-      document.querySelector(".love__img").classList.remove("animationOp");
-      document.querySelector("#mewmew").classList.remove("animationOp");
-      document.querySelectorAll(".heart").forEach((item)=>{
-        item.classList.remove("animation")
-      })
-      $(".box__letter").slideUp();
-      $(".letter__border").slideUp();
-    })
-
-    // Start the countdown when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      overlay.classList.add('show');
-      startCountdown();
-    });
-  </script>
-</body>
-</html>
+    /* Cut button */
+    .cut-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        background: linear-gradient(135deg, #ef476f, #ffd166);
+        color: #222;
+        padding: 10px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 800;
+        box-shadow: 0 10px 20px rgba(239,71,111,0.3);
+    }
+    .cut-btn:hover { filter: brightness(1.05); }
+    .controls-stack {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+        z-index: 2;
+    }
+</style>
