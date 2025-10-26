@@ -12,8 +12,6 @@
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; color: #fff; text-align: center; }
     .overlay.show { display: flex; }
     .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-
-    /* Circular timer */
     .base-timer { width: 180px; height: 180px; }
     .base-timer__circle { fill: none; stroke: none; }
     .base-timer__path-elapsed { stroke-width: 8px; stroke: #333; }
@@ -29,15 +27,59 @@
     .hidden { display: none !important; }
 
     /* Actions bar */
-    .actions { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; display: flex; gap: 12px; z-index: 9990; }
+    .actions { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; display: flex; gap: 12px; z-index: 11000; }
     .actions button { background: #ff4d6d; color: #fff; border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
     .actions button:hover { filter: brightness(1.1); }
+
+    /* Unmute prompt */
+    .unmute { position: fixed; right: 12px; bottom: 84px; z-index: 11000; }
+    .unmute button { background: #1e88e5; color: #fff; border: 0; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
     /* Player hidden container */
     .player { position: absolute; width:0; height:0; overflow:hidden; }
 
-    /* Confetti canvas */
-    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9995; }
+    /* Confetti canvas is topmost visual layer */
+    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 12000; }
+
+    /* Cake layer: separate from background; sits under UI, above main content */
+    .cake-layer {
+      position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none;
+      z-index: 10500;
+    }
+    .cake {
+      width: 220px; height: 220px; border-radius: 12px;
+      background: radial-gradient(ellipse at center, #ffd1dc 0%, #ffc2cc 60%, #ff9bb1 100%);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      position: relative; pointer-events: none;
+      transition: transform 200ms ease, filter 200ms ease;
+    }
+    .cake:after { /* plate */
+      content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: -14px;
+      width: 240px; height: 20px; background: #e0e0e0; border-radius: 12px; filter: blur(0.4px);
+    }
+    .candle {
+      position: absolute; width: 10px; height: 50px; background: repeating-linear-gradient(180deg, #fff, #fff 6px, #ffd54f 6px, #ffd54f 12px);
+      left: 50%; top: 24px; transform: translateX(-50%);
+      border-radius: 4px;
+    }
+    .flame {
+      position: absolute; width: 14px; height: 22px; background: radial-gradient(circle at 50% 30%, #fff59d 0%, #ffca28 60%, rgba(255,87,34,0.9) 100%);
+      border-radius: 50% 50% 50% 50%;
+      left: 50%; transform: translateX(-50%); top: -18px;
+      animation: flicker 0.12s infinite alternate;
+      opacity: 1;
+    }
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1) }
+      to { transform: translateX(-50%) scale(1.05) }
+    }
+    .flame.off { opacity: 0; transition: opacity 300ms ease; }
+    .slice {
+      position: absolute; width: 120px; height: 120px; background: #ffe4ea; border: 2px dashed #ff7a90; border-radius: 12px;
+      bottom: 30px; right: 20px; transform: rotate(20deg) translate(0,0);
+      opacity: 0;
+    }
+    .slice.show { opacity: 1; transform: rotate(20deg) translate(18px,-8px); transition: transform 250ms ease, opacity 220ms ease; }
   </style>
 </head>
 <body>
@@ -68,14 +110,29 @@
       frameborder="0"></iframe>
   </div>
 
+  <!-- Unmute button (shows until audio is unmuted) -->
+  <div id="unmuteBar" class="unmute hidden">
+    <button id="btnUnmute">Unmute music 🔊</button>
+  </div>
+
   <!-- Celebration controls -->
   <div id="actionsBar" class="actions hidden">
     <button id="btnBlow">Blow Candles 🎂</button>
     <button id="btnCut">Cut Cake 🔪</button>
   </div>
 
-  <!-- Canvas for confetti -->
+  <!-- Confetti top canvas -->
   <canvas id="confettiCanvas" class="confetti hidden"></canvas>
+
+  <!-- Cake separate layer (no overlap with UI) -->
+  <div id="cakeLayer" class="cake-layer hidden" aria-hidden="true">
+    <div class="cake" id="cake">
+      <div class="candle">
+        <div class="flame" id="flame"></div>
+      </div>
+      <div class="slice" id="slice"></div>
+    </div>
+  </div>
 
   <!-- BEGIN ORIGINAL CONTENT (unchanged) -->
   <div id="mainContent" class="hidden">
@@ -229,6 +286,7 @@
     const overlay = document.getElementById('countdownOverlay');
     const mainContent = document.getElementById('mainContent');
     const actionsBar = document.getElementById('actionsBar');
+    const unmuteBar = document.getElementById('unmuteBar');
 
     function setCircle(timeLeft) {
       const rawFraction = timeLeft / COUNTDOWN_SECONDS;
@@ -258,12 +316,14 @@
       overlay.classList.remove('show');
       document.getElementById('playerContainer').classList.remove('hidden');
       actionsBar.classList.remove('hidden');
+      unmuteBar.classList.remove('hidden');
       mainContent.classList.remove('hidden');
+      document.getElementById('cakeLayer').classList.remove('hidden');
       startYouTube();
     }
 
-    // ===== YouTube IFrame API control (muted autoplay, then try unmute) =====
-    let ytPlayer;
+    // ===== YouTube IFrame API control (muted autoplay + clear unmute gesture) =====
+    let ytPlayer, isUnmuted = false;
     function startYouTube() {
       if (!window.YT) {
         const tag = document.createElement('script');
@@ -275,28 +335,36 @@
       }
     }
     function initYTPlayer() {
-      ytPlayer = new YT.Player('ytplayer', {
-        events: { 'onReady': onPlayerReady }
-      });
+      ytPlayer = new YT.Player('ytplayer', { events: { 'onReady': onPlayerReady } });
     }
     function onPlayerReady(event) {
-      try {
-        event.target.mute();
-        event.target.playVideo();
-      } catch (e) {}
-      setTimeout(() => {
-        try { event.target.unMute(); } catch (e) {}
-      }, 1500);
+      // Autoplay muted to pass policy
+      try { event.target.mute(); event.target.playVideo(); } catch (e) {}
+      // Show unmute bar until user unmutes
+      unmuteBar.classList.remove('hidden');
     }
+    function attemptUnmute() {
+      if (ytPlayer && ytPlayer.unMute) {
+        try {
+          ytPlayer.unMute();
+          isUnmuted = true;
+          unmuteBar.classList.add('hidden');
+        } catch (e) {}
+      }
+    }
+    document.getElementById('btnUnmute').addEventListener('click', attemptUnmute);
 
-    // ===== Confetti helpers =====
+    // Also treat any celebration click as user gesture to unmute
+    function gestureUnmute() { if (!isUnmuted) attemptUnmute(); }
+
+    // ===== Confetti helpers (top layer) =====
     const confettiCanvas = document.getElementById('confettiCanvas');
     const confettiInstance = confetti.create(confettiCanvas, { resize: true, useWorker: true });
 
     function burstConfetti() {
       confettiCanvas.classList.remove('hidden');
       confettiInstance({ particleCount: 180, spread: 75, origin: { y: 0.7 } });
-      setTimeout(() => confettiCanvas.classList.add('hidden'), 2000);
+      setTimeout(() => confettiCanvas.classList.add('hidden'), 1800);
     }
     function fireworks() {
       confettiCanvas.classList.remove('hidden');
@@ -309,21 +377,27 @@
       }());
     }
 
-    // ===== Blow and Cut actions =====
-    document.getElementById('btnBlow').addEventListener('click', () => {
-      document.querySelectorAll('.decorate_star, .decorate_flower--one, .decorate_flower--two, .decorate_flower--three')
-        .forEach(el => { el.style.transition = 'opacity 600ms'; el.style.opacity = '0.2'; });
+    // ===== Cake separate layer logic =====
+    const flame = document.getElementById('flame');
+    const cake = document.getElementById('cake');
+    const slice = document.getElementById('slice');
+
+    function blowCandles() {
+      flame.classList.add('off');    // hide flame
+      cake.style.filter = 'brightness(0.97)';
+      setTimeout(() => cake.style.filter = 'brightness(1)', 300);
       burstConfetti();
-    });
-    document.getElementById('btnCut').addEventListener('click', () => {
+    }
+    function cutCake() {
+      slice.classList.add('show');   // reveal slice
+      cake.style.transform = 'scale(0.98)';
+      setTimeout(() => cake.style.transform = 'scale(1)', 220);
       fireworks();
-      const cake = document.querySelector('.smiley__icon img');
-      if (cake) {
-        cake.style.transition = 'transform 200ms';
-        cake.style.transform = 'scale(0.95)';
-        setTimeout(() => cake.style.transform = 'scale(1)', 220);
-      }
-    });
+    }
+
+    // Buttons
+    document.getElementById('btnBlow').addEventListener('click', () => { gestureUnmute(); blowCandles(); });
+    document.getElementById('btnCut').addEventListener('click', () => { gestureUnmute(); cutCake(); });
 
     // ===== Your original scripted behavior (kept as-is) =====
     let datetxt = "2 Nov 1999";
