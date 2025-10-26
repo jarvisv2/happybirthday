@@ -1,453 +1,563 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Video Source + Birthday</title>
-<link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="title" content="Happy Birthday | darkshadeoflove" />
+<title>Happy Birthday | darkshadeoflove</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
 <style>
-  /* Utility/layout */
-  body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji"; background:#0b0b12; color:#f5f7fb; }
-  .container { max-width:1100px; margin:auto; padding:16px; }
-  h1,h2 { margin:12px 0; }
-  .controls { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 16px; }
-  .controls button, .controls a, .btn button, .cake-controls button { background:#6c5ce7; color:#fff; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; text-decoration:none; }
-  .controls button:disabled { opacity:.5; cursor:not-allowed; }
-  .thumbs { display:flex; gap:8px; flex-wrap:wrap; }
-  .thumbs img { width:140px; height:auto; border-radius:6px; }
-  pre#ffmpeg { background:#141627; color:#d7e0ff; padding:12px; border-radius:8px; overflow:auto; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins',sans-serif; background:#111; color:#fff; overflow-x:hidden; }
 
-  /* YouTube background player */
-  #yt-wrap { position:relative; margin:16px 0; }
-  #yt-bg {
-    position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:10px; border:1px solid #2b2e4a;
+  /* ========== 1) Intro Countdown Screen ========== */
+  #intro {
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#ff0000,#ff7f50);
+    z-index:9999;
   }
-  #yt-bg iframe {
-    position:absolute; top:0; left:0; width:100%; height:100%; border:0;
+  .countdown {
+    color:#fff; font-size:15vw; font-weight:900;
+    text-shadow:0 0 40px rgba(255,255,255,0.6);
+    animation: pop 1s ease forwards;
   }
-  .yt-controls { display:flex; gap:8px; margin-top:8px; }
+  @keyframes pop {
+    0% { transform:scale(0); opacity:0; }
+    50% { transform:scale(1.4); opacity:1; }
+    100% { transform:scale(1); opacity:1; }
+  }
+  .message {
+    color:#fff; font-size:8vw; font-weight:800; opacity:0; animation: appear 1s ease forwards;
+  }
+  @keyframes appear { from {opacity:0; transform:scale(0.6);} to {opacity:1; transform:scale(1);} }
 
-  /* Cake animation (simple CSS cake + cut) */
-  .cake-zone { margin:24px 0; display:grid; gap:12px; }
-  .cake-stage { position:relative; height:260px; background:#111428; border:1px solid #2b2e4a; border-radius:12px; overflow:hidden; }
-  .cake { position:absolute; left:50%; bottom:36px; transform:translateX(-50%); width:240px; height:140px; }
-  .cake .tier { position:absolute; left:50%; transform:translateX(-50%); width:100%; border-radius:12px; background:#ff99b9; box-shadow:0 6px 0 #ff4a83 inset; }
-  .cake .tier.t1 { bottom:0; height:70px; }
-  .cake .tier.t2 { bottom:58px; width:75%; height:55px; }
-  .cake .tier.t3 { bottom:106px; width:50%; height:40px; }
-  .sprinkles::after { content:""; position:absolute; inset:0; background:
-    radial-gradient(circle at 12% 40%, #ffee8d 4px, transparent 5px),
-    radial-gradient(circle at 36% 62%, #f1663e 4px, transparent 5px),
-    radial-gradient(circle at 66% 22%, #9a152b 4px, transparent 5px),
-    radial-gradient(circle at 86% 50%, #f5e671 4px, transparent 5px); opacity:.9;
-  }
-  .candle { position:absolute; left:50%; bottom:136px; transform:translateX(-50%); width:12px; height:40px; background:#3aa2cf; border-radius:3px 3px 0 0; }
-  .candle::before { content:""; position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(135deg); width:18px; height:18px; background:#f1af3f; border-radius:50% 50% 50% 0; animation:flame 1.6s infinite; }
-  @keyframes flame { 50% { transform:translateX(-50%) scale(.8) rotate(135deg);} }
-
-  /* Cut animation: a diagonal slice separates tiers with a clip-path sweep */
-  .cake.cut .mask { animation:slice 900ms ease-out forwards; }
-  .mask {
-    position:absolute; inset:0; pointer-events:none;
-    background:linear-gradient(135deg, transparent 49%, rgba(255,255,255,.25) 50%, transparent 51%);
-    mix-blend-mode:screen; opacity:0;
-  }
-  @keyframes slice {
-    0% { opacity:0; clip-path:polygon(0 0, 0 0, 0 100%, 0 100%); }
-    20% { opacity:1; }
-    100% { opacity:1; clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  /* ========== 2) Player (hidden, audio only) ========== */
+  #playerArea {
+    position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden;
   }
 
-  /* Split effect: tiers shift apart */
-  .cake.cut .t1 { transform:translateX(-50%) translateY(8px) rotate(0.2deg); transition:transform 700ms ease; }
-  .cake.cut .t2 { transform:translateX(-50%) translate(-8px,-2px) rotate(-0.8deg); transition:transform 700ms ease; }
-  .cake.cut .t3 { transform:translateX(-50%) translate(10px,-6px) rotate(1.2deg); transition:transform 700ms ease; }
-  .cake.cut .candle { opacity:0; transition:opacity 250ms ease; }
+  /* ========== 3) Cake Section ========== */
+  #cakeSection {
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px;
+    background:linear-gradient(135deg,#1a1a1a,#2a2a2a);
+    padding:40px 16px;
+  }
+  .cake-title { font-size:clamp(28px,4vw,48px); text-align:center; }
+  .cake-wrap { position:relative; width:360px; height:360px; display:grid; place-items:center; }
+  .cake {
+    position:relative; width:240px; height:180px;
+    transform-origin:bottom; transition:transform 0.6s ease;
+  }
+  .layer {
+    width:240px; height:70px; border-radius:14px; background:#ffe0b3; position:absolute; left:50%; transform:translateX(-50%);
+    box-shadow: inset 0 -8px 0 rgba(0,0,0,0.06);
+  }
+  .layer.bottom { bottom:0; }
+  .layer.middle { bottom:60px; width:220px; background:#ffd699; }
+  .layer.top { bottom:120px; width:200px; background:#ffcc80; }
+
+  .icing {
+    position:absolute; top:-16px; left:0; right:0; height:28px; background:repeating-linear-gradient(90deg,#ff66a3 0 12px,#ff4d94 12px 24px);
+    border-top-left-radius:14px; border-top-right-radius:14px;
+    clip-path: polygon(0% 0%,100% 0%,100% 70%,90% 100%,80% 70%,70% 100%,60% 70%,50% 100%,40% 70%,30% 100%,20% 70%,10% 100%,0% 70%);
+  }
+
+  .candle {
+    position:absolute; bottom:170px; left:50%; transform:translateX(-50%);
+    width:16px; height:46px;
+    background:repeating-linear-gradient(45deg,#fd3018 0 5px,#ffa89e 5px 10px);
+    border-radius:4px;
+  }
+  .flame {
+    position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+    width:14px; height:20px; background:radial-gradient(ellipse at center,#ffd54d 30%,#ff9100 60%,transparent 70%);
+    border-radius:50% 50% 50% 50%;
+    filter:blur(0.4px);
+    animation: flicker 0.12s infinite alternate;
+  }
+  @keyframes flicker {
+    from { transform:translateX(-50%) scale(1); opacity:0.95; }
+    to   { transform:translateX(-50%) scale(1.06); opacity:0.75; }
+  }
+
+  .knife {
+    position:absolute; right:-60px; top:40%;
+    width:140px; height:14px; background:linear-gradient(90deg,#c0c0c0,#e0e0e0);
+    border-radius:4px; transform-origin:90% 50%;
+    box-shadow:0 2px 0 rgba(0,0,0,0.2);
+  }
+  .knife:after {
+    content:""; position:absolute; right:-16px; top:-6px; width:24px; height:26px; background:#6b4f2a; border-radius:4px;
+  }
+
+  .controls { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .btn {
+    background:#ff4d94; color:#fff; border:none; border-radius:8px; padding:12px 18px; font-size:16px; cursor:pointer;
+    box-shadow:0 6px 20px rgba(255,77,148,0.35); transition:transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover { transform:translateY(-1px); box-shadow:0 8px 22px rgba(255,77,148,0.45); }
+  .btn.secondary { background:#00b8ff; box-shadow:0 6px 20px rgba(0,184,255,0.35); }
+  .btn.tertiary { background:#00d084; box-shadow:0 6px 20px rgba(0,208,132,0.35); }
+
+  /* Slice animation */
+  .slice-left, .slice-right {
+    position:absolute; bottom:120px; width:100px; height:70px; background:#ffcc80; border-radius:12px; opacity:0; pointer-events:none;
+  }
+  .slice-left { left:50%; transform:translateX(-120px) rotate(0deg); }
+  .slice-right { left:50%; transform:translateX(20px) rotate(0deg); }
+  .cutting .slice-left { animation: sliceLeft 1s ease forwards; }
+  .cutting .slice-right { animation: sliceRight 1s ease forwards; }
+  .cutting .knife { animation: knifeCut 0.9s ease forwards; }
+  .cutting .cake { animation: cakeNudge 0.6s ease; }
+
+  @keyframes knifeCut {
+    0% { transform:translate(0,0) rotate(0deg); }
+    30% { transform:translate(-120px, 44px) rotate(-8deg); }
+    60% { transform:translate(-120px, 44px) rotate(-8deg); }
+    100% { transform:translate(0,0) rotate(0deg); }
+  }
+  @keyframes sliceLeft {
+    0% { opacity:0; transform:translateX(-120px) translateY(0) rotate(0deg); }
+    30% { opacity:1; }
+    100% { opacity:1; transform:translateX(-180px) translateY(48px) rotate(-14deg); }
+  }
+  @keyframes sliceRight {
+    0% { opacity:0; transform:translateX(20px) translateY(0) rotate(0deg); }
+    30% { opacity:1; }
+    100% { opacity:1; transform:translateX(80px) translateY(60px) rotate(12deg); }
+  }
+  @keyframes cakeNudge {
+    0% { transform:translateY(0); }
+    50% { transform:translateY(3px); }
+    100% { transform:translateY(0); }
+  }
 
   /* Confetti */
-  .confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-  .confetti i { position:absolute; top:-10px; width:8px; height:14px; background:var(--c,#ffcc00); transform:rotate(var(--r,0deg)); animation:fall 900ms linear forwards; }
+  .confetti {
+    position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:5;
+  }
+  .confetti i {
+    position:absolute; top:-10px; width:8px; height:14px; opacity:0.9;
+    animation: fall linear forwards;
+  }
   @keyframes fall {
-    to { transform:translateY(320px) rotate(calc(var(--r,0deg) + 260deg)); opacity:0; }
+    to { transform:translateY(110vh) rotate(360deg); }
   }
 
-  .cake-controls { display:flex; gap:8px; }
+  /* ========== 4) Main Birthday Page (your code) ========== */
+  #mainPage { background:#111; }
+  #wrapper { max-width:1200px; margin:0 auto; padding:40px 16px; }
+
+  .flag__birthday { display:flex; align-items:center; justify-content:space-between; }
+  .flag__left, .flag__right { filter:drop-shadow(0 6px 16px rgba(0,0,0,0.4)); }
+
+  .content { display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; margin-top:24px; }
+  .left { flex:1 1 420px; min-width:320px; }
+  .right { flex:1 1 420px; min-width:320px; position:relative; }
+
+  .title { position:relative; }
+  .happy, .birthday { display:flex; gap:8px; font-size:clamp(42px,5vw,72px); letter-spacing:2px; }
+  .hat { position:absolute; right:-6px; top:-10px; transform:rotate(14deg); }
+
+  .date__of__birth { margin-top:8px; font-size:clamp(16px,2.5vw,22px); display:flex; gap:8px; align-items:center; }
+  .date__of__birth i { color:#ffd54d; }
+
+  .btn #btn__letter { background:#ff4d94; color:#fff; border:none; border-radius:8px; padding:12px 18px; margin-top:18px; cursor:pointer; }
+
+  .box__account { position:relative; padding:16px; border-radius:16px; background:rgba(255,255,255,0.06); backdrop-filter:blur(4px); }
+  .box__account .image img { width:100%; border-radius:12px; }
+  .name { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px; font-weight:700; }
+  .balloon_one, .balloon_two { position:absolute; animation: float 3.4s ease-in-out infinite; }
+  .balloon_one { top:-24px; left:-12px; }
+  .balloon_two { top:-24px; right:-12px; animation-delay:0.7s; }
+  @keyframes float { 50% { transform:translateY(-10px); } }
+
+  .cricle { position:relative; width:200px; height:200px; margin:20px auto; border-radius:50%; display:grid; place-items:center; border:2px dashed #ff4d94; }
+  .text__cricle { position:absolute; width:100%; height:100%; display:flex; flex-wrap:wrap; align-content:space-around; justify-content:center; gap:4px; }
+  .text__cricle span { animation: spin 8s linear infinite; display:inline-block; }
+  @keyframes spin { to { transform:rotate(1turn); } }
+
+  .decorate_star, .decorate_flower--one, .decorate_flower--two, .decorate_flower--three, .decorate_bottom, .smiley__icon { opacity:0.95; }
+
+  .box__letter { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:20; }
+  .letter__border { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; color:#111; width:min(680px,92vw); border-radius:16px; overflow:hidden; }
+  .letter { padding:20px; }
+  .title__letter { font-size:22px; font-weight:800; display:flex; align-items:center; gap:10px; }
+  .content__letter { display:flex; gap:16px; flex-wrap:wrap; }
+  .content__letter .left { flex:1 1 220px; min-width:200px; }
+  .content__letter .right { flex:2 1 320px; min-width:260px; }
+  .animationOp { opacity:1 !important; transform:none !important; transition:all .6s ease; }
+  .heart { opacity:0; }
+  .heart.animation { opacity:1; animation: pulse 1.2s ease-in-out infinite alternate; }
+  @keyframes pulse { to { transform:scale(1.2); } }
+  .close { position:absolute; top:10px; right:12px; font-size:24px; cursor:pointer; }
+
+  #copy { padding:24px; text-align:center; color:#fff; opacity:0.8; }
 </style>
 </head>
 <body>
-  <!-- BLOCK 1: Your local video player section (unchanged) -->
-  <div class="container">
-    <h1>Video Player — "video_20251026_235525_edit.mp4"</h1>
-    <video id="video" controls crossorigin="anonymous" style="width:100%; max-height:60vh; background:#000;">
-      <source src="video_20251026_235525_edit.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
 
-    <div class="controls">
-      <button id="captureBtn">Capture current frame</button>
-      <button id="captureIntervalBtn">Capture interval (every 2s)</button>
-      <button id="stopIntervalBtn" disabled>Stop interval</button>
-      <a id="downloadAudio" href="#" download="audio_extracted.mp3">Download audio (needs server-side extraction)</a>
-    </div>
-
-    <h2>Captured frames</h2>
-    <div id="thumbs" class="thumbs"></div>
-
-    <h2>Instructions & FFmpeg commands</h2>
-    <pre id="ffmpeg">
-# FFmpeg commands
-ffmpeg -i video_20251026_235525_edit.mp4 -vn -acodec libmp3lame -ab 192k audio_extracted.mp3
-ffmpeg -i video_20251026_235525_edit.mp4 -vf fps=1 frame_%04d.png
-ffmpeg -ss 00:00:05 -i video_20251026_235525_edit.mp4 -frames:v 1 frame_at_5s.png
-ffprobe -v quiet -print_format json -show_format -show_streams video_20251026_235525_edit.mp4
-    </pre>
-    <p class="note">Place your MP4 in this folder and open this HTML in a browser.</p>
+  <!-- 1) Countdown Intro -->
+  <div id="intro">
+    <div id="display" class="countdown">3</div>
   </div>
 
-  <!-- Background YouTube player (autoplay muted) -->
-  <div class="container" id="yt-wrap">
-    <h2>Birthday Song</h2>
-    <div id="yt-bg">
-      <div id="player"></div>
-    </div>
-    <div class="yt-controls">
-      <button id="ytPlay">Play</button>
-      <button id="ytPause">Pause</button>
-      <button id="ytToggleMute">Unmute</button>
-    </div>
+  <!-- 2) Hidden YouTube player area -->
+  <div id="playerArea">
+    <div id="player"></div>
   </div>
 
-  <!-- Cake with cut button -->
-  <div class="container cake-zone">
-    <h2>Birthday Cake</h2>
-    <div class="cake-controls">
-      <button id="cutCakeBtn"><i class="fa-solid fa-cake-candles"></i> Cut the cake</button>
-      <button id="resetCakeBtn">Reset cake</button>
-    </div>
-    <div class="cake-stage">
+  <!-- 3) Cake Section -->
+  <section id="cakeSection" aria-label="Cake Celebration" style="display:none;">
+    <h2 class="cake-title">Happy Birthday, Supriya ❤️</h2>
+    <div class="cake-wrap" id="cakeWrap">
       <div class="cake" id="cake">
-        <div class="tier t1 sprinkles"></div>
-        <div class="tier t2 sprinkles"></div>
-        <div class="tier t3 sprinkles"></div>
-        <div class="candle"></div>
-        <div class="mask"></div>
+        <div class="layer top"><div class="icing"></div></div>
+        <div class="layer middle"><div class="icing"></div></div>
+        <div class="layer bottom"><div class="icing"></div></div>
+        <div class="candle"><div class="flame" id="flame"></div></div>
       </div>
-      <div class="confetti" id="confetti"></div>
+      <div class="knife"></div>
+      <div class="slice-left"></div>
+      <div class="slice-right"></div>
     </div>
-  </div>
+    <div class="controls">
+      <button class="btn" id="btnCut">Cut the Cake</button>
+      <button class="btn secondary" id="btnBlow">Blow Candle</button>
+      <button class="btn tertiary" id="btnReplay">Replay Cut</button>
+    </div>
+    <div class="confetti" id="confetti"></div>
+  </section>
 
-  <!-- BLOCK 2: Your “Happy Birthday | darkshadeoflove” page placed AFTER the first code -->
-  <!-- Kept intact; minor script at bottom will coexist. -->
-  <div class="container" style="max-width:1200px;">
+  <!-- 4) Your existing main page -->
+  <main id="mainPage" style="display:none;">
     <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
-        </div>
-        <div class="content">
-            <div class="left">
-                <div class="title">
-                    <h1 class="happy">
-                        <span style="--t: 4s;">H</span>
-                        <span style="--t: 4.2s;">a</span>
-                        <span style="--t: 4.4s;">p</span>
-                        <span style="--t: 4.6s;">p</span>
-                        <span style="--t: 4.8s;">y</span>
-                    </h1>
-                    <h1 class="birthday">
-                        <span style="--t: 5s;">B</span>
-                        <span style="--t: 5.2s;">i</span>
-                        <span style="--t: 5.4s;">r</span>
-                        <span style="--t: 5.6s;">t</span>
-                        <span style="--t: 5.8s;">h</span>
-                        <span style="--t: 6s;">d</span>
-                        <span style="--t: 6.2s;">a</span>
-                        <span style="--t: 6.4s;">y</span>
-                    </h1>
-                    <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
-                    </div>
-                </div>
-                <div class="date__of__birth">
-                    <span></span>
-                </div>
-                <div class="btn">
-                    <button id="btn__letter">
-                        Click here Supriya ❤️
-                        <i class="fa-regular fa-envelope"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="right">
-                <div class="box__account">
-                    <div class="image">
-                        <img src="./images/r5.png" alt="">
-                    </div>
-                    <div class="name">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Supriya ❤️</span>
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
-                    </div>
-                    <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
-                    </div>
-                </div>
-                <div class="cricle">
-                    <div class="text__cricle">
-                        <span style="--i: 1;">h</span>
-                        <span style="--i: 2;">a</span>
-                        <span style="--i: 3;">p</span>
-                        <span style="--i: 4;">p</span>
-                        <span style="--i: 5;">y</span>
-                        <span style="--i: 6;">-</span>
-                        <span style="--i: 7;">b</span>
-                        <span style="--i: 8;">i</span>
-                        <span style="--i: 9;">r</span>
-                        <span style="--i: 10;">t</span>
-                        <span style="--i: 11;">h</span>
-                        <span style="--i: 12;">d</span>
-                        <span style="--i: 13;">a</span>
-                        <span style="--i: 14;">y</span>
-                        <span style="--i: 15;">-</span>
-                    </div>
-                    <i class="fa-solid fa-heart"></i>
-                </div>
-            </div>
-        </div>
-        <div class="decorate_star star1" style="--t: 15s;"></div>
-        <div class="decorate_star star2" style="--t: 15.2s;"></div>
-        <div class="decorate_star star3" style="--t: 15.4s;"></div>
-        <div class="decorate_star star4" style="--t: 15.6s;"></div>
-        <div class="decorate_star star5" style="--t: 15.8s;"></div>
-        <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
-        </div>
-        <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
+      <div class="flag__birthday">
+        <img src="./images/1.png" alt="" width="350" class="flag__left">
+        <img src="./images/1.png" alt="" width="350" class="flag__right">
+      </div>
+
+      <div class="content">
+        <div class="left">
+          <div class="title">
+            <h1 class="happy">
+              <span style="--t:4s;">H</span>
+              <span style="--t:4.2s;">a</span>
+              <span style="--t:4.4s;">p</span>
+              <span style="--t:4.6s;">p</span>
+              <span style="--t:4.8s;">y</span>
+            </h1>
+            <h1 class="birthday">
+              <span style="--t:5s;">B</span>
+              <span style="--t:5.2s;">i</span>
+              <span style="--t:5.4s;">r</span>
+              <span style="--t:5.6s;">t</span>
+              <span style="--t:5.8s;">h</span>
+              <span style="--t:6s;">d</span>
+              <span style="--t:6.2s;">a</span>
+              <span style="--t:6.4s;">y</span>
+            </h1>
+            <div class="hat"><img src="./images/hat.png" alt="" width="130"></div>
+          </div>
+          <div class="date__of__birth"><span></span></div>
+          <div class="btn"><button id="btn__letter">Click here Supriya ❤️ <i class="fa-regular fa-envelope"></i></button></div>
         </div>
 
-        <div class="box__letter">
-            <div class="letter__border">
-                <div class="letter">
-                    <div class="title__letter"></div>
-                    <div class="content__letter">
-                        <div class="left">
-                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-                        </div>
-                        <div class="right">
-                            <div class="love__img">
-                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                            </div>
-                            <div class="text__letter">
-                                 <p></p>
-                            </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
+        <div class="right">
+          <div class="box__account">
+            <div class="image"><img src="./images/r5.png" alt=""></div>
+            <div class="name"><i class="fa-solid fa-heart"></i><span>Supriya ❤️</span><i class="fa-solid fa-heart"></i></div>
+            <div class="balloon_one"><img width="100" src="./images/balloon1.png" alt=""></div>
+            <div class="balloon_two"><img width="100" src="./images/balloon2.png" alt=""></div>
+          </div>
+
+          <div class="cricle">
+            <div class="text__cricle">
+              <span style="--i:1;">h</span><span style="--i:2;">a</span><span style="--i:3;">p</span><span style="--i:4;">p</span>
+              <span style="--i:5;">y</span><span style="--i:6;">-</span><span style="--i:7;">b</span><span style="--i:8;">i</span>
+              <span style="--i:9;">r</span><span style="--i:10;">t</span><span style="--i:11;">h</span><span style="--i:12;">d</span>
+              <span style="--i:13;">a</span><span style="--i:14;">y</span><span style="--i:15;">-</span>
             </div>
+            <i class="fa-solid fa-heart"></i>
+          </div>
         </div>
+      </div>
+
+      <div class="decorate_star star1" style="--t: 15s;"></div>
+      <div class="decorate_star star2" style="--t: 15.2s;"></div>
+      <div class="decorate_star star3" style="--t: 15.4s;"></div>
+      <div class="decorate_star star4" style="--t: 15.6s;"></div>
+      <div class="decorate_star star5" style="--t: 15.8s;"></div>
+
+      <div class="decorate_flower--one" style="--t: 15s;"><img width="20" src="./images/decorate_flower.png" alt=""></div>
+      <div class="decorate_flower--two" style="--t: 15.3s;"><img width="20" src="./images/decorate_flower.png" alt=""></div>
+      <div class="decorate_flower--three" style="--t: 15.6s;"><img width="20" src="./images/decorate_flower.png" alt=""></div>
+
+      <div class="decorate_bottom"><img src="./images/decorate.png" alt="" width="100"></div>
+      <div class="smiley__icon"><img src="./images/smiley_icon.png" alt="" width="100"></div>
+
+      <div class="box__letter">
+        <div class="letter__border">
+          <div class="letter">
+            <div class="title__letter"></div>
+            <div class="content__letter">
+              <div class="left">
+                <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+                <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+                <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+                <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+                <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
+              </div>
+              <div class="right">
+                <div class="love__img">
+                  <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+                </div>
+                <div class="text__letter"><p></p></div>
+                <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+      </div>
     </div>
 
     <div id="copy">
       <p class="text-center text-white text-sm">darkshadeoflove<a href="https://www.instagram.com/@darkshadeoflove"></a></p>
     </div>
-  </div>
+  </main>
 
-  <!-- Scripts -->
-  <script src="player.js"></script>
+<script>
+  // ================== 1) Countdown then reveal cake ==================
+  let count = 3;
+  const display = document.getElementById('display');
+  const intro = document.getElementById('intro');
+  const colors = ["#ff0000","#ff7f50","#ffa500","#00bfff","#00ff88"];
 
-  <!-- YouTube IFrame API -->
-  <script>
-    // Load IFrame API
+  const countdownTimer = setInterval(()=>{
+    count--;
+    if(count > 0){
+      display.textContent = count;
+      display.style.animation = "none";
+      setTimeout(()=> display.style.animation = "pop 1s ease",10);
+      intro.style.background = colors[Math.floor(Math.random()*colors.length)];
+    } else {
+      clearInterval(countdownTimer);
+      display.textContent = "Go!";
+      display.className = "message";
+      intro.style.background = "linear-gradient(135deg,#00ff66,#0099ff)";
+      setTimeout(()=>{
+        intro.style.display = "none";
+        document.getElementById('cakeSection').style.display = 'block';
+        ensurePlayerReadyThenPlay(); // start music after intro
+      }, 800);
+    }
+  },1000);
+
+  // ================== 2) YouTube IFrame API setup ==================
+  let player, playerReady = false, pendingPlay = false;
+
+  // Load API
+  (function loadYT(){
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
+  })();
 
-    let ytPlayer;
-    function onYouTubeIframeAPIReady() {
-      ytPlayer = new YT.Player('player', {
-        videoId: 'kcGojPJzh1k', // target YouTube ID
-        playerVars: {
-          autoplay: 1, // attempt autoplay
-          controls: 1,
-          rel: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          mute: 1, // start muted to satisfy autoplay policy
-          enablejsapi: 1
-        },
-        events: {
-          onReady: e => {
-            e.target.playVideo(); // play muted
-          }
+  // Global API hook
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '270',
+      width: '480',
+      videoId: 'kcGojPJzh1k', // from your link
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        rel: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        mute: 1,       // start muted so autoplay is allowed
+        loop: 1,
+        playlist: 'kcGojPJzh1k'
+      },
+      events: {
+        onReady: function() {
+          playerReady = true;
+          if (pendingPlay) { safePlay(); }
         }
-      });
+      }
+    });
+  }
+
+  function safePlay(){
+    try { player.playVideo(); } catch(e){}
+  }
+
+  function ensurePlayerReadyThenPlay(){
+    if (playerReady) {
+      safePlay();
+    } else {
+      pendingPlay = true;
     }
+  }
 
-    // Simple controls
-    document.getElementById('ytPlay').addEventListener('click', () => ytPlayer && ytPlayer.playVideo());
-    document.getElementById('ytPause').addEventListener('click', () => ytPlayer && ytPlayer.pauseVideo());
-    document.getElementById('ytToggleMute').addEventListener('click', (ev) => {
-      if (!ytPlayer) return;
-      if (ytPlayer.isMuted()) {
-        ytPlayer.unMute();
-        ev.target.textContent = 'Mute';
-      } else {
-        ytPlayer.mute();
-        ev.target.textContent = 'Unmute';
-      }
-    });
-
-    // Many browsers only allow audible playback after a user gesture.
-    // First click anywhere: unmute and continue.
-    window.addEventListener('click', () => {
-      if (ytPlayer && ytPlayer.isMuted && ytPlayer.isMuted()) {
-        ytPlayer.unMute();
-      }
-    }, { once: true });
-  </script>
-
-  <!-- Cake cutting logic -->
-  <script>
-    const cake = document.getElementById('cake');
-    const confettiBox = document.getElementById('confetti');
-    const cutBtn = document.getElementById('cutCakeBtn');
-    const resetBtn = document.getElementById('resetCakeBtn');
-
-    function burstConfetti(count=60) {
-      confettiBox.innerHTML = '';
-      const colors = ['#ffcc00','#ff6699','#66ddff','#99ff66','#ff8844','#c299ff'];
-      for (let i=0;i<count;i++){
-        const chip = document.createElement('i');
-        chip.style.left = Math.random()*100 + '%';
-        chip.style.setProperty('--r', Math.round(Math.random()*180-90)+'deg');
-        chip.style.setProperty('--c', colors[Math.floor(Math.random()*colors.length)]);
-        confettiBox.appendChild(chip);
-      }
+  // Unmute on first user interaction anywhere
+  let unmutedOnce = false;
+  function tryUnmute() {
+    if (!unmutedOnce && player && typeof player.unMute === 'function') {
+      player.unMute();
+      unmutedOnce = true;
     }
+  }
+  ['click','touchstart','keydown'].forEach(evt=>{
+    window.addEventListener(evt, tryUnmute, { once:true, passive:true });
+  });
 
-    cutBtn.addEventListener('click', ()=>{
-      if (!cake.classList.contains('cut')) {
-        cake.classList.add('cut');
-        burstConfetti(80);
-      }
-    });
+  // ================== 3) Cake interactions ==================
+  const cakeWrap = document.getElementById('cakeWrap');
+  const btnCut = document.getElementById('btnCut');
+  const btnBlow = document.getElementById('btnBlow');
+  const btnReplay = document.getElementById('btnReplay');
+  const flame = document.getElementById('flame');
 
-    resetBtn.addEventListener('click', ()=>{
-      cake.classList.remove('cut');
-      confettiBox.innerHTML = '';
-    });
-  </script>
+  function confettiBurst(){
+    const area = document.getElementById('confetti');
+    const colors = ['#ff4d94','#ffd54d','#4dd0e1','#a5d6a7','#b39ddb','#ff8a65'];
+    for (let i=0;i<80;i++){
+      const piece = document.createElement('i');
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (1.8 + Math.random()*1.8) + 's';
+      piece.style.transform = `rotate(${Math.random()*360}deg)`;
+      area.appendChild(piece);
+      setTimeout(()=> piece.remove(), 3600);
+    }
+  }
 
-  <!-- Original birthday letter typing script (unchanged) -->
-  <script>
-    let datetxt = "2 Nov 1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-    setTimeout(function(){
-        timeDatetxt = setInterval(function(){
-            if(currentIndex < charArrDate.length){
-                date__of__birth.textContent += charArrDate[currentIndex];
-                currentIndex++;
-            }
-            else{
-                let i = document.createElement("i");
-                i.className = "fa-solid fa-star"
-                document.querySelector(".date__of__birth").prepend(i)
-                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                clearInterval(timeDatetxt)
-            }
+  btnCut.addEventListener('click', ()=>{
+    cakeWrap.classList.remove('cutting'); // reset if needed
+    void cakeWrap.offsetWidth;            // reflow to restart animation
+    cakeWrap.classList.add('cutting');
+    confettiBurst();
+    tryUnmute(); // also unmute music on user action
+  });
+
+  btnReplay.addEventListener('click', ()=>{
+    cakeWrap.classList.remove('cutting');
+    void cakeWrap.offsetWidth;
+    cakeWrap.classList.add('cutting');
+    confettiBurst();
+  });
+
+  btnBlow.addEventListener('click', ()=>{
+    if (flame) {
+      flame.style.display = 'none';
+      setTimeout(()=> { flame.style.display = 'block'; }, 2000);
+    }
+  });
+
+  // ================== 4) Your existing letter typing logic ==================
+  let datetxt = "2 Nov 1999";
+  let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
+  let titleLetter = "To you";
+  let charArrDate = datetxt.split('');
+  let charArrDateLetter = datatxtletter.split('');
+  let charArrTitle = titleLetter.split('');
+  let currentIndex = 0;
+  let currentIndexLetter = 0;
+  let currentIndexTitle = 0;
+  let date__of__birth = document.querySelector(".date__of__birth span");
+  let text__letter = document.querySelector(".text__letter p");
+
+  // After some time on main page appears: show main after cake
+  function revealMainPageAfterCake() {
+    // Show main page a moment after slice (or directly if user skips)
+    setTimeout(()=> {
+      document.getElementById('mainPage').style.display = 'block';
+      // start date typing after reveal
+      setTimeout(function(){
+        let timeDatetxt = setInterval(function(){
+          if(currentIndex < charArrDate.length){
+              date__of__birth.textContent += charArrDate[currentIndex];
+              currentIndex++;
+          } else{
+              let i = document.createElement("i");
+              i.className = "fa-solid fa-star";
+              document.querySelector(".date__of__birth").prepend(i)
+              document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
+              clearInterval(timeDatetxt)
+          }
         },100)
-    },12000)
+      },1200);
+    }, 900); // slightly after cut ends
+  }
 
-    var intervalContent;
-    var intervalTitle;
-    document.getElementById("btn__letter").addEventListener("click", function(){
-        document.querySelector(".box__letter").style.display = "block";
-        setTimeout(function(){
-            document.querySelector(".letter__border").style.display = "block";
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                }
-                else{
-                    clearInterval(intervalTitle)
-                }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
-    });
+  // Auto-reveal main page upon first cut, else provide a fallback after 10s
+  let mainShown = false;
+  btnCut.addEventListener('click', ()=>{
+    if (!mainShown) {
+      revealMainPageAfterCake();
+      mainShown = true;
+    }
+  });
+  setTimeout(()=>{
+    if (!mainShown) {
+      document.getElementById('mainPage').style.display = 'block';
+      mainShown = true;
+    }
+  }, 10000);
 
-    document.querySelector(".close").addEventListener("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.remove("animation")
-            })
-        document.querySelector(".box__letter").style.display = "none";
-        document.querySelector(".letter__border").style.display = "none";
-    });
-  </script>
+  var intervalContent;
+  var intervalTitle;
+  $("#btn__letter").on("click", function(){
+      $(".box__letter").slideDown()
+      setTimeout(function(){ $(".letter__border").slideDown(); },1000)
+      setTimeout(function(){
+          intervalTitle = setInterval(function(){
+              if(currentIndexTitle < charArrTitle.length){
+                  document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                  let i = document.createElement("i");
+                  i.className = "fa-solid fa-heart"
+                  document.querySelector(".title__letter").appendChild(i)
+                  currentIndexTitle++;
+              }
+              else{ clearInterval(intervalTitle) }
+          },100)
+      },2000)
+      setTimeout(function(){
+          document.querySelector("#heart__letter").classList.add("animationOp");
+          document.querySelector(".love__img").classList.add("animationOp");
+          document.querySelector("#mewmew").classList.add("animationOp");
+      },2800)
+      setTimeout(function(){
+          document.querySelectorAll(".heart").forEach((item)=>{ item.classList.add("animation") })
+      },3500)
+      setTimeout(function(){
+          intervalContent = setInterval(function(){
+              if(currentIndexLetter < charArrDateLetter.length){
+                  text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                  currentIndexLetter++;
+              } else { clearInterval(intervalContent) }
+          },50)
+      },6000)
+  })
+  $(".close").on("click", function(){
+      clearInterval(intervalContent)
+      document.querySelector(".title__letter").textContent = "";
+      text__letter.textContent = "";
+      currentIndexLetter = 0
+      currentIndexTitle = 0
+      document.querySelector("#heart__letter").classList.remove("animationOp");
+      document.querySelector(".love__img").classList.remove("animationOp");
+      document.querySelector("#mewmew").classList.remove("animationOp");
+      document.querySelectorAll(".heart").forEach((item)=>{ item.classList.remove("animation") })
+      $(".box__letter").slideUp();
+      $(".letter__border").slideUp();
+  })
+</script>
 </body>
 </html>
