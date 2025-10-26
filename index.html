@@ -6,130 +6,271 @@
     <meta name="title" content="Happy Birthday | darkshadeoflove">
     <title>Happy Birthday | darkshadeoflove</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-    /* Timer modal overlay */
-    #timerModal {
-        position: fixed; top: 0; left: 0;
-        width: 100vw; height: 100vh;
-        background: rgba(30, 30, 30, 0.93);
-        z-index: 9999;
-        display: flex; flex-direction: column;
-        justify-content: center; align-items: center;
-        color: #fff; font-size: 2.5rem;
-        letter-spacing: 2px; font-weight: 500;
-        transition: opacity 1s;
-    }
-    #timerModal.fadeout { opacity: 0; pointer-events: none; }
-    .timer-count { font-size: 3.5rem; margin-top: 25px; font-family: 'Courier New', Courier, monospace;}
-    /* Cake animation styles */
-    #cakeSection {
-        display: none;
-        width: 100%; text-align: center;
-        margin-top: 20px;
-    }
-    #cakeImg {
-        width: 220px; transition: filter 0.6s, transform 0.7s;
-    }
-    #cakeCutMsg {
-        font-size: 1.7rem; color: #fe4365;
-        font-weight: bold; margin-top:23px; display:none; letter-spacing:2px;
-        text-shadow: 0 1px 10px #fff;
-    }
-    .cake-cut {
-        filter: brightness(0.9) drop-shadow(0 0 8px #f7d1ff);
-        transform: scale(1.12) rotate(-4deg);
-    }
-    #cutCakeBtn {
-        background: #ff99cc; color: #fff; border: none;
-        padding: 13px 28px; font-size: 1.35rem; border-radius: 40px;
-        margin-top: 22px; cursor: pointer; box-shadow:0 2px 8px #ddd;
-        transition: background 0.3s, transform 0.3s;
-    }
-    #cutCakeBtn:hover { background: #fe4365; transform: scale(1.09); }
-    /* Hide YouTube player visually */
-    #ytPlayer { width:0; height:0; opacity:0; pointer-events:none; }
+        /* Add simple inline styles for demo (edit in your style.css) */
+        #surpriseAnimation {
+            width:100vw;height:100vh;position:fixed;top:0;left:0;background:#222;display:flex;align-items:center;justify-content:center;z-index:9999;
+            flex-direction:column;color:#fff;animation:fadein 0.5s ease;
+        }
+        .surprise-text {
+            font-size:2.5em;font-weight:bold;animation:bounce 1.5s infinite;
+            letter-spacing:2px; 
+        }
+        @keyframes bounce {
+            0%{transform:scale(1);}
+            50%{transform:scale(1.13);}
+            100%{transform:scale(1);}
+        }
+        @keyframes fadeout {from{opacity:1;}to{opacity:0;}}
+        @keyframes fadein {from{opacity:0;}to{opacity:1;}}
+        #cake-section {display:none;text-align:center;padding:60px 0;}
+        .cake-img {width:220px;height:auto;margin:0 auto;display:block;}
+        #cutCakeBtn {background:#e67e22;border:none;color:#fff;padding:12px 28px;margin-top:20px;font-size:1.25em;border-radius:15px;cursor:pointer;box-shadow:0 2px 12px #fc0d0d55;}
+        #cakeCutResult {font-size:1.4em;color:#d35400;margin-top:28px;}
+        #youtube-audio {display:none;}
+        /* Simple floating music note while playing */
+        .music-note {
+            position:fixed;bottom:22px;right:28px;z-index:2000;font-size:2.7em;color:#ff99cc;animation:note-float 2.5s infinite;
+        }
+        @keyframes note-float {
+            50%{transform:translateY(-22px) scale(1.19);}
+            100%{transform:translateY(0) scale(1);}
+        }
     </style>
 </head>
 <body>
-    <!-- Surprise Timer -->
-    <div id="timerModal">
-        <span>A surprise is coming</span>
-        <div class="timer-count" id="timerCount"></div>
+    <!-- Surprise Animation -->
+    <div id="surpriseAnimation">
+        <span class="surprise-text">A surprise is coming...</span>
+        <span id="surprise-timer" style="margin-top:18px;font-size:1.35em;">3</span>
     </div>
 
-    <!-- Cake Section -->
-    <div id="cakeSection">
-        <img src="https://cdn.pixabay.com/photo/2016/03/31/19/25/birthday-cake-1293812_1280.png" alt="Cake" id="cakeImg">
-        <br>
+    <!-- Add YouTube black screen status (autoplay, hidden, muted for compliance) -->
+    <div id="youtube-audio"></div>
+    <span class="music-note"><i class="fa-solid fa-music"></i></span>
+
+    <!-- Cake Cutting Section -->
+    <div id="cake-section">
+        <img src="https://i.imgur.com/fu8g6Eb.png" alt="Lovely Cake" class="cake-img" id="cakeImg">
         <button id="cutCakeBtn">Cut the Cake 🎂</button>
-        <div id="cakeCutMsg">Cake cut! Happy celebration! 🎉🥳</div>
+        <div id="cakeCutResult"></div>
     </div>
 
-    <!-- YouTube Player (hidden, autoplay after timer) -->
-    <iframe id="ytPlayer" src="" frameborder="0" allow="autoplay"></iframe>
+    <!-- Rest of your previously uploaded coding/content (just drop it here) -->
+    <div id="main-content" style="display:none;">
+        <!-- Your uploaded content/coding will appear here after cake cutting -->
+        <!-- START HERE: Paste your remaining code/content from upload -->
+        <!-- Example: <div>[...your uploaded HTML here...]</div> -->
+    </div>
 
+    <!-- Your original birthday template code goes below as needed -->
+
+    <script>
+        // Surprise animation countdown
+        let surpriseSec = 3;
+        let surpriseTimer = document.getElementById('surprise-timer');
+        let surpriseAnim = document.getElementById('surpriseAnimation');
+        let musicStarted = false;
+
+        function startSongAndNext() {
+            // Embed YouTube song black screen status, autoplay background
+            // Uses YouTube Embedded API (autoplay, audio only effect)
+            $('#youtube-audio').html(
+                `<iframe width="0" height="0" 
+                  src="https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&loop=1&controls=0&playlist=kcGojPJzh1k"
+                  frameborder="0" allow="autoplay" allowfullscreen></iframe>`
+            );
+            $('.music-note').show();
+            setTimeout(function() {
+                $('#cake-section').fadeIn();
+            }, 500); // Show cake after song starts
+        }
+
+        // Surprise animation logic
+        let intervalSurprise = setInterval(() => {
+            surpriseSec--;
+            surpriseTimer.textContent = surpriseSec;
+            if(surpriseSec<=0){
+                clearInterval(intervalSurprise);
+                surpriseAnim.style.animation = "fadeout 0.6s ease forwards";
+                setTimeout(()=>{
+                    surpriseAnim.style.display="none";
+                    startSongAndNext();
+                },500);
+            }
+        },1000);
+
+        // Cake cutting animation logic
+        $('#cutCakeBtn').on('click', function(){
+            $('#cakeImg').attr('src','https://i.imgur.com/Zv7ZJPJ.gif'); // Cake cutting animation, replace URL if you have other .gif or .png
+            $('#cakeCutResult').html('The cake is cut! 🎉 A sweet moment for you.');
+            setTimeout(function(){
+                $('#main-content').fadeIn(); // Show the rest content after the cake is cut
+            },1200);
+            $(this).fadeOut();
+        });
+
+        // Hide music note if not playing (just for demo, optional)
+        $(document).ready(function(){
+            $('.music-note').hide();
+        });
+
+    </script>
+    <!-- Place your original code below, or use #main-content above -->
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="Happy Birthday | darkshadeoflove">
+    <title>Happy Birthday | darkshadeoflove</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
+</head>
+<body>
     <div id="wrapper">
-        <!-- (Original code from your file...) -->
-        <!-- All your existing content goes here unchanged -->
-        <!-- ... -->
-        <!-- Your content, flags, birthday, message, letter, etc. remain the same ... -->
         <div class="flag__birthday">
             <img src="./images/1.png" alt="" width="350" class="flag__left">
             <img src="./images/1.png" alt="" width="350" class="flag__right">
         </div>
-        <!-- ...the rest of your page... -->
-        <!-- Existing content omitted for brevity (identical to your uploaded code) -->
-        <!-- ... -->
+        <div class="content">
+            <div class="left">
+                <div class="title">
+                    <h1 class="happy">
+                        <span style="--t: 4s;">H</span>
+                        <span style="--t: 4.2s;">a</span>
+                        <span style="--t: 4.4s;">p</span>
+                        <span style="--t: 4.6s;">p</span>
+                        <span style="--t: 4.8s;">y</span>
+                    </h1>
+                    <h1 class="birthday">
+                        <span style="--t: 5s;">B</span>
+                        <span style="--t: 5.2s;">i</span>
+                        <span style="--t: 5.4s;">r</span>
+                        <span style="--t: 5.6s;">t</span>
+                        <span style="--t: 5.8s;">h</span>
+                        <span style="--t: 6s;">d</span>
+                        <span style="--t: 6.2s;">a</span>
+                        <span style="--t: 6.4s;">y</span>
+                    </h1>
+                    <div class="hat">
+                        <img src="./images/hat.png" alt="" width="130">
+                    </div>
+                </div>
+                <div class="date__of__birth">
+                    <span></span>
+                </div>
+                <div class="btn">
+                    <button id="btn__letter">
+                        Click here Supriya ❤️
+                        <i class="fa-regular fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="right">
+                <div class="box__account">
+                    <div class="image">
+                        <img src="./images/r5.png" alt="">
+                    </div>
+                    <div class="name">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Supriya ❤️</span>
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="balloon_one">
+                        <img width="100px" src="./images/balloon1.png" alt="">
+                    </div>
+                    <div class="balloon_two">
+                        <img width="100px" src="./images/balloon2.png" alt="">
+                    </div>
+                </div>
+                <div class="cricle">
+                    <div class="text__cricle">
+                        <span style="--i: 1;">h</span>
+                        <span style="--i: 2;">a</span>
+                        <span style="--i: 3;">p</span>
+                        <span style="--i: 4;">p</span>
+                        <span style="--i: 5;">y</span>
+                        <span style="--i: 6;">-</span>
+                        <span style="--i: 7;">b</span>
+                        <span style="--i: 8;">i</span>
+                        <span style="--i: 9;">r</span>
+                        <span style="--i: 10;">t</span>
+                        <span style="--i: 11;">h</span>
+                        <span style="--i: 12;">d</span>
+                        <span style="--i: 13;">a</span>
+                        <span style="--i: 14;">y</span>
+                        <span style="--i: 15;">-</span>
+                    </div>
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="decorate_star star1" style="--t: 15s;"></div>
+        <div class="decorate_star star2" style="--t: 15.2s;"></div>
+        <div class="decorate_star star3" style="--t: 15.4s;"></div>
+        <div class="decorate_star star4" style="--t: 15.6s;"></div>
+        <div class="decorate_star star5" style="--t: 15.8s;"></div>
+        <div class="decorate_flower--one" style="--t: 15s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--two" style="--t: 15.3s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--three" style="--t: 15.6s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_bottom">
+            <img src="./images/decorate.png" alt="" width="100">
+        </div>
+        <div class="smiley__icon">
+            <img src="./images/smiley_icon.png" alt="" width="100">
+        </div>
+
+        
+
+        <div class="box__letter">
+            <div class="letter__border">
+                <div class="letter">
+                    <div class="title__letter">
+                    </div>
+                    <div class="content__letter">
+                        <div class="left">
+                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
+                        </div>
+                        <div class="right">
+                            <div class="love__img">
+                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+                            </div>
+                            <div class="text__letter">
+                                 <p></p>
+                            </div>
+                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="copy">
-        <p class="text-center text-white text-sm">darkshadeoflove<a
-            href="https://www.instagram.com/@darkshadeoflove"></a></p>
-    </div>
+		<p class="text-center text-white text-sm">darkshadeoflove<a
+			href="https://www.instagram.com/@darkshadeoflove"></a></p>
+	  </div>
+</body>
 <script>
-    // --- SURPRISE TIMER ---
-    let surpriseTime = 10;
-    let timer = surpriseTime;
-    let timerModal = document.getElementById('timerModal');
-    let timerCount = document.getElementById('timerCount');
-    timerCount.textContent = timer;
-    let ytPlayer = document.getElementById('ytPlayer');
-    function startSurpriseCountdown() {
-        let interval = setInterval(function() {
-            timer--;
-            timerCount.textContent = timer;
-            if (timer <= 0) {
-                clearInterval(interval);
-                // Fade out modal
-                timerModal.classList.add('fadeout');
-                setTimeout(function(){
-                    timerModal.style.display="none";
-                    // Start auto-play YouTube!
-                    ytPlayer.src = "https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&mute=0";
-                    // Show cake animation section
-                    document.getElementById('cakeSection').style.display = 'block';
-                },1000);
-            }
-        },1000);
-    }
-    startSurpriseCountdown();
-
-    // --- CAKE CUTTING ---
-    let cakeCutBtn = document.getElementById('cutCakeBtn');
-    let cakeImg = document.getElementById('cakeImg');
-    let cakeCutMsg = document.getElementById('cakeCutMsg');
-    cakeCutBtn.addEventListener('click', function() {
-        cakeImg.classList.add('cake-cut');
-        setTimeout(function(){
-            cakeCutMsg.style.display = 'block';
-        },650);
-        cakeCutBtn.disabled=true;
-        cakeCutBtn.innerText="Cake Cut!";
-    });
-
-    // ----- Remain all your original logic -----
     let datetxt = "2 Nov 1999";
     let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
     let titleLetter = "To you";
@@ -216,5 +357,4 @@
         $(".letter__border").slideUp();
     })
 </script>
-</body>
 </html>
