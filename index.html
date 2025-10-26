@@ -1,225 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Special Day Countdown</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-  :root{
-    --bg1:#ffe3ef;
-    --bg2:#e9dcff;
-    --card:#fff6fb;
-    --chip:#ffffff;
-    --text:#c2188f;
-    --muted:#a358b0;
-    --shadow:0 12px 30px rgba(180,83,149,.25);
-    --radius:18px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    color:var(--text);
-    background: linear-gradient(180deg,var(--bg1),var(--bg2));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-  }
-
-  /* confetti/hearts dots */
-  .dots{
-    position:fixed; inset:0; pointer-events:none;
-    background:
-      radial-gradient(circle at 10% 20%, #ffc7de 3px, transparent 4px),
-      radial-gradient(circle at 85% 30%, #ffe28c 4px, transparent 5px),
-      radial-gradient(circle at 30% 75%, #d7b0ff 5px, transparent 6px),
-      radial-gradient(circle at 60% 60%, #f7a4d1 3px, transparent 4px),
-      radial-gradient(circle at 80% 80%, #cbb5ff 4px, transparent 5px),
-      radial-gradient(circle at 15% 60%, #ffd2ea 4px, transparent 5px);
-    opacity:.7;
-  }
-
-  .card{
-    width:min(720px,92vw);
-    background:var(--card);
-    border-radius:24px;
-    box-shadow:var(--shadow);
-    padding:34px 28px 28px;
-    text-align:center;
-    border:1px solid rgba(194,24,143,.12);
-  }
-
-  .title{
-    font-weight:700;
-    font-size:clamp(20px,3.2vw,30px);
-    letter-spacing:.2px;
-  }
-  .title .heart{filter:drop-shadow(0 2px 0 rgba(194,24,143,.12))}
-  .grid{
-    margin:22px auto 8px;
-    display:grid;
-    grid-template-columns: repeat(4, minmax(120px,1fr));
-    gap:14px;
-    max-width:560px;
-  }
-  .unit{
-    background:var(--chip);
-    border-radius:16px;
-    padding:16px 10px 12px;
-    box-shadow:var(--shadow);
-    border:1px solid rgba(194,24,143,.10);
-  }
-  .num{
-    font-size:clamp(26px,4.8vw,34px);
-    font-weight:700;
-    line-height:1;
-  }
-  .label{
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    letter-spacing:.3px;
-    text-transform:uppercase;
-    font-weight:600;
-  }
-  .label i{font-style:normal; font-size:14px}
-  .message{
-    margin:18px auto 0;
-    max-width:460px;
-    background:#ffe9f5;
-    border:1px solid rgba(194,24,143,.16);
-    color:#8f2a7b;
-    border-radius:16px;
-    padding:14px 16px;
-    box-shadow:var(--shadow);
-    font-size:14px;
-  }
-  .dots-pager{
-    margin-top:10px;
-    display:flex;
-    gap:6px;
-    justify-content:center;
-  }
-  .dot{
-    width:8px; height:8px; border-radius:999px;
-    background:#f7a4d1; opacity:.6;
-  }
-  .dot.active{opacity:1; background:#c2188f}
-
-  /* small floating hearts */
-  .floating{
-    position:fixed; inset:0; pointer-events:none; overflow:hidden;
-  }
-  .floating span{
-    position:absolute;
-    font-size:14px;
-    animation:float 8s linear infinite;
-    opacity:.5;
-  }
-  @keyframes float{
-    0%{transform:translateY(110vh) rotate(0deg)}
-    100%{transform:translateY(-20vh) rotate(360deg)}
-  }
-
-  @media (max-width:480px){
-    .grid{grid-template-columns:repeat(2,1fr)}
-  }
-</style>
-</head>
-<body>
-  <div class="dots" aria-hidden="true"></div>
-
-  <div class="card" role="region" aria-label="Countdown">
-    <div class="title">Your Special Day is Almost Here <span class="heart">💕</span></div>
-
-    <div class="grid" aria-live="polite">
-      <div class="unit"><div class="num" id="days">0</div><div class="label"><i>♡</i> Days</div></div>
-      <div class="unit"><div class="num" id="hours">0</div><div class="label"><i>🎁</i> Hours</div></div>
-      <div class="unit"><div class="num" id="minutes">0</div><div class="label"><i>⏰</i> Minutes</div></div>
-      <div class="unit"><div class="num" id="seconds">0</div><div class="label"><i>⭐</i> Seconds</div></div>
-    </div>
-
-    <div class="message" id="message">
-      Just a little more… A small gift for my favorite person 💗
-      <div class="dots-pager" aria-hidden="true">
-        <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="floating" aria-hidden="true" id="floaters"></div>
-
 <script>
-  // 1) Set your target date/time here
-  // Example: Dec 25, 2025 00:00:00 local time
-  const targetDate = new Date("2025-12-25T00:00:00");
+  // Fixed 5‑second countdown (no target date)
+  const START_SECONDS = 5;
 
-  // 2) Messages to rotate
+  // message rotation (optional – keep from previous file)
   const messages = [
     "Just a little more… A small gift for my favorite person 💗",
     "Counting every second to celebrate with you 🎉",
     "Thank you for being you. Can’t wait! 🌸"
   ];
-
-  // 3) Simple paginator logic
   let msgIndex = 0;
   const msgBox = document.getElementById("message");
-  const pagerDots = msgBox.querySelectorAll(".dot");
+  const pagerDots = msgBox.querySelectorAll?.(".dot") ?? [];
   setInterval(() => {
     msgIndex = (msgIndex + 1) % messages.length;
     msgBox.firstChild.nodeValue = messages[msgIndex] + " ";
     pagerDots.forEach((d,i)=> d.classList.toggle("active", i===msgIndex));
   }, 3500);
 
-  // 4) Countdown updater
+  // Grab number elements
   const ids = ["days","hours","minutes","seconds"];
-  function updateCountdown(){
-    const now = new Date();
-    let diff = targetDate - now;
+  const $ = id => document.getElementById(id);
 
-    if(diff <= 0){
-      ids.forEach(id => document.getElementById(id).textContent = "0");
+  // Always show 0 for days/hours/minutes; count only seconds
+  $("days").textContent = 0;
+  $("hours").textContent = 0;
+  $("minutes").textContent = 0;
+
+  let remaining = START_SECONDS;
+  $("seconds").textContent = remaining;
+
+  const tick = setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      $("seconds").textContent = 0;
       msgBox.firstChild.nodeValue = "It’s time! Your surprise is ready 🎉";
+      clearInterval(tick);
       return;
     }
-    const sec = Math.floor(diff/1000) % 60;
-    const min = Math.floor(diff/60000) % 60;
-    const hr  = Math.floor(diff/3600000) % 24;
-    const day = Math.floor(diff/86400000);
+    $("seconds").textContent = remaining;
+  }, 1000);
 
-    document.getElementById("days").textContent = day;
-    document.getElementById("hours").textContent = hr;
-    document.getElementById("minutes").textContent = min;
-    document.getElementById("seconds").textContent = sec;
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  // 5) Floating hearts
-  const floater = document.getElementById("floaters");
-  const HEARTS = ["💗","💜","💖","💞","💘"];
-  function spawnHeart(){
-    const s = document.createElement("span");
-    s.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)];
-    s.style.left = Math.random()*100 + "vw";
-    s.style.animationDuration = (6 + Math.random()*6) + "s";
-    s.style.fontSize = (10 + Math.random()*18) + "px";
-    s.style.opacity = 0.35 + Math.random()*0.4;
-    floater.appendChild(s);
-    setTimeout(()=> s.remove(), 12000);
-  }
-  setInterval(spawnHeart, 600);
-  for(let i=0;i<15;i++) spawnHeart();
+  // Optional floating hearts from earlier code can remain unchanged
 </script>
-</body>
-</html>
