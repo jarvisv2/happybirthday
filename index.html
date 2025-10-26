@@ -16,7 +16,6 @@
           crossorigin="anonymous"></script>
 
   <style>
-    /* Base look and countdown card */
     :root {
       --bg: #0b1220;
       --panel: rgba(255,255,255,0.06);
@@ -76,7 +75,6 @@
     .footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; color: var(--muted); font-size: 13px; flex-wrap: wrap; }
     .celebrate { margin-top: 18px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #100b1a; font-weight: 800; border: none; border-radius: 12px; padding: 12px 16px; cursor: pointer; }
 
-    /* Celebration modal */
     .backdrop {
       position: fixed; inset: 0; background: rgba(0,0,0,0.78);
       display: none; align-items: center; justify-content: center; padding: 20px; z-index: 60;
@@ -85,28 +83,15 @@
       width: min(1000px, 96vw);
       background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 12px 40px var(--shadow);
+      border-radius: 16px; padding: 16px; box-shadow: 0 12px 40px var(--shadow);
     }
-    .stage-grid {
-      display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;
-    }
+    .stage-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
     @media (max-width: 860px) { .stage-grid { grid-template-columns: 1fr; } }
-    .panel {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      padding: 10px;
-    }
+    .panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 10px; }
     .player { aspect-ratio: 16 / 9; background: #000; width: 100%; border-radius: 10px; overflow: hidden; }
     .player-controls { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-    .btn {
-      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
-      background: rgba(255,255,255,0.06); color: var(--fg); cursor: pointer;
-    }
+    .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: var(--fg); cursor: pointer; }
 
-    /* Cake */
     .cake-wrap { display: grid; place-items: center; padding: 10px; }
     .plate { width: 340px; height: 24px; background: var(--plate); border-radius: 999px; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)); }
     .cake { position: relative; width: 300px; height: 160px; margin-top: -12px; display: grid; place-items: center; }
@@ -118,10 +103,7 @@
       position: absolute; bottom: 120px; width: 300px; height: 40px; background: var(--cake-top);
       border-radius: 18px 18px 12px 12px; box-shadow: 0 4px 10px var(--shadow); transition: transform .6s ease;
     }
-    .drip {
-      position: absolute; top: -6px; width: 16px; height: 26px; background: var(--cake-cream);
-      border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
+    .drip { position: absolute; top: -6px; width: 16px; height: 26px; background: var(--cake-cream); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
     .drip.d1 { left: 48px; height: 22px; }
     .drip.d2 { left: 96px; height: 28px; }
     .drip.d3 { left: 160px; height: 24px; }
@@ -134,10 +116,7 @@
 
     .flame { position: absolute; bottom: 58px; left: 50%; transform: translateX(-50%); width: 10px; height: 22px;
       filter: drop-shadow(0 0 8px #ffb347) drop-shadow(0 0 16px #ff944d); }
-    .flame:before, .flame:after {
-      content: ""; position: absolute; left: 50%; transform: translateX(-50%); border-radius: 50%;
-      animation: flicker 1.2s infinite ease-in-out;
-    }
+    .flame:before, .flame:after { content: ""; position: absolute; left: 50%; transform: translateX(-50%); border-radius: 50%; animation: flicker 1.2s infinite ease-in-out; }
     .flame:before { width: 10px; height: 22px; background: radial-gradient(50% 60% at 50% 60%, var(--flame-core) 0%, var(--flame-mid) 55%, transparent 70%); opacity: 0.95; }
     .flame:after  { width: 18px; height: 28px; top: -3px; background: radial-gradient(45% 60% at 50% 60%, rgba(255,255,255,0.65) 0%, var(--flame-outer) 55%, transparent 70%); filter: blur(0.6px); opacity: 0.8; }
     @keyframes flicker {
@@ -173,12 +152,12 @@
 
     .action-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 
-    /* The "darkshadeoflove" scene wrapper starts hidden until after cake cut */
+    /* Hide the final page until after cake cut */
     #wrapper { display: none; }
   </style>
 </head>
 <body>
-  <!-- COUNTDOWN CARD -->
+  <!-- COUNTDOWN (duration: 3 seconds) -->
   <main class="wrap" id="countdownView">
     <section class="card" aria-live="polite">
       <h1 class="title">
@@ -188,23 +167,23 @@
           <path d="M6 12h12a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3z" />
           <path d="M6 12v-1a6 6 0 0 1 12 0v1" />
         </svg>
-        Countdown to Birthday
+        Countdown
       </h1>
-      <p class="subtitle">At zero: song + cake scene → then your special page appears after cutting. Click Unmute to hear music. 🎂</p>
+      <p class="subtitle">Starting at 0 days 0 hours 0 minutes 3 seconds and ending with music and a celebration scene. Click Unmute to hear music. 🎂</p>
 
       <div class="count-grid" role="group" aria-label="Countdown time units">
         <div class="unit"><div id="days" class="val">00</div><div class="label">Days</div></div>
         <div class="unit"><div id="hours" class="val">00</div><div class="label">Hours</div></div>
         <div class="unit"><div id="minutes" class="val">00</div><div class="label">Minutes</div></div>
-        <div class="unit"><div id="seconds" class="val">00</div><div class="label">Seconds</div></div>
+        <div class="unit"><div id="seconds" class="val">03</div><div class="label">Seconds</div></div>
       </div>
 
-      <div class="progress" aria-label="Progress toward birthday">
+      <div class="progress" aria-label="Progress toward end">
         <div id="bar" class="bar"></div>
       </div>
 
       <div class="footer">
-        <span>Target: <strong id="targetLabel"></strong></span>
+        <span>Target: <strong id="targetLabel">0d 0h 0m 3s</strong></span>
         <span id="status">Counting down…</span>
       </div>
 
@@ -258,8 +237,10 @@
     </div>
   </div>
 
-  <!-- YOUR "darkshadeoflove" PAGE (initially hidden, shown after cake cutting) -->
+   <!-- FINAL PAGE -->
   <div id="wrapper">
+    <!-- Your entire darkshadeoflove markup unchanged (same as in previous message) -->
+    <!-- ... START copied block ... -->
     <div class="flag__birthday">
       <img src="./images/1.png" alt="" width="350" class="flag__left">
       <img src="./images/1.png" alt="" width="350" class="flag__right">
@@ -389,16 +370,12 @@
     <div id="copy">
       <p class="text-center text-white text-sm">Supriya<a href="https://www.instagram.com/@darkshadeoflove"></a></p>
     </div>
+    <!-- ... END copied block ... -->
   </div>
 
   <script>
-    // ============== Config ==============
-    // Set your target date (YYYY, MM-1, DD, hh, mm)
-    const TARGET = new Date(2025, 100, 27, 02, 20, 0); // Oct 27, 2026 02:20
-    const START  = new Date(TARGET.getFullYear() - 1, TARGET.getMonth(), TARGET.getDate(), 0, 0, 0);
-    const YT_VIDEO_ID = "kcGojPJzh1k"; // requested song
-
-    // ============ Countdown =============
+    // ===== Duration countdown: 3 seconds (00d 00h 00m 03s → 00) =====
+    let totalSeconds = 3; // change if needed
     const el = {
       days: document.getElementById('days'),
       hours: document.getElementById('hours'),
@@ -406,7 +383,6 @@
       seconds: document.getElementById('seconds'),
       bar: document.getElementById('bar'),
       status: document.getElementById('status'),
-      label: document.getElementById('targetLabel'),
       celebrate: document.getElementById('celebrateBtn'),
       modal: document.getElementById('celebrateModal'),
       flame: document.getElementById('flame'),
@@ -418,59 +394,37 @@
     };
 
     function pad(n){ return n.toString().padStart(2, '0'); }
-    function updateLabel() {
-      const opts = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      el.label.textContent = TARGET.toLocaleString(undefined, opts);
-    }
-    function updateProgress(now) {
-      const total = TARGET - START;
-      const elapsed = Math.min(Math.max(now - START, 0), total);
-      const pct = total > 0 ? (elapsed / total) * 100 : 100;
+    function renderTime(sec){
+      el.days.textContent = '00';
+      el.hours.textContent = '00';
+      el.minutes.textContent = '00';
+      el.seconds.textContent = pad(sec);
+      const pct = ((3 - sec) / 3) * 100;
       el.bar.style.width = pct.toFixed(2) + '%';
     }
 
-    let ticking = true;
-    function tick() {
-      if (!ticking) return;
-      const now = Date.now();
-      const diff = TARGET.getTime() - now;
-      updateProgress(now);
+    renderTime(totalSeconds);
+    el.status.textContent = 'Counting down…';
 
-      if (diff <= 0) {
-        el.days.textContent = '00';
-        el.hours.textContent = '00';
-        el.minutes.textContent = '00';
-        el.seconds.textContent = '00';
+    const interval = setInterval(() => {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        renderTime(0);
         el.status.textContent = 'Happy Birthday! 🎉';
         el.celebrate.disabled = false;
-        ticking = false;
+        clearInterval(interval);
         openCelebration();
-        return;
+      } else {
+        renderTime(totalSeconds);
       }
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((diff % (1000 * 60)) / 1000);
+    }, 1000);
 
-      el.days.textContent = pad(d);
-      el.hours.textContent = pad(h);
-      el.minutes.textContent = pad(m);
-      el.seconds.textContent = pad(s);
-
-      setTimeout(tick, 1000);
-    }
-
-    // ========== Celebration Scene ==========
-    // Load YouTube IFrame API (autoplay muted → user can unmute)
+    // ===== Celebration: YouTube IFrame API (autoplay muted) =====
+    const YT_VIDEO_ID = "kcGojPJzh1k";
     let ytReady = false, ytPlayer = null;
-    (function loadYT() {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(tag);
-    })();
-    window.onYouTubeIframeAPIReady = function() { ytReady = true; }; // API readiness
-
-    function ensurePlayer() {
+    (function loadYT(){ const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s); })();
+    window.onYouTubeIframeAPIReady = function(){ ytReady = true; };
+    function ensurePlayer(){
       if (ytPlayer) return ytPlayer;
       if (!ytReady) return null;
       ytPlayer = new YT.Player('ytPlayer', {
@@ -480,25 +434,22 @@
       });
       return ytPlayer;
     }
-
-    function openCelebration() {
+    function openCelebration(){
       document.getElementById('celebrateModal').style.display = 'flex';
       if (!ensurePlayer()) {
         const t = setInterval(() => { if (ensurePlayer()) clearInterval(t); }, 100);
       }
-      confettiBurst(); setTimeout(confettiBurst, 1000); setTimeout(confettiBurst, 2200);
+      confettiBurst(); setTimeout(confettiBurst, 800); setTimeout(confettiBurst, 1800);
     }
-
-    // Player controls
     document.getElementById('btnUnmute').addEventListener('click', () => { if (ytPlayer) ytPlayer.unMute(); });
     document.getElementById('btnPause').addEventListener('click', () => { if (ytPlayer) ytPlayer.pauseVideo(); });
     document.getElementById('btnReplay').addEventListener('click', () => { if (ytPlayer) { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); } });
 
-    // Candle controls
+    // Candle
     document.getElementById('btnBlow').addEventListener('click', () => { el.flame.classList.add('off'); });
     document.getElementById('btnLight').addEventListener('click', () => { el.flame.classList.remove('off'); });
 
-    // Cut cake → then show your page
+    // Cut cake then reveal final page
     let cutOnce = false;
     document.getElementById('btnCut').addEventListener('click', () => {
       if (cutOnce) return;
@@ -507,13 +458,9 @@
       el.slice.classList.add('show');
       el.crumbs.classList.add('show');
       confettiBurst();
-
-      // After slice animation, hide modal and show your page
       setTimeout(() => {
         document.getElementById('celebrateModal').style.display = 'none';
-        // Keep music playing in background if desired; comment the next two lines to continue music
         if (ytPlayer) ytPlayer.pauseVideo();
-        // Switch to your scene
         el.countdownView.style.display = 'none';
         el.wrapper.style.display = 'block';
       }, 1400);
@@ -527,15 +474,15 @@
       document.body.appendChild(canvas);
       const ctx = canvas.getContext('2d');
       const colors = ['#fce18a', '#ff726d', '#b48def', '#56d7c6', '#f4306d'];
-      const pieces = Array.from({length: 140}, () => ({
-        x: Math.random()*canvas.width, y: -10 - Math.random()*40,
+      const pieces = Array.from({length: 120}, () => ({
+        x: Math.random()*canvas.width, y: -10 - Math.random()*30,
         w: 6 + Math.random()*6, h: 10 + Math.random()*14,
-        color: colors[(Math.random()*colors.length)|0], tilt: Math.random()*10 - 5,
+        color: colors[(Math.random()*colors.length)|0],
         vy: 1 + Math.random()*2.5, vx: Math.random()*0.6 - 0.3,
         rot: Math.random()*360, vr: Math.random()*4 - 2
       }));
       const start = performance.now();
-      function step(t) {
+      function step(t){
         const dt = (t - start);
         ctx.clearRect(0,0,canvas.width,canvas.height);
         pieces.forEach(p => {
@@ -543,27 +490,22 @@
           ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI/180);
           ctx.fillStyle = p.color; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
         });
-        if (dt < 4500) requestAnimationFrame(step); else canvas.remove();
+        if (dt < 4200) requestAnimationFrame(step); else canvas.remove();
       }
       requestAnimationFrame(step);
     }
 
-    // Init countdown
-    updateLabel();
-    tick();
-
-    // ===== Your letter typing logic (unchanged) =====
+    // ===== Letter typing (unchanged) =====
     let datetxt = "2 Nov 1999";
     let datatxtletter = "My love. You are a very special girl. I always silently thank you for coming into my life. Today, I wish you all the best, lots of health, and lots of joy. I always hope we will celebrate many more birthdays like this together. Happy birthday to you.💕";
     let titleLetter = "To you";
     let charArrDate = datetxt.split('');
     let charArrDateLetter = datatxtletter.split('');
     let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
+    let currentIndex = 0, currentIndexLetter = 0, currentIndexTitle = 0;
     let date__of__birth = document.querySelector(".date__of__birth span");
     let text__letter = document.querySelector(".text__letter p");
+
     setTimeout(function(){
       timeDatetxt = setInterval(function(){
         if(currentIndex < charArrDate.length){
@@ -579,8 +521,7 @@
       },100);
     },12000);
 
-    var intervalContent;
-    var intervalTitle;
+    var intervalContent, intervalTitle;
     $("#btn__letter").on("click", function(){
       $(".box__letter").slideDown();
       setTimeout(function(){ $(".letter__border").slideDown(); },1000);
@@ -630,4 +571,3 @@
   </script>
 </body>
 </html>
-
