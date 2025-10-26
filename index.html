@@ -159,6 +159,41 @@
         #birthday-audio {
             display: none;
         }
+
+        /* --- NEW: Improved Date Animation Styles --- */
+        .date__of__birth {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #333;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .date__of__birth span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(25px) scale(0.8);
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .date-star {
+            font-size: 0.8em;
+            color: #ffd700;
+            margin: 0 15px;
+            opacity: 0;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+        /* --- END: New Styles --- */
+
     </style>
 </head>
 <body>
@@ -194,15 +229,15 @@
                 <ellipse cx="100" cy="175" rx="80" ry="20" fill="#ff69b4"/>
                 
                 <!-- Decorations -->
-                <circle cx="70" cy="85" r="4" fill="#fff"/>
+                ircle cx="70" cy="85"5" r="4" fill="#fff"/>
                 <circle cx="100" cy="85" r="4" fill="#fff"/>
                 <circle cx="130" cy="85" r="4" fill="#fff"/>
-                <circle cx="60" cy="120" r="4" fill="#fff"/>
+                ircle cx="60" cycy="120" r="4" fill="#fff"/>
                 <circle cx="90" cy="120" r="4" fill="#fff"/>
                 <circle cx="110" cy="120" r="4" fill="#fff"/>
-                <circle cx="140" cy="120" r="4" fill="#fff"/>
+                irclele cx="140" cy="120" r="4" fill="#fff"/>
                 <circle cx="50" cy="155" r="5" fill="#ffd700"/>
-                <circle cx="80" cy="155" r="5" fill="#ffd700"/>
+                ircle cx="80" cy="155" r="5"5" fill="#ffd700"/>
                 <circle cx="120" cy="155" r="5" fill="#ffd700"/>
                 <circle cx="150" cy="155" r="5" fill="#ffd700"/>
             </svg>
@@ -363,171 +398,4 @@
     
     const timerInterval = setInterval(() => {
         countdown--;
-        if (countdown > 0) {
-            timerDisplay.textContent = countdown;
-        } else {
-            clearInterval(timerInterval);
-            timerOverlay.style.display = 'none';
-            cakeSection.style.display = 'flex';
-            
-            // Try to play audio (note: YouTube links won't work directly in audio tags)
-            // You'll need to download the audio file or use an embed player
-            playBackgroundMusic();
-        }
-    }, 1000);
-
-    // Background music function
-    function playBackgroundMusic() {
-        // Note: Direct YouTube links don't work in audio tags
-        // You need to either:
-        // 1. Download the audio file and host it
-        // 2. Use YouTube iframe API
-        // 3. Use a third-party service to extract audio
-        
-        // Fallback: Create YouTube iframe player
-        const audioContainer = document.createElement('div');
-        audioContainer.innerHTML = `
-            <iframe id="youtube-player" width="0" height="0" 
-                src="https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&loop=1&playlist=kcGojPJzh1k" 
-                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-            </iframe>
-        `;
-        document.body.appendChild(audioContainer);
-    }
-
-    // Cake cutting functionality
-    const cutButton = document.getElementById('cut-button');
-    const cakeImage = document.getElementById('cake-image');
-    const cakeContainer = document.getElementById('cake-container');
-
-    cutButton.addEventListener('click', function() {
-        // Add cut animation
-        cakeImage.classList.add('cut');
-        
-        // Create confetti
-        createConfetti();
-        
-        // Hide button
-        cutButton.style.display = 'none';
-        
-        // Show main content after animation
-        setTimeout(() => {
-            cakeSection.style.display = 'none';
-            wrapper.style.display = 'block';
-
-            // start typing the date when wrapper is visible for smoother UX
-            startDateTyping(80);
-        }, 1500);
-    });
-
-    // Confetti creation
-    function createConfetti() {
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDelay = Math.random() * 0.5 + 's';
-            cakeSection.appendChild(confetti);
-            
-            setTimeout(() => confetti.remove(), 3000);
-        }
-    }
-
-    // Original birthday page script
-    let datetxt = "2 Nov 1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
-    let titleLetter = "For You";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-    
-    // Replace setInterval typing with requestAnimationFrame for smoother rendering
-    function startDateTyping(msPerChar = 100) {
-        let idx = 0;
-        let last = performance.now();
-        function step(now) {
-            if (now - last >= msPerChar) {
-                date__of__birth.textContent += charArrDate[idx++];
-                last = now;
-            }
-            if (idx < charArrDate.length) {
-                requestAnimationFrame(step);
-            } else {
-                const star = document.createElement("i");
-                star.className = "fa-solid fa-star";
-                document.querySelector(".date__of__birth").prepend(star);
-                document.querySelector(".date__of__birth").appendChild(star.cloneNode(true));
-            }
-        }
-        requestAnimationFrame(step);
-    }
-    
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
-        setTimeout(function(){
-            $(".letter__border").slideDown();
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                }
-                else{
-                    clearInterval(intervalTitle)
-                }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
-    })
-    
-    $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.remove("animation")
-            })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
-    })
-</script>
-</body>
-</html>
+        if (countdown >
