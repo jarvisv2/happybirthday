@@ -1,1022 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday | darkshadeoflove">
-    <title>Happy Birthday | darkshadeoflove</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
-    <style>
-        /* Surprise Screen Styles */
-        #surprise-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-            background-size: 400% 400%;
-            animation: gradientShift 3s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-
-        .surprise-text {
-            font-size: 4rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            animation: surpriseAnimation 3s ease-in-out;
-            text-align: center;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes surpriseAnimation {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Cake Cutting Screen Styles */
-        #cake-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 9999;
-        }
-
-        .cake-container {
-            text-align: center;
-            position: relative;
-        }
-
-        .cake {
-            width: 300px;
-            height: 300px;
-            margin: 20px auto;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .cake:hover {
-            transform: scale(1.05);
-        }
-
-        .cake-base {
-            width: 280px;
-            height: 180px;
-            background: linear-gradient(45deg, #8B4513, #A0522D);
-            border-radius: 20px;
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .cake-layer {
-            width: 240px;
-            height: 120px;
-            background: linear-gradient(45deg, #FFB6C1, #FFC0CB);
-            border-radius: 15px;
-            position: absolute;
-            bottom: 160px;
-            left: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .candles {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-        }
-
-        .candle {
-            width: 8px;
-            height: 40px;
-            background: linear-gradient(to bottom, #FF6B6B, #4ECDC4);
-            border-radius: 4px;
-            position: relative;
-        }
-
-        .flame {
-            width: 12px;
-            height: 15px;
-            background: radial-gradient(circle, #FFA500, #FF4500);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: absolute;
-            top: -15px;
-            left: -2px;
-            animation: flicker 1s ease-in-out infinite alternate;
-        }
-
-        @keyframes flicker {
-            0% { transform: rotate(-2deg) scale(1); }
-            100% { transform: rotate(2deg) scale(1.1); }
-        }
-
-        .cut-button {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .cut-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .cake-cut {
-            animation: cakeCut 1s ease-in-out;
-        }
-
-        @keyframes cakeCut {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.9) rotate(5deg); }
-            100% { transform: scale(1); }
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #FF6B6B;
-            animation: confettiFall 2s ease-in-out infinite;
-        }
-
-        @keyframes confettiFall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* Hide main content initially */
-        #wrapper {
-            display: none;
-        }
-
-        /* Main Birthday Page Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow-x: hidden;
-        }
-
-        #wrapper {
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .flag__birthday {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            z-index: 1;
-        }
-
-        .flag__left {
-            animation: flagWave 2s ease-in-out infinite;
-        }
-
-        .flag__right {
-            animation: flagWave 2s ease-in-out infinite reverse;
-        }
-
-        @keyframes flagWave {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
-        }
-
-        .content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 100vh;
-            padding: 50px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .left {
-            flex: 1;
-            text-align: center;
-        }
-
-        .title {
-            position: relative;
-            margin-bottom: 50px;
-        }
-
-        .happy, .birthday {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .happy {
-            color: #FF6B6B;
-            margin-bottom: 20px;
-        }
-
-        .birthday {
-            color: #4ECDC4;
-        }
-
-        .happy span, .birthday span {
-            display: inline-block;
-            opacity: 0;
-            animation: letterDrop var(--t) ease forwards;
-        }
-
-        @keyframes letterDrop {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px) rotate(180deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) rotate(0deg);
-            }
-        }
-
-        .hat {
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: hatBounce 2s ease-in-out infinite;
-        }
-
-        @keyframes hatBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-10px); }
-        }
-
-        .date__of__birth {
-            font-size: 1.5rem;
-            color: white;
-            margin: 30px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn {
-            margin-top: 40px;
-        }
-
-        #btn__letter {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-
-        #btn__letter:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .right {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .box__account {
-            text-align: center;
-            position: relative;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .image img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 5px solid #FF6B6B;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .name {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            color: white;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .name i {
-            color: #FF6B6B;
-            animation: heartBeat 1s ease-in-out infinite;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .balloon_one, .balloon_two {
-            position: absolute;
-            animation: balloonFloat 3s ease-in-out infinite;
-        }
-
-        .balloon_one {
-            top: -50px;
-            left: -50px;
-        }
-
-        .balloon_two {
-            top: -50px;
-            right: -50px;
-            animation-delay: 1s;
-        }
-
-        @keyframes balloonFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .cricle {
-            position: absolute;
-            bottom: -100px;
-            right: -100px;
-            width: 200px;
-            height: 200px;
-            border: 3px solid #4ECDC4;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: rotate 10s linear infinite;
-        }
-
-        .text__cricle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .text__cricle span {
-            position: absolute;
-            left: 50%;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            transform-origin: 0 100px;
-            transform: rotate(calc(24deg * var(--i))) translateY(-50%);
-        }
-
-        .cricle i {
-            font-size: 2rem;
-            color: #FF6B6B;
-            animation: heartBeat 1s ease-in-out infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .decorate_star {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #FFD700;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            opacity: 0;
-            animation: starTwinkle var(--t) ease forwards;
-        }
-
-        .star1 { top: 20%; left: 10%; }
-        .star2 { top: 30%; right: 15%; }
-        .star3 { top: 60%; left: 20%; }
-        .star4 { top: 70%; right: 25%; }
-        .star5 { top: 40%; left: 50%; }
-
-        @keyframes starTwinkle {
-            0% {
-                opacity: 0;
-                transform: scale(0) rotate(0deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(360deg);
-            }
-        }
-
-        .decorate_flower--one, .decorate_flower--two, .decorate_flower--three {
-            position: absolute;
-            opacity: 0;
-            animation: flowerBloom var(--t) ease forwards;
-        }
-
-        .decorate_flower--one { top: 25%; left: 30%; }
-        .decorate_flower--two { top: 45%; right: 30%; }
-        .decorate_flower--three { top: 65%; left: 40%; }
-
-        @keyframes flowerBloom {
-            0% {
-                opacity: 0;
-                transform: scale(0);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .decorate_bottom {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
-            animation-delay: 16s;
-        }
-
-        .smiley__icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
-            animation-delay: 16.5s;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .box__letter {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .letter__border {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            display: none;
-        }
-
-        .title__letter {
-            text-align: center;
-            font-size: 2rem;
-            color: #FF6B6B;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        .content__letter {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .content__letter .left {
-            flex: 1;
-            position: relative;
-        }
-
-        .content__letter .right {
-            flex: 2;
-            position: relative;
-        }
-
-        #heart__letter {
-            width: 100%;
-            border-radius: 10px;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        #heart__letter.animationOp {
-            opacity: 1;
-        }
-
-        .heart {
-            position: absolute;
-            opacity: 0;
-        }
-
-        .heart.animation {
-            animation: heartFloat 2s ease-in-out infinite;
-            opacity: 1;
-        }
-
-        .heart_1 { top: 10%; left: 80%; animation-delay: var(--t); }
-        .heart_2 { top: 30%; left: 85%; animation-delay: var(--t); }
-        .heart_3 { top: 50%; left: 90%; animation-delay: var(--t); }
-        .heart_4 { top: 70%; left: 85%; animation-delay: var(--t); }
-
-        @keyframes heartFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.1); }
-        }
-
-        .love__img {
-            text-align: center;
-            margin-bottom: 20px;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        .love__img.animationOp {
-            opacity: 1;
-        }
-
-        .text__letter {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #333;
-            text-align: center;
-        }
-
-        #mewmew {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        #mewmew.animationOp {
-            opacity: 1;
-        }
-
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            color: #999;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #FF6B6B;
-        }
-
-        #copy {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-        }
-
-        .text-center { text-align: center; }
-        .text-white { color: white; }
-        .text-sm { font-size: 0.9rem; }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
-                padding: 20px;
-            }
-            
-            .happy, .birthday {
-                font-size: 2.5rem;
-            }
-            
-            .surprise-text {
-                font-size: 2.5rem;
-            }
-            
-            .cake {
-                width: 250px;
-                height: 250px;
-            }
-            
-            .cake-base {
-                width: 230px;
-                height: 150px;
-            }
-            
-            .cake-layer {
-                width: 190px;
-                height: 100px;
-                bottom: 130px;
-                left: 30px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="Happy Birthday | darkshadeoflove">
+  <title>Happy Birthday | darkshadeoflove</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    /* --- Surprise screen --- */
+    #surprise {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #ffb6c1, #ff69b4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.5rem;
+      font-family: 'Poppins', sans-serif;
+      z-index: 9999;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes fadeOut {
+      from {opacity: 1;}
+      to {opacity: 0;}
+    }
+
+    /* --- Cake section --- */
+    #cake-section {
+      position: fixed;
+      inset: 0;
+      background: #ffebf0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9998;
+      font-family: 'Poppins', sans-serif;
+    }
+    #cake-section img {
+      width: 220px;
+      animation: floatCake 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatCake {
+      from {transform: translateY(0);}
+      to {transform: translateY(-10px);}
+    }
+    #cutCakeBtn {
+      background: #ff4f70;
+      color: #fff;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+    #cutCakeBtn:hover {
+      background: #ff1f50;
+    }
+  </style>
 </head>
 <body>
-    <!-- Surprise Screen -->
-    <div id="surprise-screen">
-        <div class="surprise-text">A surprise is coming...</div>
+
+  <!-- Surprise Screen -->
+  <div id="surprise">🎁 A surprise is coming...</div>
+
+  <!-- Cake Section -->
+  <div id="cake-section">
+    <img id="cake" src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="Birthday Cake">
+    <button id="cutCakeBtn">Cut the Cake 🎂</button>
+  </div>
+
+  <!-- Your Original Code Below -->
+  <div id="wrapper" style="display:none;">
+    <div class="flag__birthday">
+      <img src="./images/1.png" alt="" width="350" class="flag__left">
+      <img src="./images/1.png" alt="" width="350" class="flag__right">
+    </div>
+    <div class="content">
+      <div class="left">
+        <div class="title">
+          <h1 class="happy">
+            <span style="--t: 4s;">H</span>
+            <span style="--t: 4.2s;">a</span>
+            <span style="--t: 4.4s;">p</span>
+            <span style="--t: 4.6s;">p</span>
+            <span style="--t: 4.8s;">y</span>
+          </h1>
+          <h1 class="birthday">
+            <span style="--t: 5s;">B</span>
+            <span style="--t: 5.2s;">i</span>
+            <span style="--t: 5.4s;">r</span>
+            <span style="--t: 5.6s;">t</span>
+            <span style="--t: 5.8s;">h</span>
+            <span style="--t: 6s;">d</span>
+            <span style="--t: 6.2s;">a</span>
+            <span style="--t: 6.4s;">y</span>
+          </h1>
+          <div class="hat">
+            <img src="./images/hat.png" alt="" width="130">
+          </div>
+        </div>
+        <div class="date__of__birth">
+          <span></span>
+        </div>
+        <div class="btn">
+          <button id="btn__letter">
+            Click here Supriya ❤️
+            <i class="fa-regular fa-envelope"></i>
+          </button>
+        </div>
+      </div>
+      <div class="right">
+        <div class="box__account">
+          <div class="image">
+            <img src="./images/r5.png" alt="">
+          </div>
+          <div class="name">
+            <i class="fa-solid fa-heart"></i>
+            <span>Supriya ❤️</span>
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <div class="balloon_one">
+            <img width="100px" src="./images/balloon1.png" alt="">
+          </div>
+          <div class="balloon_two">
+            <img width="100px" src="./images/balloon2.png" alt="">
+          </div>
+        </div>
+        <div class="cricle">
+          <div class="text__cricle">
+            <span style="--i: 1;">h</span>
+            <span style="--i: 2;">a</span>
+            <span style="--i: 3;">p</span>
+            <span style="--i: 4;">p</span>
+            <span style="--i: 5;">y</span>
+            <span style="--i: 6;">-</span>
+            <span style="--i: 7;">b</span>
+            <span style="--i: 8;">i</span>
+            <span style="--i: 9;">r</span>
+            <span style="--i: 10;">t</span>
+            <span style="--i: 11;">h</span>
+            <span style="--i: 12;">d</span>
+            <span style="--i: 13;">a</span>
+            <span style="--i: 14;">y</span>
+            <span style="--i: 15;">-</span>
+          </div>
+          <i class="fa-solid fa-heart"></i>
+        </div>
+      </div>
     </div>
 
-    <!-- Cake Cutting Screen -->
-    <div id="cake-screen">
-        <div class="cake-container">
-            <div class="cake" id="birthday-cake">
-                <div class="cake-base"></div>
-                <div class="cake-layer"></div>
-                <div class="candles">
-                    <div class="candle"><div class="flame"></div></div>
-                    <div class="candle"><div class="flame"></div></div>
-                    <div class="candle"><div class="flame"></div></div>
-                    <div class="candle"><div class="flame"></div></div>
-                    <div class="candle"><div class="flame"></div></div>
-                </div>
-            </div>
-            <button class="cut-button" id="cut-cake-btn">🎂 Cut the Cake! 🎂</button>
-        </div>
-    </div>
-
-    <!-- Main Birthday Page -->
-    <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
-        </div>
-        <div class="content">
+    <div class="box__letter">
+      <div class="letter__border">
+        <div class="letter">
+          <div class="title__letter"></div>
+          <div class="content__letter">
             <div class="left">
-                <div class="title">
-                    <h1 class="happy">
-                        <span style="--t: 4s;">H</span>
-                        <span style="--t: 4.2s;">a</span>
-                        <span style="--t: 4.4s;">p</span>
-                        <span style="--t: 4.6s;">p</span>
-                        <span style="--t: 4.8s;">y</span>
-                    </h1>
-                    <h1 class="birthday">
-                        <span style="--t: 5s;">B</span>
-                        <span style="--t: 5.2s;">i</span>
-                        <span style="--t: 5.4s;">r</span>
-                        <span style="--t: 5.6s;">t</span>
-                        <span style="--t: 5.8s;">h</span>
-                        <span style="--t: 6s;">d</span>
-                        <span style="--t: 6.2s;">a</span>
-                        <span style="--t: 6.4s;">y</span>
-                    </h1>
-                    <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
-                    </div>
-                </div>
-                <div class="date__of__birth">
-                    <span></span>
-                </div>
-                <div class="btn">
-                    <button id="btn__letter">
-                        Click here Supriya ❤️
-                        <i class="fa-regular fa-envelope"></i>
-                    </button>
-                </div>
+              <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+              <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
             </div>
             <div class="right">
-                <div class="box__account">
-                    <div class="image">
-                        <img src="./images/r5.png" alt="">
-                    </div>
-                    <div class="name">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Supriya ❤️</span>
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
-                    </div>
-                    <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
-                    </div>
-                </div>
-                <div class="cricle">
-                    <div class="text__cricle">
-                        <span style="--i: 1;">h</span>
-                        <span style="--i: 2;">a</span>
-                        <span style="--i: 3;">p</span>
-                        <span style="--i: 4;">p</span>
-                        <span style="--i: 5;">y</span>
-                        <span style="--i: 6;">-</span>
-                        <span style="--i: 7;">b</span>
-                        <span style="--i: 8;">i</span>
-                        <span style="--i: 9;">r</span>
-                        <span style="--i: 10;">t</span>
-                        <span style="--i: 11;">h</span>
-                        <span style="--i: 12;">d</span>
-                        <span style="--i: 13;">a</span>
-                        <span style="--i: 14;">y</span>
-                        <span style="--i: 15;">-</span>
-                    </div>
-                    <i class="fa-solid fa-heart"></i>
-                </div>
+              <div class="love__img">
+                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+              </div>
+              <div class="text__letter">
+                <p></p>
+              </div>
+              <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
             </div>
+          </div>
         </div>
-        <div class="decorate_star star1" style="--t: 15s;"></div>
-        <div class="decorate_star star2" style="--t: 15.2s;"></div>
-        <div class="decorate_star star3" style="--t: 15.4s;"></div>
-        <div class="decorate_star star4" style="--t: 15.6s;"></div>
-        <div class="decorate_star star5" style="--t: 15.8s;"></div>
-        <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
-        </div>
-        <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
-        </div>
-
-        <div class="box__letter">
-            <div class="letter__border">
-                <div class="letter">
-                    <div class="title__letter">
-                    </div>
-                    <div class="content__letter">
-                        <div class="left">
-                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-                        </div>
-                        <div class="right">
-                            <div class="love__img">
-                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                            </div>
-                            <div class="text__letter">
-                                 <p></p>
-                            </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-            </div>
-        </div>
+        <div class="close"><i class="fa-solid fa-xmark"></i></div>
+      </div>
     </div>
+  </div>
 
-    <div id="copy">
-        <p class="text-center text-white text-sm">darkshadeoflove<a href="https://www.instagram.com/@darkshadeoflove"></a></p>
-    </div>
+  <div id="copy">
+    <p class="text-center text-white text-sm">darkshadeoflove
+      <a href="https://www.instagram.com/@darkshadeoflove"></a></p>
+  </div>
 
-    <!-- Hidden Audio Element -->
-    <audio id="background-music" loop>
-        <source src="https://www.youtube.com/watch?v=kcGojPJzh1k" type="audio/mpeg">
-        <!-- Fallback for YouTube audio - you'll need to convert the YouTube video to MP3 and host it -->
-    </audio>
+  <audio id="bgmusic" loop>
+    <source src="https://pipedproxy.kavin.rocks/redirect/kcGojPJzh1k" type="audio/mp3">
+  </audio>
 
-    <script>
-        // Configuration
-        let datetxt = "2 Nov 1999";
-        let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
-        let titleLetter = "To you";
-        
-        // Initialize variables
-        let charArrDate = datetxt.split('');
-        let charArrDateLetter = datatxtletter.split('');
-        let charArrTitle = titleLetter.split('');
-        let currentIndex = 0;
-        let currentIndexLetter = 0;
-        let currentIndexTitle = 0;
-        let date__of__birth = document.querySelector(".date__of__birth span");
-        let text__letter = document.querySelector(".text__letter p");
+  <script>
+    // --- Step 1: Show Surprise for 3s ---
+    setTimeout(() => {
+      document.getElementById("surprise").style.animation = "fadeOut 1s forwards";
+      setTimeout(() => {
+        document.getElementById("surprise").style.display = "none";
+        document.getElementById("cake-section").style.display = "flex";
+      }, 1000);
+    }, 3000);
 
-        // Sequence Controller
-        function startSequence() {
-            // Step 1: Show surprise message for 3 seconds
-            setTimeout(() => {
-                document.getElementById('surprise-screen').style.display = 'none';
-                document.getElementById('cake-screen').style.display = 'flex';
-                
-                // Try to play background music (Note: YouTube direct links won't work due to CORS)
-                // You'll need to convert the YouTube video to MP3 and host it yourself
-                // const audio = document.getElementById('background-music');
-                // audio.play().catch(e => console.log('Audio play failed:', e));
-                
-            }, 3000);
-        }
+    // --- Step 2: Cake Cut ---
+    document.getElementById("cutCakeBtn").addEventListener("click", () => {
+      document.getElementById("cake-section").style.animation = "fadeOut 1s forwards";
+      setTimeout(() => {
+        document.getElementById("cake-section").style.display = "none";
+        document.getElementById("wrapper").style.display = "block";
 
-        // Cake cutting functionality
-        function setupCakeCutting() {
-            const cutButton = document.getElementById('cut-cake-btn');
-            const cake = document.getElementById('birthday-cake');
-            const cakeScreen = document.getElementById('cake-screen');
-            const wrapper = document.getElementById('wrapper');
+        // Play background song
+        const audio = document.getElementById("bgmusic");
+        audio.volume = 0.5;
+        audio.play().catch(() => console.log("Autoplay blocked"));
 
-            cutButton.addEventListener('click', () => {
-                // Add cake cutting animation
-                cake.classList.add('cake-cut');
-                
-                // Create confetti effect
-                createConfetti();
-                
-                // Hide candle flames
-                document.querySelectorAll('.flame').forEach(flame => {
-                    flame.style.display = 'none';
-                });
-                
-                // After 2 seconds, show main birthday page
-                setTimeout(() => {
-                    cakeScreen.style.display = 'none';
-                    wrapper.style.display = 'block';
-                }, 2000);
-            });
-        }
+      }, 1000);
+    });
 
-        // Create confetti effect
-        function createConfetti() {
-            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98FB98'];
-            
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 2 + 's';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    
-                    document.getElementById('cake-screen').appendChild(confetti);
-                    
-                    // Remove confetti after animation
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, 5000);
-                }, i * 20);
+    // --- Original Birthday Letter Animation ---
+    let datetxt = "2 Nov 1999";
+    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
+    let titleLetter = "To you";
+    let charArrDate = datetxt.split('');
+    let charArrDateLetter = datatxtletter.split('');
+    let charArrTitle = titleLetter.split('');
+    let currentIndex = 0;
+    let currentIndexLetter = 0;
+    let currentIndexTitle = 0;
+    let date__of__birth = document.querySelector(".date__of__birth span");
+    let text__letter = document.querySelector(".text__letter p");
+    setTimeout(function(){
+        timeDatetxt = setInterval(function(){
+            if(currentIndex < charArrDate.length){
+                date__of__birth.textContent += charArrDate[currentIndex];
+                currentIndex++;
             }
-        }
+            else{
+                let i = document.createElement("i");
+                i.className = "fa-solid fa-star"
+                document.querySelector(".date__of__birth").prepend(i)
+                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
+                clearInterval(timeDatetxt)
+            }
+        },100)
+    },12000)
 
-        // Original birthday page functionality
-        function setupBirthdayPage() {
-            // Date animation
-            setTimeout(function(){
-                let timeDatetxt = setInterval(function(){
-                    if(currentIndex < charArrDate.length){
-                        date__of__birth.textContent += charArrDate[currentIndex];
-                        currentIndex++;
-                    }
-                    else{
-                        let i = document.createElement("i");
-                        i.className = "fa-solid fa-star"
-                        document.querySelector(".date__of__birth").prepend(i)
-                        document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                        clearInterval(timeDatetxt)
-                    }
-                },100)
-            },12000)
-
-            // Letter functionality
-            var intervalContent;
-            var intervalTitle;
-            
-            $("#btn__letter").on("click", function(){
-                $(".box__letter").slideDown()
-                setTimeout(function(){
-                    $(".letter__border").slideDown();
-                },1000)
-                setTimeout(function(){
-                    intervalTitle = setInterval(function(){
-                        if(currentIndexTitle < charArrTitle.length){
-                            document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                            let i = document.createElement("i");
-                            i.className = "fa-solid fa-heart"
-                            document.querySelector(".title__letter").appendChild(i)
-                            currentIndexTitle++;
-                        }
-                        else{
-                            clearInterval(intervalTitle)
-                        }
-                    },100)
-                },2000)
-                setTimeout(function(){
-                    document.querySelector("#heart__letter").classList.add("animationOp");
-                    document.querySelector(".love__img").classList.add("animationOp");
-                    document.querySelector("#mewmew").classList.add("animationOp");
-                },2800)
-                setTimeout(function(){
-                    document.querySelectorAll(".heart").forEach((item)=>{
-                        item.classList.add("animation")
-                    })
-                },3500)
-                setTimeout(function(){
-                    intervalContent = setInterval(function(){
-                        if(currentIndexLetter < charArrDateLetter.length){
-                            text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                            currentIndexLetter++;
-                        }
-                        else{
-                            clearInterval(intervalContent)
-                        }
-                    },50)
-                },6000)
+    var intervalContent;
+    var intervalTitle;
+    $("#btn__letter").on("click", function(){
+        $(".box__letter").slideDown()
+        setTimeout(function(){
+            $(".letter__border").slideDown();
+        },1000)
+        setTimeout(function(){
+            intervalTitle = setInterval(function(){
+                if(currentIndexTitle < charArrTitle.length){
+                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                    let i = document.createElement("i");
+                    i.className = "fa-solid fa-heart"
+                    document.querySelector(".title__letter").appendChild(i)
+                    currentIndexTitle++;
+                }
+                else{
+                    clearInterval(intervalTitle)
+                }
+            },100)
+        },2000)
+        setTimeout(function(){
+            document.querySelector("#heart__letter").classList.add("animationOp");
+            document.querySelector(".love__img").classList.add("animationOp");
+            document.querySelector("#mewmew").classList.add("animationOp");
+        },2800)
+        setTimeout(function(){
+            document.querySelectorAll(".heart").forEach((item)=>{
+                item.classList.add("animation")
             })
-            
-            $(".close").on("click", function(){
-                clearInterval(intervalContent)
-                document.querySelector(".title__letter").textContent = "";
-                text__letter.textContent = "";
-                currentIndexLetter = 0
-                currentIndexTitle = 0
-                document.querySelector("#heart__letter").classList.remove("animationOp");
-                document.querySelector(".love__img").classList.remove("animationOp");
-                document.querySelector("#mewmew").classList.remove("animationOp");
-                document.querySelectorAll(".heart").forEach((item)=>{
-                        item.classList.remove("animation")
-                    })
-                $(".box__letter").slideUp();
-                $(".letter__border").slideUp();
-            })
-        }
-
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            startSequence();
-            setupCakeCutting();
-            setupBirthdayPage();
-        });
-
-        // Alternative approach for background music using iframe (hidden)
-        // Note: This will show YouTube controls and may not auto-play due to browser policies
-        function playYouTubeAudio() {
-            const iframe = document.createElement('iframe');
-            iframe.src = 'https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&loop=1&playlist=kcGojPJzh1k';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-        }
-
-        // Uncomment the line below if you want to try the YouTube iframe approach
-        // Note: This may not work due to browser autoplay policies
-        // setTimeout(playYouTubeAudio, 3000);
-    </script>
+        },3500)
+        setTimeout(function(){
+            intervalContent = setInterval(function(){
+                if(currentIndexLetter < charArrDateLetter.length){
+                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                    currentIndexLetter++;
+                }
+                else{
+                    clearInterval(intervalContent)
+                }
+            },50)
+        },6000)
+    })
+    $(".close").on("click", function(){
+        clearInterval(intervalContent)
+        document.querySelector(".title__letter").textContent = "";
+        text__letter.textContent = "";
+        currentIndexLetter = 0
+        currentIndexTitle = 0
+        document.querySelector("#heart__letter").classList.remove("animationOp");
+        document.querySelector(".love__img").classList.remove("animationOp");
+        document.querySelector("#mewmew").classList.remove("animationOp");
+        document.querySelectorAll(".heart").forEach((item)=>{
+            item.classList.remove("animation")
+        })
+        $(".box__letter").slideUp();
+        $(".letter__border").slideUp();
+    })
+  </script>
 </body>
 </html>
