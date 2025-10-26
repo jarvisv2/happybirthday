@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
+
   <style>
     /* Countdown overlay */
     #countdownOverlay {
@@ -19,58 +20,61 @@
     #countdownOverlay.hidden { opacity: 0; pointer-events: none; }
     .countNum { font-size: 72px; letter-spacing: 2px; }
     .countSub { margin-top: 8px; font-size: 16px; opacity: 0.8; }
-    /* YouTube player container (hidden under overlay, appears after) */
-    #yt-sound-tip { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+
+    /* Unmute hint */
+    #yt-sound-tip {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,0.7); color: #fff; padding: 8px 12px; border-radius: 999px;
       font-size: 13px; z-index: 9998; display: none;
     }
-    /* Simple cake (in-page) */
+
+    /* Cake */
     .cakeWrap { position: relative; width: 280px; margin: 24px auto; text-align: center; }
     .cake {
-      position: relative; width: 220px; height: 120px; margin: 0 auto; background: #ff99b9;
-      border-radius: 12px; box-shadow: inset 0 -14px #ff4a83;
-      overflow: visible; transition: transform 0.6s ease;
+      position: relative; width: 220px; height: 120px; margin: 0 auto; border-radius: 12px;
+      background: #ff99b9; box-shadow: inset 0 -14px #ff4a83; overflow: visible;
     }
-    .cake:before {
-      content: ""; position: absolute; left: 0; right: 0; height: 16px; bottom: 32px;
+    .cake .frosting {
+      position: absolute; left: 0; right: 0; height: 16px; bottom: 32px; z-index: 2;
       background: repeating-linear-gradient(90deg, #ffee8d 0 20px, transparent 20px 40px);
     }
-    .cake:after {
-      content: ""; position: absolute; width: 100%; height: 14px; bottom: 0; left: 0;
-      background: #367bd0;
-    }
-    .candle {
-      position: absolute; top: -42px; left: 50%; transform: translateX(-50%);
-      width: 12px; height: 38px; background: #3aa2cf; border-radius: 3px 3px 0 0;
-    }
-    .flame {
-      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
-      width: 16px; height: 16px; background: #f1af3f; border-radius: 50% 50% 50% 0;
-      transform-origin: center; animation: flamePulse 1.6s infinite ease-in-out;
-    }
-    @keyframes flamePulse { 50% { transform: translateX(-50%) scale(0.85) rotate(0deg); } }
-    .cakeCutBtn {
-      margin-top: 12px; padding: 10px 16px; border: none; border-radius: 8px;
-      background: #ff4a83; color: #fff; cursor: pointer;
-    }
-    /* Cutting effect: split cake halves and hide flame */
-    .cake.cut .flame { display: none; }
-    .cake.cut .sliceLeft, .cake.cut .sliceRight { opacity: 1; transform: translateY(0) }
+    .cake .plate { position: absolute; width: 100%; height: 14px; bottom: 0; left: 0; background: #367bd0; z-index: 1; }
+    .candle { position: absolute; top: -42px; left: 50%; transform: translateX(-50%); width: 12px; height: 38px; background: #3aa2cf; border-radius: 3px 3px 0 0; z-index: 4; }
+    .flame { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: #f1af3f; border-radius: 50% 50% 50% 0; transform-origin: center; animation: flamePulse 1.6s infinite ease-in-out; z-index: 5; }
+    @keyframes flamePulse { 50% { transform: translateX(-50%) scale(0.85); } }
+
     .sliceLeft, .sliceRight {
-      content: ""; position: absolute; top: 0; width: 50%; height: 100%;
-      background: inherit; box-shadow: inherit; border-radius: 12px 0 0 12px;
-      clip-path: inset(0 0 0 0); opacity: 0; transform: translateY(-8px);
+      position: absolute; top: 0; height: 100%; width: 50%; z-index: 3; opacity: 0; transform: translateY(-8px);
       transition: transform 0.7s ease, opacity 0.3s ease;
     }
-    .sliceRight { left: 50%; border-radius: 0 12px 12px 0; }
+    .sliceLeft {
+      left: 0; border-radius: 12px 0 0 12px;
+      background:
+        linear-gradient(#ff99b9, #ff99b9) padding-box,
+        linear-gradient(to bottom, transparent 0 72%, #367bd0 72% 100%) border-box;
+    }
+    .sliceRight {
+      left: 50%; border-radius: 0 12px 12px 0;
+      background:
+        linear-gradient(#ff99b9, #ff99b9) padding-box,
+        linear-gradient(to bottom, transparent 0 72%, #367bd0 72% 100%) border-box;
+    }
+    .sliceStripe {
+      position: absolute; left: 0; right: 0; height: 16px; bottom: 32px; z-index: 4; pointer-events: none;
+      background: repeating-linear-gradient(90deg, #ffee8d 0 20px, transparent 20px 40px);
+    }
+    .cutLine {
+      position: absolute; top: 0; left: 50%; width: 2px; height: 100%; background: rgba(255,255,255,0.7);
+      box-shadow: 0 0 6px rgba(255,255,255,0.9); opacity: 0; z-index: 6; transition: opacity 0.2s ease;
+    }
+
+    .cake.showCut .cutLine { opacity: 1; }
+    .cake.cut .flame { display: none; }
+    .cake.cut .sliceLeft, .cake.cut .sliceRight { opacity: 1; transform: translateY(0); }
     .cake.cut .sliceLeft { transform: translate(-16px, 8px) rotate(-2deg); }
     .cake.cut .sliceRight { transform: translate(16px, 8px) rotate(2deg); }
-    .cutLine {
-      position: absolute; top: 0; left: 50%; width: 2px; height: 100%; background: rgba(255,255,255,0.6);
-      box-shadow: 0 0 6px rgba(255,255,255,0.8); opacity: 0; transition: opacity 0.2s ease;
-    }
-    .cake.showCut .cutLine { opacity: 1; }
-    /* Keep your existing styles below (flags, hearts, etc.) */
+
+    .cakeCutBtn { margin-top: 12px; padding: 10px 16px; border: 0; border-radius: 8px; background: #ff4a83; color: #fff; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -82,11 +86,12 @@
   <div id="yt-sound-tip">Tap anywhere to turn on sound</div>
 
   <div id="wrapper">
-    <!-- your existing content unchanged below -->
+    <!-- Original header decorations -->
     <div class="flag__birthday">
       <img src="./images/1.png" alt="" width="350" class="flag__left">
       <img src="./images/1.png" alt="" width="350" class="flag__right">
     </div>
+
     <div class="content">
       <div class="left">
         <div class="title">
@@ -109,11 +114,14 @@
           </h1>
           <div class="hat"><img src="./images/hat.png" alt="" width="130"></div>
         </div>
+
         <div class="date__of__birth"><span></span></div>
+
         <div class="btn">
           <button id="btn__letter">Click here Supriya ❤️ <i class="fa-regular fa-envelope"></i></button>
         </div>
       </div>
+
       <div class="right">
         <div class="box__account">
           <div class="image"><img src="./images/r5.png" alt=""></div>
@@ -134,15 +142,21 @@
     <!-- Cake area -->
     <div class="cakeWrap">
       <div class="cake" id="cake">
+        <div class="frosting"></div>
+        <div class="plate"></div>
         <div class="candle"></div>
         <div class="flame"></div>
+
         <div class="sliceLeft"></div>
         <div class="sliceRight"></div>
+        <div class="sliceStripe"></div>
+
         <div class="cutLine"></div>
       </div>
       <button class="cakeCutBtn" id="cakeCutBtn">Cut the cake 🎂</button>
     </div>
 
+    <!-- Original decorations -->
     <div class="decorate_star star1" style="--t: 15s;"></div>
     <div class="decorate_star star2" style="--t: 15.2s;"></div>
     <div class="decorate_star star3" style="--t: 15.4s;"></div>
@@ -154,6 +168,7 @@
     <div class="decorate_bottom"><img src="./images/decorate.png" alt="" width="100"></div>
     <div class="smiley__icon"><img src="./images/smiley_icon.png" alt="" width="100"></div>
 
+    <!-- Letter modal -->
     <div class="box__letter">
       <div class="letter__border">
         <div class="letter">
@@ -191,13 +206,11 @@
     const countNum = document.getElementById('countNum');
     let c = 3;
     const tick = () => {
-      countNum.textContent = c;
+      countNum.textContent = c >= 0 ? c : 'Go!';
       c--;
-      if (c < 0) {
-        countNum.textContent = 'Go!';
-        setTimeout(() => overlay.classList.add('hidden'), 500);
+      if (c < -1) {
+        overlay.classList.add('hidden');
         clearInterval(timer);
-        // start YT after overlay hides
         if (window.player && typeof window.player.playVideo === 'function') {
           try { player.playVideo(); } catch(e){}
         }
@@ -206,14 +219,14 @@
     const timer = setInterval(tick, 1000);
     tick();
 
-    // YouTube player setup (autoplay muted, then user tap to unmute)
+    // YouTube player setup: autoplay muted -> user tap to unmute
     let player;
     const ytSoundTip = document.getElementById('yt-sound-tip');
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
         height: '0',
         width: '0',
-        videoId: 'kcGojPJzh1k', // extracted from your link
+        videoId: 'kcGojPJzh1k', // from your link
         playerVars: {
           autoplay: 1, controls: 0, modestbranding: 1, rel: 0, playsinline: 1,
           enablejsapi: 1, origin: window.location.origin, mute: 1
@@ -221,18 +234,16 @@
         events: {
           onReady: (e) => {
             try { e.target.mute(); e.target.playVideo(); } catch(err){}
-            // prompt to unmute
             ytSoundTip.style.display = 'block';
           }
         }
       });
     }
-    // Load the IFrame API
+    // Load the IFrame API and hidden container for player
     (function loadYT(){
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       document.head.appendChild(tag);
-      // Hidden iframe container
       const hid = document.createElement('div');
       hid.id = 'yt-player';
       hid.style.position = 'fixed';
@@ -241,7 +252,7 @@
       document.body.appendChild(hid);
     })();
 
-    // First user interaction -> unmute and keep playing
+    // First user interaction -> unmute
     const enableSound = () => {
       if (player && typeof player.unMute === 'function') {
         try { player.unMute(); player.setVolume(100); } catch(e){}
@@ -253,21 +264,23 @@
     window.addEventListener('click', enableSound, { once: true, passive: true });
     window.addEventListener('touchstart', enableSound, { once: true, passive: true });
 
-    // Cake cutting
+    // Cake cutting with guaranteed transition trigger
     const cake = document.getElementById('cake');
     const cutBtn = document.getElementById('cakeCutBtn');
     cutBtn.addEventListener('click', () => {
       cake.classList.add('showCut');
+      // Force reflow so initial state is committed
+      void cake.offsetHeight;
       setTimeout(() => {
         cake.classList.add('cut');
-      }, 300);
-      // optional little bounce
+      }, 120);
+      // Small bounce
       cake.style.transform = 'translateY(2px)';
-      setTimeout(() => cake.style.transform = '', 400);
+      setTimeout(() => { cake.style.transform = ''; }, 300);
     });
   </script>
 
-  <!-- Your existing typewriter/date/letter logic -->
+  <!-- Your existing typing/letter logic -->
   <script>
     let datetxt = "2 Nov 1999";
     let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
@@ -280,68 +293,68 @@
     let currentIndexTitle = 0;
     let date__of__birth = document.querySelector(".date__of__birth span");
     let text__letter = document.querySelector(".text__letter p");
+
     setTimeout(function(){
-        timeDatetxt = setInterval(function(){
-            if(currentIndex < charArrDate.length){
-                date__of__birth.textContent += charArrDate[currentIndex];
-                currentIndex++;
-            }
-            else{
-                let i = document.createElement("i");
-                i.className = "fa-solid fa-star"
-                document.querySelector(".date__of__birth").prepend(i)
-                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                clearInterval(timeDatetxt)
-            }
-        },100)
-    },12000)
+      timeDatetxt = setInterval(function(){
+        if(currentIndex < charArrDate.length){
+          date__of__birth.textContent += charArrDate[currentIndex];
+          currentIndex++;
+        } else {
+          let i = document.createElement("i");
+          i.className = "fa-solid fa-star";
+          document.querySelector(".date__of__birth").prepend(i);
+          document.querySelector(".date__of__birth").appendChild(i.cloneNode(true));
+          clearInterval(timeDatetxt);
+        }
+      },100);
+    },12000);
 
     var intervalContent;
     var intervalTitle;
     $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
-        setTimeout(function(){ $(".letter__border").slideDown(); },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                } else { clearInterval(intervalTitle) }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{ item.classList.add("animation") })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                } else { clearInterval(intervalContent) }
-            },50)
-        },6000)
-    })
+      $(".box__letter").slideDown();
+      setTimeout(function(){ $(".letter__border").slideDown(); },1000);
+      setTimeout(function(){
+        intervalTitle = setInterval(function(){
+          if(currentIndexTitle < charArrTitle.length){
+            document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+            let i = document.createElement("i");
+            i.className = "fa-solid fa-heart";
+            document.querySelector(".title__letter").appendChild(i);
+            currentIndexTitle++;
+          } else { clearInterval(intervalTitle); }
+        },100);
+      },2000);
+      setTimeout(function(){
+        document.querySelector("#heart__letter").classList.add("animationOp");
+        document.querySelector(".love__img").classList.add("animationOp");
+        document.querySelector("#mewmew").classList.add("animationOp");
+      },2800);
+      setTimeout(function(){
+        document.querySelectorAll(".heart").forEach((item)=>{ item.classList.add("animation") });
+      },3500);
+      setTimeout(function(){
+        intervalContent = setInterval(function(){
+          if(currentIndexLetter < charArrDateLetter.length){
+            text__letter.textContent += charArrDateLetter[currentIndexLetter];
+            currentIndexLetter++;
+          } else { clearInterval(intervalContent); }
+        },50);
+      },6000);
+    });
     $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{ item.classList.remove("animation") })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
-    })
+      clearInterval(intervalContent);
+      document.querySelector(".title__letter").textContent = "";
+      text__letter.textContent = "";
+      currentIndexLetter = 0;
+      currentIndexTitle = 0;
+      document.querySelector("#heart__letter").classList.remove("animationOp");
+      document.querySelector(".love__img").classList.remove("animationOp");
+      document.querySelector("#mewmew").classList.remove("animationOp");
+      document.querySelectorAll(".heart").forEach((item)=>{ item.classList.remove("animation") });
+      $(".box__letter").slideUp();
+      $(".letter__border").slideUp();
+    });
   </script>
 </body>
 </html>
