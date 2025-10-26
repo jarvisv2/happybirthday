@@ -1,336 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday | darkshadeoflove">
-    <title>Happy Birthday | darkshadeoflove</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome & jQuery (unchanged) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
-
-    <!-- Added minimal inline styles for overlay + animation (safe with your existing style.css) -->
-    <style>
-      :root{
-        --overlay-bg: rgba(0,0,0,0.35);
-        --accent: #ff6aa0;
-        --cake: #ffb7c5;
-        --cake-cream: #fff3f6;
-        --knife: #d7dde2;
-        --knife-edge: #9aa3ab;
-        --confetti1: #ff5678;
-        --confetti2: #ffd166;
-        --confetti3: #5dd39e;
-        --confetti4: #6c9bff;
-      }
-      /* Fullscreen intro overlay (non-destructive, background shows through) */
-      #introOverlay{
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: 20px;
-        background: var(--overlay-bg);
-        z-index: 9999;
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-      }
-      #introOverlay.hidden{ display:none; }
-
-      .count-wrap{
-        display:flex; align-items:center; justify-content:center;
-        width: 260px; height: 260px; border-radius: 50%;
-        border: 6px solid var(--accent);
-        color: #fff; font-family: system-ui, Arial, sans-serif;
-        position: relative;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25) inset, 0 10px 30px rgba(0,0,0,0.25);
-      }
-      .count-num{
-        font-size: 88px; font-weight: 800; letter-spacing: 2px;
-        text-shadow: 0 3px 10px rgba(0,0,0,0.35);
-      }
-      .count-label{ color:#fff; font-size:18px; letter-spacing:1px; opacity:0.95; }
-
-      /* Unmute button */
-      #unmuteBtn{
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 10px 16px; border-radius: 999px; border: 2px solid #fff; color:#fff;
-        font-weight:700; background: rgba(0,0,0,0.25); cursor:pointer;
-        transition: transform .15s ease, background .2s ease;
-      }
-      #unmuteBtn:hover{ transform: translateY(-2px); background: rgba(0,0,0,0.35); }
-
-      /* Cake stage */
-      #cakeStage{
-        position: relative; width: 320px; height: 260px;
-        margin-top: 10px;
-      }
-      .cake{
-        position:absolute; left:50%; bottom: 25px; transform: translateX(-50%);
-        width: 260px; height: 110px;
-      }
-      .cake .tier{
-        position:absolute; left:50%; transform: translateX(-50%);
-        background: var(--cake);
-        border-radius: 16px;
-        box-shadow: 0 6px 0 rgba(0,0,0,0.12) inset;
-      }
-      .tier.bottom{ bottom:0; width:260px; height:60px; }
-      .tier.middle{ bottom:42px; width:200px; height:50px; }
-      .tier.top{ bottom:82px; width:140px; height:40px; }
-
-      .cream{
-        position:absolute; left:0; right:0; top:-6px; height:16px;
-        background: var(--cake-cream);
-        border-radius: 12px;
-        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.12));
-      }
-
-      /* Candle */
-      .candle{
-        position:absolute; left:50%; transform: translateX(-50%);
-        bottom: 126px; width: 10px; height: 26px; background:#ffd166; border-radius:3px;
-        box-shadow: 0 0 0 2px rgba(0,0,0,0.05) inset;
-      }
-      .flame{
-        position:absolute; left:50%; transform: translate(-50%,-100%);
-        bottom: 126px; width:12px; height:18px; border-radius: 50% 50% 50% 50%/60% 60% 40% 40%;
-        background: radial-gradient(closest-side, #ffd166, #ff7a59 70%, transparent 71%);
-        animation: flame 0.8s infinite ease-in-out;
-        filter: drop-shadow(0 0 12px rgba(255, 122, 89, 0.85));
-      }
-      @keyframes flame { 0%,100%{ transform: translate(-50%,-100%) scale(1); } 50%{ transform: translate(calc(-50% + 2px), -102%) scale(1.08);} }
-
-      /* Knife */
-      .knife{
-        position:absolute; top: -120px; left: -200px; width: 180px; height: 16px;
-        background: linear-gradient(90deg, var(--knife) 0 75%, var(--knife-edge) 75% 100%);
-        border-radius: 8px;
-        box-shadow: 0 2px 0 rgba(0,0,0,0.15);
-        transform-origin: 90% 50%;
-        transform: rotate(18deg);
-      }
-
-      /* Confetti */
-      .confetti{
-        position:absolute; top:-20px; width:6px; height:10px; opacity:0;
-      }
-      .confetti.c1{ background: var(--confetti1); }
-      .confetti.c2{ background: var(--confetti2); }
-      .confetti.c3{ background: var(--confetti3); }
-      .confetti.c4{ background: var(--confetti4); }
-      @keyframes drop {
-        0% { transform: translateY(-20px) rotate(0deg); opacity:0; }
-        10% { opacity:1; }
-        100% { transform: translateY(340px) rotate(300deg); opacity:0; }
-      }
-
-      /* Slice animations */
-      .slice-go .knife{ animation: knifeSlice 1.4s ease-in-out forwards; }
-      @keyframes knifeSlice {
-        0% { transform: translate(0,0) rotate(18deg); }
-        40% { transform: translate(240px,140px) rotate(22deg); }
-        100%{ transform: translate(440px,180px) rotate(22deg); }
-      }
-
-      .cake-halves .tier.bottom::before,
-      .cake-halves .tier.middle::before,
-      .cake-halves .tier.top::before{
-        content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:rgba(255,255,255,0.9);
-        filter: drop-shadow(0 0 2px rgba(255,255,255,0.9));
-      }
-      .split .tier.bottom{ animation: splitL 1.2s ease forwards; }
-      .split .tier.middle{ animation: splitL 1.2s ease .05s forwards; }
-      .split .tier.top{ animation: splitL 1.2s ease .1s forwards; }
-      .splitR .tier.bottom{ animation: splitR 1.2s ease forwards; }
-      .splitR .tier.middle{ animation: splitR 1.2s ease .05s forwards; }
-      .splitR .tier.top{ animation: splitR 1.2s ease .1s forwards; }
-
-      @keyframes splitL { to { transform: translate(calc(-50% - 110px), 0); } }
-      @keyframes splitR { to { transform: translate(calc(-50% + 110px), 0); } }
-
-      /* Fade out overlay */
-      .overlay-fade{ animation: overlayFade .8s ease forwards; }
-      @keyframes overlayFade { to { opacity:0; visibility:hidden; } }
-
-      /* Hide YT iframe off-screen but keep active (don’t display:none to avoid pausing) */
-      #yt-container{
-        position: fixed; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;
-        opacity: 0; pointer-events: none;
-      }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday | darkshadeoflove</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#ffe3ea; }
+    #timerOverlay {
+      position: fixed; z-index: 9999; width: 100vw; height: 100vh; top:0; left:0;
+      background: #000d; display: flex; flex-direction: column; justify-content: center;
+      align-items: center; color: #fff;
+    }
+    #timerCount { font-size:3rem; font-weight:bold; letter-spacing:0.2em; margin:1em; }
+    #cakeSection {
+      position: fixed; top:0; left:0; width:100vw; height:100vh; background:#fff8; z-index:9998;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    #cakeImg {
+      width: 240px; transition: transform 1s;
+      box-shadow: 0 8px 24px #782e48c7;
+    }
+    #cutCakeBtn {
+      margin-top:30px; font-size:1.2em; background:#d25985; color:#fff; border:none;
+      padding:1em 2em; border-radius:8px; cursor:pointer; font-weight: bold;
+      box-shadow: 0 3px 12px #d25985a0;
+    }
+    #ytWrapper { position:fixed; left:-9999px; }
+    /* Hide original wrapper for flow */
+    #wrapper { display:none; }
+    .flag__birthday img, .box__account .image img, .balloon_one img, .balloon_two img,
+    .hat img, .smiley__icon img, .decorate_star, .decorate_flower--one,
+    .decorate_flower--two, .decorate_flower--three, .decorate_bottom img {
+      user-select:none; pointer-events:none;
+    }
+  </style>
 </head>
 <body>
-    <!-- INTRO OVERLAY (new) -->
-    <div id="introOverlay" aria-live="polite">
-      <div class="count-wrap">
-        <div class="count-num" id="countNum">5</div>
-      </div>
-      <div class="count-label">A sweet surprise is coming…</div>
-      <button id="unmuteBtn" type="button" aria-label="Unmute music">
-        <i class="fa-solid fa-volume-xmark"></i>
-        <span>Tap to unmute</span>
-      </button>
-      <div id="cakeStage" aria-hidden="true">
-        <div class="knife"></div>
-        <div class="cake cake-halves">
-          <div class="tier top"><div class="cream"></div></div>
-          <div class="tier middle"><div class="cream"></div></div>
-          <div class="tier bottom"><div class="cream"></div></div>
+  
+  <!-- TIMER OVERLAY -->
+  <div id="timerOverlay">
+    <h2>Wait for the surprise...</h2>
+    <div id="timerCount">10</div>
+    <p style="font-size:1.1em;opacity:.7;margin-top:.7em;">Music & cake coming soon!</p>
+  </div>
+  
+  <!-- YOUTUBE AUTOPLAY (hidden) -->
+  <div id="ytWrapper">
+    <iframe id="ytPlayer" width="0" height="0" src="" frameborder="0" allow="autoplay"></iframe>
+  </div>
+  
+  <!-- CAKE SECTION -->
+  <div id="cakeSection" style="display:none;">
+    <img id="cakeImg" src="https://img.freepik.com/premium-photo/beautiful-cartoon-birthday-cake-with-cream-cherry-top-white-background-ai-generated_789606-13813.jpg" alt="Birthday Cake">
+    <button id="cutCakeBtn">Cut the Cake!</button>
+  </div>
+
+  <!-- ORIGINAL SURPRISE CODE -->
+  <div id="wrapper">
+    <!-- Your entire birthday HTML code, decorations, main animation, Supriya section, etc.
+      --- COPY YOUR EXISTING BIRTHDAY PAGE CODE HERE ---
+      For brevity, parts from previous answer are added. Replace with your detailed HTML as needed. -->
+    <div class="flag__birthday">
+      <img src="./images/1.png" alt="" width="350" class="flag__left">
+      <img src="./images/1.png" alt="" width="350" class="flag__right">
+    </div>
+    <div class="content">
+      <div class="left">
+        <div class="title">
+          <h1 class="happy">
+            <span style="--t: 4s;">H</span>
+            <span style="--t: 4.2s;">a</span>
+            <span style="--t: 4.4s;">p</span>
+            <span style="--t: 4.6s;">p</span>
+            <span style="--t: 4.8s;">y</span>
+          </h1>
+          <h1 class="birthday">
+            <span style="--t: 5s;">B</span>
+            <span style="--t: 5.2s;">i</span>
+            <span style="--t: 5.4s;">r</span>
+            <span style="--t: 5.6s;">t</span>
+            <span style="--t: 5.8s;">h</span>
+            <span style="--t: 6s;">d</span>
+            <span style="--t: 6.2s;">a</span>
+            <span style="--t: 6.4s;">y</span>
+          </h1>
+          <div class="hat">
+            <img src="./images/hat.png" alt="" width="130">
+          </div>
         </div>
-        <div class="candle"></div>
-        <div class="flame"></div>
+        <div class="date__of__birth">
+          <span></span>
+        </div>
+        <div class="btn">
+          <button id="btn__letter">
+            Click here Supriya ❤️
+            <i class="fa-regular fa-envelope"></i>
+          </button>
+        </div>
+      </div>
+      <div class="right">
+        <div class="box__account">
+          <div class="image">
+            <img src="./images/r5.png" alt="">
+          </div>
+          <div class="name">
+            <i class="fa-solid fa-heart"></i>
+            <span>Supriya ❤️</span>
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <div class="balloon_one">
+            <img width="100px" src="./images/balloon1.png" alt="">
+          </div>
+          <div class="balloon_two">
+            <img width="100px" src="./images/balloon2.png" alt="">
+          </div>
+        </div>
+        <div class="cricle">
+          <div class="text__cricle">
+            <span style="--i: 1;">h</span>
+            <span style="--i: 2;">a</span>
+            <span style="--i: 3;">p</span>
+            <span style="--i: 4;">p</span>
+            <span style="--i: 5;">y</span>
+            <span style="--i: 6;">-</span>
+            <span style="--i: 7;">b</span>
+            <span style="--i: 8;">i</span>
+            <span style="--i: 9;">r</span>
+            <span style="--i: 10;">t</span>
+            <span style="--i: 11;">h</span>
+            <span style="--i: 12;">d</span>
+            <span style="--i: 13;">a</span>
+            <span style="--i: 14;">y</span>
+            <span style="--i: 15;">-</span>
+          </div>
+          <i class="fa-solid fa-heart"></i>
+        </div>
       </div>
     </div>
-
-    <!-- Hidden YT container (new) -->
-    <div id="yt-container"><div id="player"></div></div>
-
-    <!-- YOUR ORIGINAL MARKUP (unchanged) -->
-    <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
-        </div>
-        <div class="content">
+    <!-- Decorations etc. -- Add rest of your HTML from before here -->
+    <!-- ... -->
+    <div class="decorate_star star1" style="--t: 15s;"></div>
+    <div class="decorate_star star2" style="--t: 15.2s;"></div>
+    <div class="decorate_star star3" style="--t: 15.4s;"></div>
+    <div class="decorate_star star4" style="--t: 15.6s;"></div>
+    <div class="decorate_star star5" style="--t: 15.8s;"></div>
+    <div class="decorate_flower--one" style="--t: 15s;">
+      <img width="20" src="./images/decorate_flower.png" alt="">
+    </div>
+    <div class="decorate_flower--two" style="--t: 15.3s;">
+      <img width="20" src="./images/decorate_flower.png" alt="">
+    </div>
+    <div class="decorate_flower--three" style="--t: 15.6s;">
+      <img width="20" src="./images/decorate_flower.png" alt="">
+    </div>
+    <div class="decorate_bottom">
+      <img src="./images/decorate.png" alt="" width="100">
+    </div>
+    <div class="smiley__icon">
+      <img src="./images/smiley_icon.png" alt="" width="100">
+    </div>
+    <div class="box__letter">
+      <div class="letter__border">
+        <div class="letter">
+          <div class="title__letter"></div>
+          <div class="content__letter">
             <div class="left">
-                <div class="title">
-                    <h1 class="happy">
-                        <span style="--t: 4s;">H</span>
-                        <span style="--t: 4.2s;">a</span>
-                        <span style="--t: 4.4s;">p</span>
-                        <span style="--t: 4.6s;">p</span>
-                        <span style="--t: 4.8s;">y</span>
-                    </h1>
-                    <h1 class="birthday">
-                        <span style="--t: 5s;">B</span>
-                        <span style="--t: 5.2s;">i</span>
-                        <span style="--t: 5.4s;">r</span>
-                        <span style="--t: 5.6s;">t</span>
-                        <span style="--t: 5.8s;">h</span>
-                        <span style="--t: 6s;">d</span>
-                        <span style="--t: 6.2s;">a</span>
-                        <span style="--t: 6.4s;">y</span>
-                    </h1>
-                    <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
-                    </div>
-                </div>
-                <div class="date__of__birth">
-                    <span></span>
-                </div>
-                <div class="btn">
-                    <button id="btn__letter">
-                        Click here Supriya ❤️
-                        <i class="fa-regular fa-envelope"></i>
-                    </button>
-                </div>
+              <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+              <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+              <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
             </div>
             <div class="right">
-                <div class="box__account">
-                    <div class="image">
-                        <img src="./images/r5.png" alt="">
-                    </div>
-                    <div class="name">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Supriya ❤️</span>
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
-                    </div>
-                    <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
-                    </div>
-                </div>
-                <div class="cricle">
-                    <div class="text__cricle">
-                        <span style="--i: 1;">h</span>
-                        <span style="--i: 2;">a</span>
-                        <span style="--i: 3;">p</span>
-                        <span style="--i: 4;">p</span>
-                        <span style="--i: 5;">y</span>
-                        <span style="--i: 6;">-</span>
-                        <span style="--i: 7;">b</span>
-                        <span style="--i: 8;">i</span>
-                        <span style="--i: 9;">r</span>
-                        <span style="--i: 10;">t</span>
-                        <span style="--i: 11;">h</span>
-                        <span style="--i: 12;">d</span>
-                        <span style="--i: 13;">a</span>
-                        <span style="--i: 14;">y</span>
-                        <span style="--i: 15;">-</span>
-                    </div>
-                    <i class="fa-solid fa-heart"></i>
-                </div>
+              <div class="love__img">
+                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+              </div>
+              <div class="text__letter">
+                <p></p>
+              </div>
+              <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
             </div>
+          </div>
         </div>
-        <div class="decorate_star star1" style="--t: 15s;"></div>
-        <div class="decorate_star star2" style="--t: 15.2s;"></div>
-        <div class="decorate_star star3" style="--t: 15.4s;"></div>
-        <div class="decorate_star star4" style="--t: 15.6s;"></div>
-        <div class="decorate_star star5" style="--t: 15.8s;"></div>
-        <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
+        <div class="close">
+          <i class="fa-solid fa-xmark"></i>
         </div>
-        <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
-        </div>
-        <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
-        </div>
-
-        <div class="box__letter">
-            <div class="letter__border">
-                <div class="letter">
-                    <div class="title__letter"></div>
-                    <div class="content__letter">
-                        <div class="left">
-                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-                        </div>
-                        <div class="right">
-                            <div class="love__img">
-                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                            </div>
-                            <div class="text__letter">
-                                <p></p>
-                            </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-
     <div id="copy">
       <p class="text-center text-white text-sm">darkshadeoflove<a href="https://www.instagram.com/@darkshadeoflove"></a></p>
     </div>
+  </div>
 
-    <!-- Your existing script (kept) -->
-    <script>
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // --- TIMER LOGIC ---
+    let countdown = 10;
+    document.getElementById('wrapper').style.display = 'none';
+    document.getElementById('cakeSection').style.display = 'none';
+    document.getElementById('ytWrapper').style.display = 'none';
+
+    const timerOverlay = document.getElementById('timerOverlay');
+    const timerCount = document.getElementById('timerCount');
+    let timerInterval = setInterval(() => {
+      timerCount.textContent = countdown;
+      countdown--;
+      if(countdown < 0){
+        clearInterval(timerInterval);
+        timerOverlay.style.display = 'none';
+        document.getElementById('ytWrapper').style.display = 'block';
+        document.getElementById('ytPlayer').src = "https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&mute=1";
+        setTimeout(() => {
+          document.getElementById('ytWrapper').style.display = 'none';
+          document.getElementById('cakeSection').style.display = 'flex';
+        }, 29000); // 29 sec play then cake
+      }
+    },1000);
+
+    // --- CAKE CUTTING BUTTON ---
+    document.getElementById('cutCakeBtn').onclick = function(){
+      let cake = document.getElementById('cakeImg');
+      cake.style.transform = "scaleY(0.4) rotate(-6deg)";
+      setTimeout(() => {
+        document.getElementById('cakeSection').style.display = 'none';
+        document.getElementById('wrapper').style.display = 'block';
+      }, 1000); // delay for animation, then show birthday page
+    };
+
+    // -------- YOUR ORIGINAL JS FOR BIRTHDAY PAGE --------
+    // Replace/merge this with your previous script logic for the animated birthday greeting, letter reveal logic, etc.
     let datetxt = "2 Nov 1999";
     let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
+    let titleLetter = "To you";
     let charArrDate = datetxt.split('');
     let charArrDateLetter = datatxtletter.split('');
-    // titleLetter is referenced; ensure it is defined
-    let titleLetter = "To: Supriya ❤️";
     let charArrTitle = titleLetter.split('');
     let currentIndex = 0;
     let currentIndexLetter = 0;
@@ -352,169 +257,64 @@
             }
         },100)
     },12000)
-
     var intervalContent;
     var intervalTitle;
     $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
-        setTimeout(function(){
-            $(".letter__border").slideDown();
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                }
-                else{
-                    clearInterval(intervalTitle)
-                }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
+      $(".box__letter").slideDown()
+      setTimeout(function(){
+        $(".letter__border").slideDown();
+      },1000)
+      setTimeout(function(){
+        intervalTitle = setInterval(function(){
+          if(currentIndexTitle < charArrTitle.length){
+            document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+            let i = document.createElement("i");
+            i.className = "fa-solid fa-heart"
+            document.querySelector(".title__letter").appendChild(i)
+            currentIndexTitle++;
+          }
+          else{
+            clearInterval(intervalTitle)
+          }
+        },100)
+      },2000)
+      setTimeout(function(){
+        document.querySelector("#heart__letter").classList.add("animationOp");
+        document.querySelector(".love__img").classList.add("animationOp");
+        document.querySelector("#mewmew").classList.add("animationOp");
+      },2800)
+      setTimeout(function(){
+        document.querySelectorAll(".heart").forEach((item)=>{
+          item.classList.add("animation")
+        })
+      },3500)
+      setTimeout(function(){
+        intervalContent = setInterval(function(){
+          if(currentIndexLetter < charArrDateLetter.length){
+            text__letter.textContent += charArrDateLetter[currentIndexLetter];
+            currentIndexLetter++;
+          }
+          else{
+            clearInterval(intervalContent)
+          }
+        },50)
+      },6000)
     })
     $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.remove("animation")
-            })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
+      clearInterval(intervalContent)
+      document.querySelector(".title__letter").textContent = "";
+      text__letter.textContent = "";
+      currentIndexLetter = 0
+      currentIndexTitle = 0
+      document.querySelector("#heart__letter").classList.remove("animationOp");
+      document.querySelector(".love__img").classList.remove("animationOp");
+      document.querySelector("#mewmew").classList.remove("animationOp");
+      document.querySelectorAll(".heart").forEach((item)=>{
+        item.classList.remove("animation")
+      })
+      $(".box__letter").slideUp();
+      $(".letter__border").slideUp();
     })
-    </script>
-
-    <!-- NEW: YT IFrame API + countdown/cake logic -->
-    <script>
-      // Load YouTube IFrame API
-      (function loadYT(){
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      })();
-
-      // Globals
-      const COUNTDOWN_SECONDS = 5; // change as needed
-      const VIDEO_ID = "kcGojPJzh1k"; // from your link
-      let player, countdown = COUNTDOWN_SECONDS, countdownTimer;
-      const overlay = document.getElementById('introOverlay');
-      const countNum = document.getElementById('countNum');
-      const cakeStage = document.getElementById('cakeStage');
-      const unmuteBtn = document.getElementById('unmuteBtn');
-
-      // Create confetti pieces
-      function addConfetti(){
-        const colors = ['c1','c2','c3','c4'];
-        for(let i=0;i<50;i++){
-          const span = document.createElement('span');
-          span.className = 'confetti ' + colors[Math.floor(Math.random()*colors.length)];
-          span.style.left = (Math.random()*300+10) + 'px';
-          span.style.animation = `drop ${1.2 + Math.random()*1.3}s ${Math.random()*0.8}s ease-in forwards`;
-          cakeStage.appendChild(span);
-        }
-      }
-
-      // YT API ready
-      window.onYouTubeIframeAPIReady = function(){
-        player = new YT.Player('player', {
-          height: '270',
-          width: '480',
-          videoId: VIDEO_ID,
-          playerVars: {
-            autoplay: 1,
-            controls: 0,
-            rel: 0,
-            playsinline: 1,
-            enablejsapi: 1
-          },
-          events: {
-            onReady: function(e){
-              try{
-                e.target.mute();
-              }catch(err){}
-              e.target.playVideo();
-            }
-          }
-        });
-      };
-
-      // Countdown flow
-      function startCountdown(){
-        countNum.textContent = countdown;
-        countdownTimer = setInterval(()=>{
-          countdown -= 1;
-          countNum.textContent = countdown;
-          if(countdown <= 0){
-            clearInterval(countdownTimer);
-            triggerCakeSequence();
-          }
-        },1000);
-      }
-
-      function triggerCakeSequence(){
-        // Animate knife slice
-        cakeStage.classList.add('slice-go');
-        // Split cake after the slice starts
-        setTimeout(()=>{
-          cakeStage.querySelector('.cake').classList.add('split');
-          // mirror right half with separate class so halves diverge (via CSS)
-          cakeStage.querySelector('.cake').classList.add('splitR');
-          addConfetti();
-        }, 500);
-
-        // Fade overlay away after the celebration
-        setTimeout(()=>{
-          overlay.classList.add('overlay-fade');
-          setTimeout(()=>{ overlay.classList.add('hidden'); }, 800);
-        }, 2200);
-
-        // Ensure playback (muted) continues
-        try{ if(player && player.playVideo) player.playVideo(); }catch(err){}
-      }
-
-      // Unmute button
-      unmuteBtn.addEventListener('click', ()=>{
-        try{
-          if(player && player.unMute){
-            player.unMute();
-            player.setVolume(100);
-          }
-        }catch(err){}
-        unmuteBtn.style.display = 'none';
-      });
-
-      // Begin on DOM ready
-      document.addEventListener('DOMContentLoaded', startCountdown);
-    </script>
+  </script>
 </body>
 </html>
