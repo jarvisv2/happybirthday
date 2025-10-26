@@ -1,279 +1,196 @@
-<!-- Splash + Timer + Cake Stage -->
-<div id="launch-overlay" aria-hidden="true">
-  <div class="overlay-inner">
-    <!-- Countdown -->
-    <div class="countdown">
-      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-        <circle class="bg" cx="60" cy="60" r="54"></circle>
-        <circle class="fg" cx="60" cy="60" r="54"></circle>
-      </svg>
-      <div id="count-num" class="count-num">5</div>
-      <div class="count-label">Starting soon...</div>
-    </div>
-
-    <!-- Player (hidden until countdown ends) -->
-    <div id="player-stage" class="player-stage" hidden>
-      <div id="yt-player"></div>
-    </div>
-
-    <!-- Cake stage -->
-    <div id="cake-stage" class="cake-stage" hidden>
-      <div class="cake">
-        <!-- Simple CSS/SVG cake -->
-        <div class="plate"></div>
-        <div class="cake-body">
-          <div class="layer top"></div>
-          <div class="layer middle"></div>
-          <div class="layer bottom"></div>
-          <div class="icing"></div>
-          <div class="candle">
-            <div class="flame"></div>
-          </div>
-        </div>
-        <!-- Invisible slices for cut animation -->
-        <div class="slice slice-left"></div>
-        <div class="slice slice-right"></div>
-      </div>
-      <button id="cut-btn" class="cut-btn" type="button" aria-label="Cut the cake">Cut the cake</button>
-      <button id="play-fallback" class="fallback-btn" type="button" hidden>Play music</button>
-      <div id="confetti"></div>
-    </div>
-  </div>
-</div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday | darkshadeoflove">
-    <title>Happy Birthday | darkshadeoflove</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Celebration</title>
+
+  <!-- Your existing stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Optional: Font Awesome already used in your page; keep if present -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- YouTube IFrame API -->
+  <script>
+    // predeclare callback for YT API readiness
+    window.onYouTubeIframeAPIReady = function(){};
+  </script>
+  <script src="https://www.youtube.com/iframe_api" defer></script>
 </head>
 <body>
-    <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
-        </div>
-        <div class="content">
-            <div class="left">
-                <div class="title">
-                    <h1 class="happy">
-                        <span style="--t: 4s;">H</span>
-                        <span style="--t: 4.2s;">a</span>
-                        <span style="--t: 4.4s;">p</span>
-                        <span style="--t: 4.6s;">p</span>
-                        <span style="--t: 4.8s;">y</span>
-                    </h1>
-                    <h1 class="birthday">
-                        <span style="--t: 5s;">B</span>
-                        <span style="--t: 5.2s;">i</span>
-                        <span style="--t: 5.4s;">r</span>
-                        <span style="--t: 5.6s;">t</span>
-                        <span style="--t: 5.8s;">h</span>
-                        <span style="--t: 6s;">d</span>
-                        <span style="--t: 6.2s;">a</span>
-                        <span style="--t: 6.4s;">y</span>
-                    </h1>
-                    <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
-                    </div>
-                </div>
-                <div class="date__of__birth">
-                    <span></span>
-                </div>
-                <div class="btn">
-                    <button id="btn__letter">
-                        Click here Supriya ❤️
-                        <i class="fa-regular fa-envelope"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="right">
-                <div class="box__account">
-                    <div class="image">
-                        <img src="./images/r5.png" alt="">
-                    </div>
-                    <div class="name">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Supriya ❤️</span>
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
-                    </div>
-                    <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
-                    </div>
-                </div>
-                <div class="cricle">
-                    <div class="text__cricle">
-                        <span style="--i: 1;">h</span>
-                        <span style="--i: 2;">a</span>
-                        <span style="--i: 3;">p</span>
-                        <span style="--i: 4;">p</span>
-                        <span style="--i: 5;">y</span>
-                        <span style="--i: 6;">-</span>
-                        <span style="--i: 7;">b</span>
-                        <span style="--i: 8;">i</span>
-                        <span style="--i: 9;">r</span>
-                        <span style="--i: 10;">t</span>
-                        <span style="--i: 11;">h</span>
-                        <span style="--i: 12;">d</span>
-                        <span style="--i: 13;">a</span>
-                        <span style="--i: 14;">y</span>
-                        <span style="--i: 15;">-</span>
-                    </div>
-                    <i class="fa-solid fa-heart"></i>
-                </div>
-            </div>
-        </div>
-        <div class="decorate_star star1" style="--t: 15s;"></div>
-        <div class="decorate_star star2" style="--t: 15.2s;"></div>
-        <div class="decorate_star star3" style="--t: 15.4s;"></div>
-        <div class="decorate_star star4" style="--t: 15.6s;"></div>
-        <div class="decorate_star star5" style="--t: 15.8s;"></div>
-        <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
-        </div>
-        <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
-        </div>
 
-        
+  <!-- Countdown + Player + Cake Overlay -->
+  <div id="launch-overlay" aria-hidden="true">
+    <div class="overlay-inner">
+      <!-- Countdown -->
+      <div class="countdown">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="bg" cx="60" cy="60" r="54"></circle>
+          <circle class="fg" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <div id="count-num" class="count-num">5</div>
+        <div class="count-label">Starting soon...</div>
+      </div>
 
-        <div class="box__letter">
-            <div class="letter__border">
-                <div class="letter">
-                    <div class="title__letter">
-                    </div>
-                    <div class="content__letter">
-                        <div class="left">
-                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-                        </div>
-                        <div class="right">
-                            <div class="love__img">
-                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                            </div>
-                            <div class="text__letter">
-                                 <p></p>
-                            </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
+      <!-- Player (appears after countdown) -->
+      <div id="player-stage" class="player-stage" hidden>
+        <div id="yt-player"></div>
+      </div>
+
+      <!-- Cake + Cut button -->
+      <div id="cake-stage" class="cake-stage" hidden>
+        <div class="cake">
+          <div class="plate"></div>
+          <div class="cake-body">
+            <div class="layer top"></div>
+            <div class="layer middle"></div>
+            <div class="layer bottom"></div>
+            <div class="icing"></div>
+            <div class="candle">
+              <div class="flame"></div>
             </div>
+          </div>
+          <div class="slice slice-left"></div>
+          <div class="slice slice-right"></div>
         </div>
+        <button id="cut-btn" class="cut-btn" type="button" aria-label="Cut the cake">Cut the cake</button>
+        <button id="play-fallback" class="fallback-btn" type="button" hidden>Play music</button>
+        <div id="confetti"></div>
+      </div>
     </div>
+  </div>
 
-    <div id="copy">
-		<p class="text-center text-white text-sm">darkshadeoflove<a
-			href="https://www.instagram.com/@darkshadeoflove"></a></p>
-	  </div>
+  <!-- Your existing page starts here; it will be revealed after cake cut -->
+  <div id="wrapper">
+    <!-- Keep all of your original markup here exactly as in your current file -->
+  </div>
+
+  <!-- Overlay logic -->
+  <script>
+    (function () {
+      const overlay = document.getElementById('launch-overlay');
+      const countNum = document.getElementById('count-num');
+      const fg = document.querySelector('.ring .fg');
+      const playerStage = document.getElementById('player-stage');
+      const cakeStage = document.getElementById('cake-stage');
+      const cutBtn = document.getElementById('cut-btn');
+      const fallbackBtn = document.getElementById('play-fallback');
+      const wrapper = document.getElementById('wrapper');
+      if (wrapper) wrapper.classList.add('hidden-initial');
+
+      // Countdown 5 -> 0
+      let secs = 5;
+      const full = 2 * Math.PI * 54;
+      function updateRing(s) {
+        const progress = (5 - s) / 5;
+        fg.style.strokeDashoffset = progress * full;
+      }
+      countNum.textContent = secs;
+      updateRing(secs);
+      const tick = setInterval(() => {
+        secs--;
+        countNum.textContent = secs;
+        updateRing(secs);
+        if (secs <= 0) {
+          clearInterval(tick);
+          startPlayerThenCake();
+        }
+      }, 1000);
+
+      // YouTube Player
+      let ytReady = false;
+      let player;
+      window.onYouTubeIframeAPIReady = function () {
+        ytReady = true;
+      };
+
+      function startPlayerThenCake() {
+        playerStage.hidden = false;
+        const create = () => {
+          try {
+            player = new YT.Player('yt-player', {
+              videoId: 'kcGojPJzh1k', // requested track
+              playerVars: {
+                autoplay: 1,
+                controls: 0,
+                modestbranding: 1,
+                rel: 0,
+                playsinline: 1,
+                mute: 1,
+                start: 0
+              },
+              events: {
+                onReady: (e) => {
+                  e.target.playVideo();
+                  setTimeout(() => cakeStage.hidden = false, 800);
+                }
+              }
+            });
+          } catch (err) {
+            fallbackBtn.hidden = false;
+            cakeStage.hidden = false;
+          }
+        };
+        if (ytReady && window.YT && YT.Player) create();
+        else {
+          const iv = setInterval(() => {
+            if (ytReady && window.YT && YT.Player) {
+              clearInterval(iv);
+              create();
+            }
+          }, 100);
+          setTimeout(() => {
+            if (!player) {
+              fallbackBtn.hidden = false;
+              cakeStage.hidden = false;
+            }
+          }, 3000);
+        }
+      }
+
+      // Fallback manual play
+      fallbackBtn.addEventListener('click', () => {
+        try { player && player.playVideo && player.playVideo(); } catch {}
+        fallbackBtn.hidden = true;
+      });
+
+      // Confetti
+      function burstConfetti(root, count = 80) {
+        const colors = ['#ff7882', '#ffd46a', '#6ad2ff', '#baffc9', '#fff8e4'];
+        const w = root.clientWidth;
+        for (let i = 0; i < count; i++) {
+          const b = document.createElement('div');
+          b.className = 'confetti-bit';
+          b.style.left = Math.random() * w + 'px';
+          b.style.top = '-10px';
+          b.style.background = colors[Math.floor(Math.random()*colors.length)];
+          b.style.animationDelay = (Math.random()*0.4) + 's';
+          b.style.transform = `translateY(-${20+Math.random()*20}vh)`;
+          root.appendChild(b);
+          setTimeout(() => b.remove(), 1600);
+        }
+      }
+
+      // Cut action
+      cutBtn.addEventListener('click', () => {
+        const cake = document.querySelector('.cake');
+        cake.classList.add('cut');
+        burstConfetti(document.getElementById('confetti'), 80);
+        try {
+          if (player && player.unMute) { player.unMute(); player.setVolume(80); }
+          if (player && player.playVideo) player.playVideo();
+        } catch {}
+        setTimeout(() => {
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+          if (wrapper) wrapper.classList.remove('hidden-initial');
+          setTimeout(() => overlay.remove(), 500);
+        }, 1200);
+      });
+    })();
+  </script>
+
+  <!-- Keep your original scripts (e.g., jQuery effects) below or above this block as needed -->
 </body>
-<script>
-    let datetxt = "2 Nov 1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-    setTimeout(function(){
-        timeDatetxt = setInterval(function(){
-            if(currentIndex < charArrDate.length){
-                date__of__birth.textContent += charArrDate[currentIndex];
-                currentIndex++;
-            }
-            else{
-                let i = document.createElement("i");
-                i.className = "fa-solid fa-star"
-                document.querySelector(".date__of__birth").prepend(i)
-                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                clearInterval(timeDatetxt)
-            }
-        },100)
-    },12000)
-
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
-        setTimeout(function(){
-            $(".letter__border").slideDown();
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                }
-                else{
-                    clearInterval(intervalTitle)
-                }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
-    })
-    $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.remove("animation")
-            })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
-    })
-</script>
 </html>
