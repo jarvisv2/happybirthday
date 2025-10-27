@@ -40,7 +40,7 @@
   </div>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    // Floating background icons
+    // Floating icons
     const rand = (min, max) => Math.random() * (max - min) + min;
     const container = document.getElementById('bg-icons');
     const count = 20;
@@ -71,7 +71,7 @@
     }
     lucide.createIcons();
 
-    // Emoji logic - all must be clicked before redirect
+    // Emoji vanish logic
     const emojiSpans = document.querySelectorAll('#emoji-row [data-emoji]');
     let clickedCount = 0;
     emojiSpans.forEach(span => {
@@ -88,39 +88,6 @@
       });
     });
   </script>
-
-  <!-- TRUE PERSISTENT AUDIO - NEVER RESTARTS -->
-  <script>
-  (function(){
-    const MUSIC_SRC = "https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3";
-    
-    if (!window.persistentAudio) {
-      console.log("🎵 Starting music for the first time");
-      window.persistentAudio = new Audio(MUSIC_SRC);
-      window.persistentAudio.loop = true;
-      window.persistentAudio.volume = 0.6;
-      window.persistentAudio.preload = "auto";
-      
-      let playPromise = window.persistentAudio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function(error) {
-          console.log("🔇 Autoplay blocked, waiting for user click");
-          document.addEventListener('click', function() {
-            window.persistentAudio.play();
-            console.log("🎵 Music started after user interaction");
-          }, { once: true });
-        });
-      }
-    } else {
-      console.log("🎵 Music already exists, continuing seamlessly");
-      if (window.persistentAudio.paused) {
-        window.persistentAudio.play().catch(function(error) {
-          console.log("⚠️ Could not resume audio:", error);
-        });
-      }
-    }
-  })();
-  </script>
+  <iframe id="musicFrame" src="music.html" style="display:none;width:0;height:0;border:0;" tabindex="-1" aria-hidden="true"></iframe>
 </body>
 </html>
-
