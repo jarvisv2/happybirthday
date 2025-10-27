@@ -66,7 +66,7 @@
   </div>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    // Floating hearts for bg
+    // Background hearts
     const heartsContainer = document.getElementById('bg-hearts');
     const heartCount = 20;
     for (let i = 0; i < heartCount; i++) {
@@ -89,13 +89,15 @@
       heartsContainer.appendChild(heart);
     }
     lucide.createIcons();
-    // 5 second countdown to button
+
+    // Countdown logic
     let totalSeconds = 5;
     const daysEl = document.getElementById('days-value');
     const hoursEl = document.getElementById('hours-value');
     const minutesEl = document.getElementById('minutes-value');
     const secondsEl = document.getElementById('seconds-value');
     const cardsEl = document.getElementById('cards');
+    
     function renderDHMS(total) {
       const days = Math.floor(total / 86400);
       const hours = Math.floor((total % 86400) / 3600);
@@ -106,12 +108,14 @@
       minutesEl.textContent = minutes;
       secondsEl.textContent = seconds;
     }
+    
     function showSurpriseButton() {
       cardsEl.innerHTML = '<button id="surprise-btn" class="mt-2 bg-pink-500 text-white font-semibold py-3 px-5 rounded-2xl hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300">🎉 Surprise! The wait is over! 🎁</button>';
       document.getElementById('surprise-btn').addEventListener('click', function() {
         window.location.href = 'birthday.html';
       });
     }
+    
     renderDHMS(totalSeconds);
     const timer = setInterval(() => {
       totalSeconds -= 1;
@@ -124,23 +128,36 @@
       }
     }, 1000);
   </script>
-  <!-- Persistent audio/music (same code as index.html, do NOT add <audio> tag directly!) -->
+
+  <!-- TRUE PERSISTENT AUDIO - CONTINUES FROM PAGE 1 -->
   <script>
   (function(){
     const MUSIC_SRC = "https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3";
-    const AUDIO_ID  = "bg-music-shared";
-    if (!window.sessionStorage.getItem('audio_created')) {
-      let audio = document.createElement("audio");
-      audio.id = AUDIO_ID;
-      audio.src = MUSIC_SRC;
-      audio.loop = true;
-      audio.autoplay = true;
-      audio.style.display = "none";
-      document.body.appendChild(audio);
-      audio.play().catch(function() {
-        document.body.addEventListener('click', () => audio.play(), { once: true });
-      });
-      window.sessionStorage.setItem('audio_created', "1");
+    
+    if (!window.persistentAudio) {
+      console.log("🎵 Starting music for the first time");
+      window.persistentAudio = new Audio(MUSIC_SRC);
+      window.persistentAudio.loop = true;
+      window.persistentAudio.volume = 0.6;
+      window.persistentAudio.preload = "auto";
+      
+      let playPromise = window.persistentAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(error) {
+          console.log("🔇 Autoplay blocked, waiting for user click");
+          document.addEventListener('click', function() {
+            window.persistentAudio.play();
+            console.log("🎵 Music started after user interaction");
+          }, { once: true });
+        });
+      }
+    } else {
+      console.log("🎵 Music already exists, continuing seamlessly");
+      if (window.persistentAudio.paused) {
+        window.persistentAudio.play().catch(function(error) {
+          console.log("⚠️ Could not resume audio:", error);
+        });
+      }
     }
   })();
   </script>
