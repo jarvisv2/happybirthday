@@ -1,265 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Loading Something Special</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #ffe5ec 0%, #fdeaff 100%);
-      overflow: hidden;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-      position: relative;
-    }
-    .center-card {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff6fa;
-      border: 3px solid #fecafc;
-      border-radius: 20px;
-      padding: 36px 56px;
-      box-shadow: 0 0 20px #ffd6f7aa;
-      text-align: center;
-    }
-    .hearts {
-      font-size: 28px;
-      color: #f578b5;
-      margin-bottom: 12px;
-    }
-    .loading-text {
-      color: #de1979;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-    }
-    .decor {
-      font-size: 26px;
-      letter-spacing: 5px;
-    }
-    /* Floating shapes */
-    .floating {
-      position: absolute;
-      animation: float 8s linear infinite;
-      opacity: 0.4;
-    }
-    .star { color: #fcdb5a; font-size: 22px; }
-    .heart1, .heart2 { color: #f578b5; }
-    .heart2 { color: #c997e6; }
-    .dot { color: #fff; }
-
-    @keyframes float {
-      0%   { transform: translateY(100vh);}
-      100% { transform: translateY(-20vh);}
-    }
-  </style>
-</head>
-<body>
-  <!-- Floating shapes (put more/less as desired) -->
-  <span class="floating heart1" style="left:10%; animation-delay: 0s;">♥</span>
-  <span class="floating star" style="left:60%; animation-delay: 3s;">★</span>
-  <span class="floating heart2" style="left:27%; animation-delay: 2s;">♥</span>
-  <span class="floating star" style="left:80%; animation-delay: 1s;">★</span>
-  <span class="floating heart1" style="left:50%; animation-delay: 5s;">♥</span>
-  <span class="floating heart2" style="left:80%; animation-delay: 6s;">♥</span>
-
-  <div class="center-card">
-    <div class="hearts">💗 💗 💜</div>
-    <div class="loading-text">Loading something<br>special...</div>
-    <div class="decor">🎂 ✨ 🎁 💖 🎈</div>
-  </div>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Your Special Day is Almost Here</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #ffe5ec 0%, #f6e7fc 100%);
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .confetti, .heart, .star, .dot {
-      position: absolute;
-      pointer-events: none;
-      opacity: 0.35;
-      font-size: 28px;
-    }
-    /* Example floating shapes to mimic your background */
-    .heart { color: #ea62bc; }
-    .star  { color: #fcdb5a; }
-    .dot   { color: #c7b5f6; }
-
-    .main-card {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff6fa;
-      border: 3px solid #fecafc;
-      border-radius: 28px;
-      padding: 40px 40px 32px 40px;
-      box-shadow: 0 0 20px #ffd6f7aa;
-      min-width: 620px;
-      text-align: center;
-    }
-    .title {
-      color: #de1979;
-      font-size: 2.3rem;
-      font-weight: bold;
-      margin-bottom: 30px;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-    }
-    .title .heart {font-size: 1.5rem; vertical-align: middle;}
-    .countdown-container {
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      margin-bottom: 26px;
-    }
-    .time-box {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 4px 14px #efd9ef5e;
-      padding: 16px 28px;
-      min-width: 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #b370ef;
-    }
-    .time-label {
-      color: #e255a2;
-      font-weight: normal;
-      font-size: 1.05rem;
-      margin-top: 2px;
-      margin-bottom: 2px;
-    }
-    .time-emoji {
-      font-size: 1.4rem;
-      margin-top: 4px;
-    }
-    .message-box {
-      background: #fce3f0;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 0 auto;
-      width: 70%;
-      font-size: 1.13rem;
-      color: #671b7a;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-      margin-bottom: 10px;
-    }
-    .dots {
-      text-align: center;
-      margin-top: 6px;
-    }
-    .dot-active, .dot-inactive {
-      height: 12px;
-      width: 12px;
-      margin: 0 2px;
-      background: #ffaad4;
-      border-radius: 50%;
-      display: inline-block;
-      opacity: 0.7;
-    }
-    .dot-inactive { background: #eed1ea; }
-
-    /* Responsive for small screens */
-    @media (max-width: 768px) {
-      .main-card { min-width: 90vw; }
-      .countdown-container { gap: 12px; }
-      .time-box { padding: 14px 8px; font-size: 1.2rem; }
-    }
-  </style>
-</head>
-<body>
-  <!-- Floating shapes, adjust or add more as you like -->
-  <span class="heart" style="left:7%; top:20%;">♥</span>
-  <span class="dot" style="left:12%; top:80%;">●</span>
-  <span class="star" style="left:72%; top:14%;">★</span>
-  <span class="dot" style="left:47%; top:92%;">●</span>
-  <span class="heart" style="left:65%; top:65%;">♥</span>
-  <span class="dot" style="left:82%; top:36%;">●</span>
-  <span class="star" style="left:17%; top:55%;">★</span>
-
-  <div class="main-card">
-    <div class="title">
-      Your Special Day is Almost Here <span class="heart">💕</span>
-    </div>
-    <div class="countdown-container">
-      <div class="time-box">
-        <span id="days">0</span>
-        <span class="time-label">Days</span>
-        <span class="time-emoji">💗</span>
-      </div>
-      <div class="time-box">
-        <span id="hours">0</span>
-        <span class="time-label">Hours</span>
-        <span class="time-emoji">🎁</span>
-      </div>
-      <div class="time-box">
-        <span id="minutes">0</span>
-        <span class="time-label">Minutes</span>
-        <span class="time-emoji">🎂</span>
-      </div>
-      <div class="time-box">
-        <span id="seconds">5</span>
-        <span class="time-label">Seconds</span>
-        <span class="time-emoji">⭐</span>
-      </div>
-    </div>
-    <div class="message-box">
-      Just a little more... A small gift for my favorite person❤️
-      <div class="dots">
-        <span class="dot-active"></span>
-        <span class="dot-inactive"></span>
-        <span class="dot-inactive"></span>
-      </div>
-    </div>
-  </div>
-  <script>
-    // 5 second countdown
-    let totalSeconds = 5;
-    function updateCountdown() {
-      let days    = Math.floor(totalSeconds / (24*3600));
-      let hours   = Math.floor((totalSeconds % (24*3600)) / 3600);
-      let minutes = Math.floor((totalSeconds % 3600) / 60);
-      let seconds = totalSeconds % 60;
-      document.getElementById("days").textContent = days;
-      document.getElementById("hours").textContent = hours;
-      document.getElementById("minutes").textContent = minutes;
-      document.getElementById("seconds").textContent = seconds;
-    }
-    updateCountdown();
-    let countdownInterval = setInterval(function(){
-      totalSeconds--;
-      if (totalSeconds < 0) {
-        clearInterval(countdownInterval);
-        // You may show a message or redirect here
-        document.querySelector('.message-box').innerHTML = '🎉 Surprise! The wait is over! 🎁';
-      } else {
-        updateCountdown();
-      }
-    }, 1000);
-  </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="Happy Birthday | darkshadeoflove">
@@ -268,47 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
     <style>
-        /* Timer Overlay Styles */
-        #timer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            animation: gradientShift 3s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-            50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
-        }
-
-        #timer-display {
-            font-size: 120px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        #timer-text {
-            font-size: 28px;
-            color: white;
-            margin-top: 20px;
-            text-align: center;
-            opacity: 0.9;
-        }
+        /* Removed: Timer Overlay Styles (no longer needed) */
 
         /* Cake Cutting Section Styles */
         #cake-section {
@@ -318,7 +19,8 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, #ffd1dc 0%, #fff0f5 100%);
-            display: none;
+            /* CHANGED: show cake section immediately */
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -421,11 +123,7 @@
     </style>
 </head>
 <body>
-    <!-- Timer Overlay -->
-    <div id="timer-overlay">
-        <div id="timer-display">3</div>
-        <div id="timer-text">Get ready for something special...</div>
-    </div>
+    <!-- Removed: Timer Overlay -->
 
     <!-- Cake Cutting Section -->
     <div id="cake-section">
@@ -435,23 +133,18 @@
             <svg id="cake-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <!-- Candle -->
                 <rect x="95" y="30" width="10" height="25" fill="#ff6b6b" rx="2"/>
-                <!-- Flame handled by CSS -->
-                
                 <!-- Top Layer -->
                 <ellipse cx="100" cy="70" rx="60" ry="15" fill="#ff69b4"/>
                 <rect x="40" y="70" width="120" height="30" fill="#ff1493"/>
                 <ellipse cx="100" cy="100" rx="60" ry="15" fill="#c71585"/>
-                
                 <!-- Middle Layer -->
                 <ellipse cx="100" cy="100" rx="70" ry="17" fill="#ffb6c1"/>
                 <rect x="30" y="100" width="140" height="35" fill="#ff69b4"/>
                 <ellipse cx="100" cy="135" rx="70" ry="17" fill="#ff1493"/>
-                
                 <!-- Bottom Layer -->
                 <ellipse cx="100" cy="135" rx="80" ry="20" fill="#ffc0cb"/>
                 <rect x="20" y="135" width="160" height="40" fill="#ffb6c1"/>
                 <ellipse cx="100" cy="175" rx="80" ry="20" fill="#ff69b4"/>
-                
                 <!-- Decorations -->
                 <circle cx="70" cy="85" r="4" fill="#fff"/>
                 <circle cx="100" cy="85" r="4" fill="#fff"/>
@@ -613,37 +306,10 @@
     </div>
 
 <script>
-    // Timer countdown functionality
-    let countdown = 3;
-    const timerDisplay = document.getElementById('timer-display');
-    const timerOverlay = document.getElementById('timer-overlay');
-    const cakeSection = document.getElementById('cake-section');
-    const wrapper = document.getElementById('wrapper');
-    
-    const timerInterval = setInterval(() => {
-        countdown--;
-        if (countdown > 0) {
-            timerDisplay.textContent = countdown;
-        } else {
-            clearInterval(timerInterval);
-            timerOverlay.style.display = 'none';
-            cakeSection.style.display = 'flex';
-            
-            // Try to play audio (note: YouTube links won't work directly in audio tags)
-            // You'll need to download the audio file or use an embed player
-            playBackgroundMusic();
-        }
-    }, 1000);
+    // Removed: countdown/timer overlay logic
 
-    // Background music function
+    // Background music function (unchanged, call on user action if desired)
     function playBackgroundMusic() {
-        // Note: Direct YouTube links don't work in audio tags
-        // You need to either:
-        // 1. Download the audio file and host it
-        // 2. Use YouTube iframe API
-        // 3. Use a third-party service to extract audio
-        
-        // Fallback: Create YouTube iframe player
         const audioContainer = document.createElement('div');
         audioContainer.innerHTML = `
             <iframe id="youtube-player" width="0" height="0" 
@@ -657,18 +323,22 @@
     // Cake cutting functionality
     const cutButton = document.getElementById('cut-button');
     const cakeImage = document.getElementById('cake-image');
-    const cakeContainer = document.getElementById('cake-container');
+    const cakeSection = document.getElementById('cake-section');
+    const wrapper = document.getElementById('wrapper');
 
     cutButton.addEventListener('click', function() {
         // Add cut animation
         cakeImage.classList.add('cut');
-        
+
         // Create confetti
         createConfetti();
-        
+
         // Hide button
         cutButton.style.display = 'none';
-        
+
+        // Optionally start background music on user gesture to avoid autoplay blocks
+        // playBackgroundMusic();
+
         // Show main content after animation
         setTimeout(() => {
             cakeSection.style.display = 'none';
@@ -689,12 +359,12 @@
             confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
             confetti.style.animationDelay = Math.random() * 0.5 + 's';
             cakeSection.appendChild(confetti);
-            
+
             setTimeout(() => confetti.remove(), 3000);
         }
     }
 
-    // Original birthday page script
+    // Original birthday page script (unchanged)
     let datetxt = "2 Nov 1999";
     let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
     let titleLetter = "For You";
@@ -706,7 +376,7 @@
     let currentIndexTitle = 0;
     let date__of__birth = document.querySelector(".date__of__birth span");
     let text__letter = document.querySelector(".text__letter p");
-    
+
     // Replace setInterval typing with requestAnimationFrame for smoother rendering
     function startDateTyping(msPerChar = 100) {
         let idx = 0;
@@ -727,7 +397,7 @@
         }
         requestAnimationFrame(step);
     }
-    
+
     var intervalContent;
     var intervalTitle;
     $("#btn__letter").on("click", function(){
@@ -771,7 +441,7 @@
             },50)
         },6000)
     })
-    
+
     $(".close").on("click", function(){
         clearInterval(intervalContent)
         document.querySelector(".title__letter").textContent = "";
