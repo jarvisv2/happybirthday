@@ -37,6 +37,8 @@
       --star: #fcdb5a;
       --white: #fff;
     }
+
+    /* Global page container setup */
     html, body {
       margin: 0;
       padding: 0;
@@ -45,6 +47,7 @@
       background: var(--pink-1);
       overflow: hidden;
     }
+
     .screen {
       position: relative;
       width: 100%;
@@ -54,6 +57,8 @@
     .screen.active {
       display: block;
     }
+
+    /* ============ SCREEN 1: Loading Something Special ============ */
     #screen1 {
       background: linear-gradient(180deg, var(--pink-1) 0%, var(--pink-2) 100%);
     }
@@ -85,6 +90,7 @@
       cursor: pointer;
       user-select: none;
     }
+    /* Floating shapes for screen 1 */
     #screen1 .floating {
       position: absolute;
       animation: float1 8s linear infinite;
@@ -99,6 +105,8 @@
       0%   { transform: translateY(100vh); }
       100% { transform: translateY(-20vh); }
     }
+
+    /* ============ SCREEN 2: Countdown ============ */
     #screen2 {
       background: linear-gradient(180deg, #ffe5ec 0%, #f6e7fc 100%);
     }
@@ -114,6 +122,7 @@
     #screen2 .heart { color: #ea62bc; }
     #screen2 .star  { color: #fcdb5a; }
     #screen2 .dot   { color: #c7b5f6; }
+
     #screen2 .main-card {
       position: absolute;
       top: 50%; left: 50%;
@@ -196,14 +205,19 @@
       opacity: 0.7;
     }
     #screen2 .dot-inactive { background: #eed1ea; }
+
     @media (max-width: 768px) {
       #screen2 .main-card { min-width: 90vw; }
       #screen2 .countdown-container { gap: 12px; }
       #screen2 .time-box { padding: 14px 8px; font-size: 1.2rem; }
     }
+
+    /* ============ SCREEN 3: Cake → Birthday Wrapper ============ */
     #screen3 {
       background: linear-gradient(to bottom, #ffd1dc 0%, #fff0f5 100%);
     }
+
+    /* Cake cutting overlay (visible first within screen 3) */
     #cake-section {
       position: absolute;
       inset: 0;
@@ -263,6 +277,7 @@
       box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
     }
     #cut-button:active { transform: scale(0.95); }
+
     .confetti {
       position: absolute;
       width: 10px;
@@ -282,6 +297,8 @@
       text-align: center;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+    /* Final content wrapper (hidden until cake cut) */
     #wrapper {
       position: relative;
       z-index: 1;
@@ -289,18 +306,23 @@
       width: 100%;
       height: 100%;
     }
+
+    /* You likely style everything below via your own style.css; 
+       this file just preserves structure and IDs/classes used by your JS */
   </style>
 </head>
 <body>
 
   <!-- ================= SCREEN 1 ================= -->
   <section id="screen1" class="screen active" aria-label="Loading Something Special">
+    <!-- Floating shapes -->
     <span class="floating heart1" style="left:10%; animation-delay: 0s;">♥</span>
     <span class="floating star"   style="left:60%; animation-delay: 3s;">★</span>
     <span class="floating heart2" style="left:27%; animation-delay: 2s;">♥</span>
     <span class="floating star"   style="left:80%; animation-delay: 1s;">★</span>
     <span class="floating heart1" style="left:50%; animation-delay: 5s;">♥</span>
     <span class="floating heart2" style="left:80%; animation-delay: 6s;">♥</span>
+
     <div class="center-card">
       <div class="hearts">💗 💗 💜</div>
       <div class="loading-text">Loading something<br />special...</div>
@@ -310,6 +332,7 @@
 
   <!-- ================= SCREEN 2 ================= -->
   <section id="screen2" class="screen" aria-label="Countdown">
+    <!-- Decorative shapes -->
     <span class="heart" style="left:7%; top:20%;">♥</span>
     <span class="dot"   style="left:12%; top:80%;">●</span>
     <span class="star"  style="left:72%; top:14%;">★</span>
@@ -317,10 +340,12 @@
     <span class="heart" style="left:65%; top:65%;">♥</span>
     <span class="dot"   style="left:82%; top:36%;">●</span>
     <span class="star"  style="left:17%; top:55%;">★</span>
+
     <div class="main-card">
       <div class="title">
         Your Special Day is Almost Here <span style="font-size:1.5rem; vertical-align: middle;">💕</span>
       </div>
+
       <div class="countdown-container">
         <div class="time-box">
           <span id="days">0</span>
@@ -343,6 +368,7 @@
           <span class="time-emoji">⭐</span>
         </div>
       </div>
+
       <div class="message-box" id="messageBox">
         Just a little more... A small gift for my favorite person❤️
         <div class="dots">
@@ -356,22 +382,27 @@
 
   <!-- ================= SCREEN 3 ================= -->
   <section id="screen3" class="screen" aria-label="Cake and Birthday Content">
+    <!-- Cake Cutting Section -->
     <div id="cake-section">
       <div id="cake-text">Make a Wish & Cut the Cake! 🎂</div>
       <div id="cake-container">
         <div class="candle-flame"></div>
         <svg id="cake-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="Birthday Cake">
-          <!-- ... SVG contents as before ... -->
+          <!-- Candle -->
           <rect x="95" y="30" width="10" height="25" fill="#ff6b6b" rx="2"/>
+          <!-- Top Layer -->
           <ellipse cx="100" cy="70" rx="60" ry="15" fill="#ff69b4"/>
           <rect x="40" y="70" width="120" height="30" fill="#ff1493"/>
           <ellipse cx="100" cy="100" rx="60" ry="15" fill="#c71585"/>
+          <!-- Middle Layer -->
           <ellipse cx="100" cy="100" rx="70" ry="17" fill="#ffb6c1"/>
           <rect x="30" y="100" width="140" height="35" fill="#ff69b4"/>
           <ellipse cx="100" cy="135" rx="70" ry="17" fill="#ff1493"/>
+          <!-- Bottom Layer -->
           <ellipse cx="100" cy="135" rx="80" ry="20" fill="#ffc0cb"/>
           <rect x="20" y="135" width="160" height="40" fill="#ffb6c1"/>
           <ellipse cx="100" cy="175" rx="80" ry="20" fill="#ff69b4"/>
+          <!-- Decorations -->
           <circle cx="70" cy="85" r="4" fill="#fff"/>
           <circle cx="100" cy="85" r="4" fill="#fff"/>
           <circle cx="130" cy="85" r="4" fill="#fff"/>
@@ -392,38 +423,40 @@
 
     <!-- Main Birthday Content (hidden until cake is cut) -->
     <div id="wrapper" style="display: none;">
-      <!-- ... Your existing main content here ... -->
       <div class="flag__birthday">
         <img src="./images/1.png" alt="" width="350" class="flag__left">
         <img src="./images/1.png" alt="" width="350" class="flag__right">
       </div>
+
       <div class="content">
         <div class="left">
           <div class="title">
             <h1 class="happy">
-               <span style="--t: 4s;">H</span>
-               <span style="--t: 4.2s;">a</span>
-               <span style="--t: 4.4s;">p</span>
-               <span style="--t: 4.6s;">p</span>
-               <span style="--t: 4.8s;">y</span>
+              <span style="--t: 4s;">H</span>
+              <span style="--t: 4.2s;">a</span>
+              <span style="--t: 4.4s;">p</span>
+              <span style="--t: 4.6s;">p</span>
+              <span style="--t: 4.8s;">y</span>
             </h1>
             <h1 class="birthday">
-               <span style="--t: 5s;">B</span>
-               <span style="--t: 5.2s;">i</span>
-               <span style="--t: 5.4s;">r</span>
-               <span style="--t: 5.6s;">t</span>
-               <span style="--t: 5.8s;">h</span>
-               <span style="--t: 6s;">d</span>
-               <span style="--t: 6.2s;">a</span>
-               <span style="--t: 6.4s;">y</span>
+              <span style="--t: 5s;">B</span>
+              <span style="--t: 5.2s;">i</span>
+              <span style="--t: 5.4s;">r</span>
+              <span style="--t: 5.6s;">t</span>
+              <span style="--t: 5.8s;">h</span>
+              <span style="--t: 6s;">d</span>
+              <span style="--t: 6.2s;">a</span>
+              <span style="--t: 6.4s;">y</span>
             </h1>
             <div class="hat">
               <img src="./images/hat.png" alt="" width="130">
             </div>
           </div>
+
           <div class="date__of__birth">
             <span></span>
           </div>
+
           <div class="btn">
             <button id="btn__letter">
               Click here Supriya ❤️
@@ -431,6 +464,7 @@
             </button>
           </div>
         </div>
+
         <div class="right">
           <div class="box__account">
             <div class="image">
@@ -448,6 +482,7 @@
               <img width="100" src="./images/balloon2.png" alt="">
             </div>
           </div>
+
           <div class="cricle">
             <div class="text__cricle">
               <span style="--i: 1;">h</span>
@@ -470,11 +505,13 @@
           </div>
         </div>
       </div>
+
       <div class="decorate_star star1" style="--t: 15s;"></div>
       <div class="decorate_star star2" style="--t: 15.2s;"></div>
       <div class="decorate_star star3" style="--t: 15.4s;"></div>
       <div class="decorate_star star4" style="--t: 15.6s;"></div>
       <div class="decorate_star star5" style="--t: 15.8s;"></div>
+
       <div class="decorate_flower--one" style="--t: 15s;">
         <img width="20" src="./images/decorate_flower.png" alt="">
       </div>
@@ -484,12 +521,15 @@
       <div class="decorate_flower--three" style="--t: 15.6s;">
         <img width="20" src="./images/decorate_flower.png" alt="">
       </div>
+
       <div class="decorate_bottom">
         <img src="./images/decorate.png" alt="" width="100">
       </div>
       <div class="smiley__icon">
         <img src="./images/smiley_icon.png" alt="" width="100">
       </div>
+
+      <!-- Letter -->
       <div class="box__letter" style="display:none;">
         <div class="letter__border" style="display:none;">
           <div class="letter">
@@ -519,29 +559,35 @@
         </div>
       </div>
     </div>
+
     <div id="copy" style="position:absolute; bottom:10px; width:100%; text-align:center;">
       <p class="text-center text-sm">darkshadeoflove</p>
     </div>
   </section>
 
-  <!-- ==== Background Music - Put before </body> ==== -->
-  <audio id="birthday-audio" src="https://github.com/jarvisv2/happybirthday/main/music/barbaad.mp3" autoplay loop style="display:none"></audio>
   <script>
-    // ========== NAVIGATION ==========
+    // ========== Navigation helpers ==========
     const s1 = document.getElementById('screen1');
     const s2 = document.getElementById('screen2');
     const s3 = document.getElementById('screen3');
+
     function showScreen(screenEl) {
       [s1, s2, s3].forEach(el => el.classList.remove('active'));
       screenEl.classList.add('active');
+      // Reset scroll position for each screen
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
+
+    // ========== Screen 1 → Screen 2 ==========
     document.getElementById('emoji-row').addEventListener('click', () => {
       showScreen(s2);
       startCountdown();
     });
+
+    // ========== Screen 2 countdown logic ==========
     let totalSeconds = 5;
     let countdownInterval = null;
+
     function updateCountdown() {
       const days    = Math.floor(totalSeconds / (24*3600));
       const hours   = Math.floor((totalSeconds % (24*3600)) / 3600);
@@ -552,17 +598,20 @@
       document.getElementById("minutes").textContent = minutes;
       document.getElementById("seconds").textContent = seconds;
     }
+
     function startCountdown() {
       totalSeconds = 5;
       updateCountdown();
       const msgBox = document.getElementById('messageBox');
       msgBox.classList.remove('clickable');
       msgBox.textContent = 'Just a little more... A small gift for my favorite person❤️';
+
       if (countdownInterval) clearInterval(countdownInterval);
       countdownInterval = setInterval(() => {
         totalSeconds--;
         if (totalSeconds < 0) {
           clearInterval(countdownInterval);
+          // Show the Surprise message and make it clickable to continue
           msgBox.textContent = '🎉 Surprise! The wait is over! 🎁';
           msgBox.classList.add('clickable');
           msgBox.addEventListener('click', goToCake, { once: true });
@@ -571,25 +620,40 @@
         }
       }, 1000);
     }
+
     function goToCake() {
       showScreen(s3);
+      // Cake screen starts with the cake overlay visible by default
     }
 
-    // CAKE & WRAPPER
+    // ========== Screen 3: Cake → Wrapper logic ==========
     const cutButton  = document.getElementById('cut-button');
     const cakeImage  = document.getElementById('cake-image');
     const cakeSection = document.getElementById('cake-section');
     const wrapper    = document.getElementById('wrapper');
+
     cutButton.addEventListener('click', function() {
+      // Add cut animation
       cakeImage.classList.add('cut');
+
+      // Create confetti
       createConfetti();
+
+      // Hide button during animation
       cutButton.style.display = 'none';
+
+      // Optionally start background music on user gesture to avoid autoplay blocks
+      // playBackgroundMusic();
+
+      // Show main content after animation
       setTimeout(() => {
         cakeSection.style.display = 'none';
         wrapper.style.display = 'block';
+        // start typing the date when wrapper is visible
         startDateTyping(80);
       }, 1500);
     });
+
     function createConfetti() {
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
       for (let i = 0; i < 50; i++) {
@@ -603,35 +667,48 @@
       }
     }
 
-    // BACKGROUND MUSIC AUTOPLAY, USER-GESTURE FALLBACK
-    window.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('birthday-audio');
-      var playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function() {
-          document.body.addEventListener('click', () => {
-            audio.play();
-          }, { once: true });
-        });
-      }
-    });
+    
+    function playBackgroundMusic() {
+     <audio id="birthday-audio" src="https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3" autoplay loop style="display:none"></audio>
+<script>
+  // Ensure autoplay works cross-browser by starting playback on any user gesture if blocked
+  window.addEventListener('DOMContentLoaded', function() {
+    var audio = document.getElementById('birthday-audio');
+    var playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function() {
+        // If autoplay is prevented, play on first interaction
+        document.body.addEventListener('click', () => {
+          audio.play();
+        }, { once: true });
+      });
+    }
+  });
+</script>
 
-    // FINAL TYPING/LAYOUT LOGIC
+    }
+
+    // ========== Final screen: typing effects and letter interactions ==========
     let datetxt        = "2 Nov 1999";
     let datatxtletter  = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
     let titleLetter    = "For You";
+
     let charArrDate        = datetxt.split('');
     let charArrDateLetter  = datatxtletter.split('');
     let charArrTitle       = titleLetter.split('');
+
     let currentIndex       = 0;
     let currentIndexLetter = 0;
     let currentIndexTitle  = 0;
+
     let date__of__birth = null;
     let text__letter    = null;
 
     function startDateTyping(msPerChar = 100) {
+      // Ensure DOM nodes exist (they are inside #wrapper)
       date__of__birth = document.querySelector(".date__of__birth span");
       text__letter    = document.querySelector(".text__letter p");
+
       let idx  = 0;
       let last = performance.now();
       function step(now) {
@@ -651,12 +728,14 @@
       requestAnimationFrame(step);
     }
 
-    // LETTER INTERACTION
+    // Letter open/close handlers (require jQuery)
     let intervalContent;
     let intervalTitle;
+
     $(document).on("click", "#btn__letter", function() {
       $(".box__letter").slideDown();
       setTimeout(function(){ $(".letter__border").slideDown(); }, 1000);
+
       setTimeout(function(){
         intervalTitle = setInterval(function(){
           if (currentIndexTitle < charArrTitle.length) {
@@ -670,14 +749,17 @@
           }
         }, 100);
       }, 2000);
+
       setTimeout(function(){
         document.querySelector("#heart__letter").classList.add("animationOp");
         document.querySelector(".love__img").classList.add("animationOp");
         document.querySelector("#mewmew").classList.add("animationOp");
       }, 2800);
+
       setTimeout(function(){
         document.querySelectorAll(".heart").forEach((item)=>{ item.classList.add("animation"); });
       }, 3500);
+
       setTimeout(function(){
         intervalContent = setInterval(function(){
           if (currentIndexLetter < charArrDateLetter.length) {
@@ -689,6 +771,7 @@
         }, 50);
       }, 6000);
     });
+
     $(document).on("click", ".close", function() {
       clearInterval(intervalContent);
       document.querySelector(".title__letter").textContent = "";
@@ -705,5 +788,3 @@
   </script>
 </body>
 </html>
-
-
