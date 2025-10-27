@@ -6,9 +6,115 @@
     <meta name="title" content="Happy Birthday | darkshadeoflove">
     <meta name="github" content="https://github.com/jarvisv2">
     <title>Happy Birthday | darkshadeoflove</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <style>
+        /* -------- All previous CSS plus cake cutting animation -------- */
+
+        body {
+            margin: 0;
+            font-size: 16px;
+            background: radial-gradient(120% 120% at 50% 10%, #fffdf7 0%, #ffe9f2 40%, #ffd6ea 70%, #ffc1e2 100%);
+            min-height: 100vh;
+        }
+        .cake-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .cake-stage {
+            position: relative;
+            width: min(520px, 92vw);
+            aspect-ratio: 4 / 3;
+            display: grid;
+            place-items: center;
+        }
+        #cake-svg {
+            width: 100%;
+            height: auto;
+        }
+        .cake-skip {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            padding: 8px 12px;
+            border: 0;
+            background: #1f1f1f;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.85;
+            transition: opacity .2s, transform .2s;
+        }
+        .cake-skip:hover { opacity: 1; transform: translateY(-1px);}
+        #knife, #slice, .flame {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+        .flame {
+            animation: cake-flicker 0.9s ease-in-out infinite;
+        }
+        #knife {
+            transform-origin: 210px 14px;
+            animation: cake-knife-cut 2.4s cubic-bezier(.3,.7,.2,1) 0.8s forwards;
+        }
+        #slice {
+            transform-origin: 160px 98px;
+            animation: cake-slice-out 2.8s ease-out 1.6s forwards;
+        }
+        .cake-confetti { position: fixed; inset: 0; pointer-events: none;}
+        .cake-confetti span {
+            position: fixed;
+            top: -10vh;
+            left: var(--x, 0);
+            width: 8px;
+            height: 12px;
+            border-radius: 2px;
+            opacity: 0.95;
+            transform: translateY(-20vh) rotate(0turn);
+        }
+        .cake-confetti.on span {
+            animation:
+                cake-confetti-fall var(--dur, 2.8s) linear var(--delay, 0s) forwards,
+                cake-confetti-wobble calc(var(--dur, 2.8s) * 0.8) ease-in-out var(--delay, 0s) 2 alternate;
+        }
+        .cake-overlay.hide {
+            animation: cake-overlay-fade .48s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes cake-flicker {
+            0%, 100% { transform: scale(1) translateY(0); opacity: 1; }
+            50%      { transform: scale(1.05) translateY(-1px); opacity: 0.85; }
+            70%      { transform: scale(0.95) translateY(1px); opacity: 0.9;}
+        }
+        @keyframes cake-knife-cut {
+            0%   { transform: translate(-40px, -140px) rotate(-25deg);}
+            45%  { transform: translate(0px, -20px) rotate(-12deg);}
+            55%  { transform: translate(-8px, 8px) rotate(-3deg);}
+            100% { transform: translate(20px, -30px) rotate(-18deg);}
+        }
+        @keyframes cake-slice-out {
+            0%   { transform: translate(0,0) rotate(0deg);}
+            35%  { transform: translate(0,0) rotate(0deg);}
+            100% { transform: translate(46px,-28px) rotate(-10deg);}
+        }
+        @keyframes cake-confetti-fall {
+            to { transform: translateY(105vh) rotate(1turn); }
+        }
+        @keyframes cake-confetti-wobble {
+            0%, 100% { translate: 0 0;}
+            50%      { translate: 8px 0;}
+        }
+        @keyframes cake-overlay-fade {
+            to { opacity: 0; visibility: hidden; }
+        }
+    </style>
 </head>
 <body>
   <!-- Cake Cutting Intro Overlay -->
@@ -21,9 +127,7 @@
             <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.2"/>
           </filter>
         </defs>
-        <!-- Plate -->
         <ellipse cx="160" cy="198" rx="110" ry="16" fill="#e7e7e7"/>
-        <!-- Cake body -->
         <g id="cake">
           <rect x="90" y="90" width="140" height="90" rx="12" fill="#ffb3c7" filter="url(#soft-shadow)"/>
           <ellipse cx="160" cy="90" rx="70" ry="16" fill="#ffffff"/>
@@ -32,18 +136,15 @@
           <circle cx="185" cy="118" r="7" fill="#ffffff"/>
           <circle cx="210" cy="116" r="5" fill="#ffffff"/>
         </g>
-        <!-- Candle -->
         <g id="candle">
           <rect x="155" y="50" width="10" height="40" rx="3" fill="#6dcff6"/>
           <ellipse class="flame" cx="160" cy="46" rx="6" ry="10" fill="#ffb400"/>
           <ellipse class="flame" cx="160" cy="46" rx="3" ry="6" fill="#ffd25e"/>
         </g>
-        <!-- Slice (lifts out) -->
         <g id="slice">
           <polygon points="160,90 200,90 200,98 160,98" fill="#ffffff"/>
           <polygon points="160,98 200,98 200,180 160,180" fill="#ffb3c7"/>
         </g>
-        <!-- Knife -->
         <g id="knife">
           <rect x="210" y="10" width="90" height="8" rx="3" fill="#d0d5d8"/>
           <rect x="290" y="4" width="24" height="20" rx="6" fill="#5a463a"/>
@@ -55,21 +156,19 @@
     </div>
   </div>
 
-  <!-- BEGIN: Your existing wrapper and all other code -->
-  <div id="wrapper">
-    <!-- ... your original HTML content here ... -->
-    <!-- All the provided birthday greeting code -->
+  <!-- Add your main content below (birthday greeting, etc.) -->
+  <div style="text-align:center; margin-top:40px;">
+    <h1 style="font-family:'Comic Sans MS',cursive; color:#ff3e8e;">Happy Birthday, Supriya!</h1>
+    <p style="font-size:1.3em"> wishing you sweetness &amp; smiles 🎂❤️ </p>
   </div>
-  <!-- END: Main content -->
 
-  <!-- Cake overlay JS (add before closing body tag) -->
+  <!-- Cake overlay JS -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const overlay  = document.getElementById('cake-overlay');
       const slice    = document.getElementById('slice');
       const confetti = overlay.querySelector('.cake-confetti');
       const skipBtn  = overlay.querySelector('.cake-skip');
-      // Build confetti pieces
       const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#f073cd','#ff9f1c'];
       const COUNT = 80;
       for (let i = 0; i < COUNT; i++) {
@@ -93,10 +192,6 @@
       setTimeout(hideOverlay, 7000);
       skipBtn.addEventListener('click', hideOverlay);
     });
-  </script>
-  <!-- Your original scripts can remain below this -->
-  <script>
-    // Your previously provided JS, like the birthday message letter animation
   </script>
 </body>
 </html>
