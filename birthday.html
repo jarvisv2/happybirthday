@@ -424,27 +424,27 @@
     })
      </script>
 
-  <!-- Background audio (replace USERNAME/REPO with your GitHub path) -->
-  <audio id="birthday-audio" src="https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3" autoplay loop style="display:none"></audio>
-  <script>
-    // Ensure autoplay works cross-browser by starting playback on any user gesture if blocked
-    window.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('birthday-audio');
-      var playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function() {
-          // If autoplay is prevented, play on first interaction
-          document.body.addEventListener('click', () => {
-            audio.play();
-          }, { once: true });
-        });
-      }
+<script>
+(function(){
+  const MUSIC_SRC = "https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3";
+  const AUDIO_ID  = "bg-music-shared";
+  if (!window.sessionStorage.getItem('audio_created')) {
+    let audio = document.createElement("audio");
+    audio.id = AUDIO_ID;
+    audio.src = MUSIC_SRC;
+    audio.loop = true;
+    audio.autoplay = true;
+    audio.style.display = "none";
+    document.body.appendChild(audio);
+    audio.play().catch(function() {
+      document.body.addEventListener('click', () => audio.play(), { once: true });
     });
-  </script>
-</body>
-</html>
-
+    window.sessionStorage.setItem('audio_created', "1");
+  }
+})();
+    
 </script>
 </body>
 </html>
+
 
