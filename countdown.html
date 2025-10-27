@@ -6,11 +6,7 @@
   <title>5s Countdown with Background Hearts</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @keyframes floatHeart {
-      0%{transform:translateY(0)translateX(0)rotate(0deg)scale(1);}
-      50%{transform:translateY(-20px)translateX(var(--random-x,0px))rotate(var(--random-rot,0deg))scale(1.1);}
-      100%{transform:translateY(0)translateX(0)rotate(0deg)scale(1);}
-    }
+    @keyframes floatHeart { 0%{transform:translateY(0)translateX(0)rotate(0deg)scale(1);} 50%{transform:translateY(-20px)translateX(var(--random-x,0px))rotate(var(--random-rot,0deg))scale(1.1);} 100%{transform:translateY(0)translateX(0)rotate(0deg)scale(1);} }
     @keyframes pulseScaleMirror {0%{transform:scale(0.95);} 100%{transform:scale(1);} }
     @keyframes fadeUp {0%{transform:translateY(20px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }
     @keyframes dotPulse {0%{transform:scale(1);opacity:0.7;}50%{transform:scale(1.5);opacity:1;}100%{transform:scale(1);opacity:0.7;} }
@@ -66,7 +62,7 @@
   </div>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    // Background hearts
+    // Hearts background
     const heartsContainer = document.getElementById('bg-hearts');
     const heartCount = 20;
     for (let i = 0; i < heartCount; i++) {
@@ -97,7 +93,6 @@
     const minutesEl = document.getElementById('minutes-value');
     const secondsEl = document.getElementById('seconds-value');
     const cardsEl = document.getElementById('cards');
-    
     function renderDHMS(total) {
       const days = Math.floor(total / 86400);
       const hours = Math.floor((total % 86400) / 3600);
@@ -108,14 +103,12 @@
       minutesEl.textContent = minutes;
       secondsEl.textContent = seconds;
     }
-    
     function showSurpriseButton() {
       cardsEl.innerHTML = '<button id="surprise-btn" class="mt-2 bg-pink-500 text-white font-semibold py-3 px-5 rounded-2xl hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300">🎉 Surprise! The wait is over! 🎁</button>';
       document.getElementById('surprise-btn').addEventListener('click', function() {
         window.location.href = 'birthday.html';
       });
     }
-    
     renderDHMS(totalSeconds);
     const timer = setInterval(() => {
       totalSeconds -= 1;
@@ -128,38 +121,6 @@
       }
     }, 1000);
   </script>
-
-  <!-- TRUE PERSISTENT AUDIO - CONTINUES FROM PAGE 1 -->
-  <script>
-  (function(){
-    const MUSIC_SRC = "https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3";
-    
-    if (!window.persistentAudio) {
-      console.log("🎵 Starting music for the first time");
-      window.persistentAudio = new Audio(MUSIC_SRC);
-      window.persistentAudio.loop = true;
-      window.persistentAudio.volume = 0.6;
-      window.persistentAudio.preload = "auto";
-      
-      let playPromise = window.persistentAudio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function(error) {
-          console.log("🔇 Autoplay blocked, waiting for user click");
-          document.addEventListener('click', function() {
-            window.persistentAudio.play();
-            console.log("🎵 Music started after user interaction");
-          }, { once: true });
-        });
-      }
-    } else {
-      console.log("🎵 Music already exists, continuing seamlessly");
-      if (window.persistentAudio.paused) {
-        window.persistentAudio.play().catch(function(error) {
-          console.log("⚠️ Could not resume audio:", error);
-        });
-      }
-    }
-  })();
-  </script>
+  <iframe id="musicFrame" src="music.html" style="display:none;width:0;height:0;border:0;" tabindex="-1" aria-hidden="true"></iframe>
 </body>
 </html>
