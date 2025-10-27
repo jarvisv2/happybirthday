@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading Something Special</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ffe5ec 0%, #fdeaff 100%);
+      overflow: hidden;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      position: relative;
+    }
+    .center-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff6fa;
+      border: 3px solid #fecafc;
+      border-radius: 20px;
+      padding: 36px 56px;
+      box-shadow: 0 0 20px #ffd6f7aa;
+      text-align: center;
+    }
+    .hearts {
+      font-size: 28px;
+      color: #f578b5;
+      margin-bottom: 12px;
+    }
+    .loading-text {
+      color: #de1979;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+    }
+    .decor {
+      font-size: 26px;
+      letter-spacing: 5px;
+    }
+    /* Emoji click disappear effect */
+    .emoji {
+      cursor: pointer;
+      transition: opacity 0.5s, transform 0.5s;
+      display: inline-block;
+    }
+    .emoji.disappear {
+      opacity: 0;
+      transform: scale(1.7) rotate(40deg) translateY(-50px);
+      pointer-events: none;
+    }
+    /* Floating shapes */
+    .floating {
+      position: absolute;
+      animation: float 8s linear infinite;
+      opacity: 0.4;
+    }
+    .star { color: #fcdb5a; font-size: 22px; }
+    .heart1, .heart2 { color: #f578b5; }
+    .heart2 { color: #c997e6; }
+    .dot { color: #fff; }
+    @keyframes float {
+      0%   { transform: translateY(100vh);}
+      100% { transform: translateY(-20vh);}
+    }
+  </style>
+  <!-- Optional: Preload audio for faster start -->
+  <!-- Replace USERNAME/REPO/path.mp3 with your actual file path -->
+  <link rel="preload" as="audio" href="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3">
+</head>
+<body>
+  <!-- Background music -->
+  <!-- Replace the src with your audio file; autoplay may be blocked until a user gesture -->
+  <audio id="birthday-audio" src="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3" preload="auto" autoplay loop style="display:none"></audio>
+
+  <!-- Floating shapes -->
+  <span class="floating heart1" style="left:10%; animation-delay: 0s;">♥</span>
+  <span class="floating star" style="left:60%; animation-delay: 3s;">★</span>
+  <span class="floating heart2" style="left:27%; animation-delay: 2s;">♥</span>
+  <span class="floating star" style="left:80%; animation-delay: 1s;">★</span>
+  <span class="floating heart1" style="left:50%; animation-delay: 5s;">♥</span>
+  <span class="floating heart2" style="left:80%; animation-delay: 6s;">♥</span>
+
+  <div class="center-card">
+    <div class="hearts">💗 💗 💜</div>
+    <div class="loading-text">Loading something<br>special...</div>
+    <div class="decor">
+      <span class="emoji" data-emoji="cake">🎂</span>
+      <span class="emoji" data-emoji="sparkles">✨</span>
+      <span class="emoji" data-emoji="gift">🎁</span>
+      <span class="emoji" data-emoji="heart">💖</span>
+      <span class="emoji" data-emoji="balloon">🎈</span>
+    </div>
+  </div>
+
+  <script>
+    // Robust autoplay attempt with user-gesture fallback
+    (function ensureAudio() {
+      const audio = document.getElementById('birthday-audio');
+      function tryPlay() {
+        const p = audio.play();
+        if (p && typeof p.then === 'function') {
+          p.catch(() => {
+            const resume = () => { audio.play().catch(()=>{}); cleanup(); };
+            const cleanup = () => {
+              ['click','touchstart','keydown','pointerdown'].forEach(evt => {
+                document.removeEventListener(evt, resume, { passive: true });
+              });
+            };
+            ['click','touchstart','keydown','pointerdown'].forEach(evt => {
+              document.addEventListener(evt, resume, { passive: true, once: true });
+            });
+          });
+        }
+      }
+      if (audio) tryPlay();
+    })();
+
+    // Emoji interactions and redirect to page 2
+    document.addEventListener('DOMContentLoaded', function() {
+      const emojis = document.querySelectorAll('.emoji');
+      let clickedCount = 0;
+      emojis.forEach(function(emoji) {
+        emoji.addEventListener('click', function() {
+          emoji.classList.add('disappear');
+          clickedCount++;
+          if (clickedCount === emojis.length) {
+            setTimeout(function() {
+              window.location.href = "page2.html"; // go to second page
+            }, 700);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
