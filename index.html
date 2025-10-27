@@ -2,52 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Birthday Flow | Supriya</title>
+  <title>Loading Something Special</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts & Icons needed by Page 3 -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Caveat:wght@600&family=Inter:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- 3rd page meta (kept) -->
+  <meta name="title" content="Happy Birthday | darkshadeoflove">
+  <meta name="github" content="https://github.com/jarvisv2">
 
-  <!-- jQuery needed by Page 3 interactions -->
+  <!-- 3rd page dependencies (kept) -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Caveat:wght@600&family=Inter:wght@500&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  <!-- Optional: keep your original style.css for Page 3 -->
-  <link rel="stylesheet" href="style.css">
-
   <style>
-    /* ---- App-wide layout ---- */
-    html, body {
-      height: 100%;
-    }
-    body {
-      margin: 0;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-      background: #ffe5ec;
-      overflow: hidden;
-    }
-    .screen {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      display: none;
-    }
-    .screen.active {
-      display: block;
-    }
-    .fade-in {
-      animation: fadeIn 500ms ease forwards;
-    }
-    .fade-out {
-      animation: fadeOut 500ms ease forwards;
-    }
-    @keyframes fadeIn { from {opacity:0} to {opacity:1} }
-    @keyframes fadeOut { from {opacity:1} to {opacity:0} }
+    /* Page containers: show only page1 initially */
+    #page1, #page2, #page3 { display: none; }
+    #page1 { display: block; }
 
-    /* ---------- PAGE 1 ---------- */
+    /* ===========================
+       Page 1 (scoped styles)
+       =========================== */
     #page1 {
+      min-height: 100vh;
       background: linear-gradient(180deg, #ffe5ec 0%, #fdeaff 100%);
       overflow: hidden;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      position: relative;
+      margin: 0;
+      padding: 0;
     }
     #page1 .center-card {
       position: absolute;
@@ -70,66 +53,93 @@
       font-size: 22px;
       font-weight: bold;
       margin-bottom: 15px;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
     }
     #page1 .decor {
       font-size: 26px;
-      letter-spacing: 6px;
+      letter-spacing: 5px;
       display: flex;
+      gap: 12px;
       justify-content: center;
-      gap: 18px;
+      align-items: center;
+      margin-top: 6px;
       user-select: none;
-      flex-wrap: wrap;
     }
-    /* Clickable emojis */
-    .emoji {
+    #page1 .click-emoji {
       cursor: pointer;
       display: inline-block;
-      transition: transform .25s ease, filter .25s ease, opacity .25s ease;
+      transition: transform .2s ease;
     }
-    .emoji:hover { transform: translateY(-2px) scale(1.06); }
-    .emoji.gone { animation: popOut .55s ease forwards; }
-    @keyframes popOut {
-      40% { transform: scale(1.18) rotate(6deg); }
-      100% { transform: scale(0) rotate(-22deg); opacity: 0; filter: blur(2px); }
-    }
+    #page1 .click-emoji:hover { transform: scale(1.15); }
 
-    /* Floating shapes for Page 1 */
+    /* Floating shapes */
     #page1 .floating {
       position: absolute;
-      animation: float 8s linear infinite;
+      animation: p1float 8s linear infinite;
       opacity: 0.4;
-      user-select: none;
     }
     #page1 .star { color: #fcdb5a; font-size: 22px; }
     #page1 .heart1, #page1 .heart2 { color: #f578b5; }
     #page1 .heart2 { color: #c997e6; }
     #page1 .dot { color: #fff; }
-    @keyframes float {
+
+    @keyframes p1float {
       0%   { transform: translateY(100vh); }
       100% { transform: translateY(-20vh); }
     }
 
-    /* ---------- PAGE 2 ---------- */
+    /* Per-emoji disappear animations */
+    @keyframes cakeDrop {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(40px) scale(0.7); opacity: 0; }
+    }
+    @keyframes sparkTwinkle {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: scale(0) rotate(180deg); opacity: 0; }
+    }
+    @keyframes giftPop {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    @keyframes heartPop {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.2); opacity: 0; }
+    }
+    @keyframes balloonUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-60px) scale(0.9); opacity: 0; }
+    }
+    #page1 .anim-cake   { animation: cakeDrop .65s ease forwards; }
+    #page1 .anim-sparkles { animation: sparkTwinkle .6s ease forwards; }
+    #page1 .anim-gift   { animation: giftPop .55s ease forwards; }
+    #page1 .anim-heart  { animation: heartPop .5s ease forwards; }
+    #page1 .anim-balloon{ animation: balloonUp .7s ease forwards; }
+
+    /* ===========================
+       Page 2 (scoped styles)
+       =========================== */
     #page2 {
+      margin: 0;
+      min-height: 100vh;
       background: linear-gradient(180deg, #ffe5ec 0%, #f6e7fc 100%);
+      font-family: 'Comic Sans MS', Arial, sans-serif;
       overflow: hidden;
       position: relative;
+      display: grid;
+      place-items: center;
     }
-    /* Rename to avoid conflicts with Page 3 .heart/.star */
-    #page2 .p2-heart, #page2 .p2-star, #page2 .p2-dot {
+    #page2 .confetti, #page2 .heart, #page2 .star, #page2 .dot {
       position: absolute;
       pointer-events: none;
       opacity: 0.35;
       font-size: 28px;
     }
-    #page2 .p2-heart { color: #ea62bc; }
-    #page2 .p2-star  { color: #fcdb5a; }
-    #page2 .p2-dot   { color: #c7b5f6; }
+    #page2 .heart { color: #ea62bc; }
+    #page2 .star  { color: #fcdb5a; }
+    #page2 .dot   { color: #c7b5f6; }
 
     #page2 .main-card {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       background: #fff6fa;
       border: 3px solid #fecafc;
       border-radius: 28px;
@@ -143,7 +153,9 @@
       font-size: 2.3rem;
       font-weight: bold;
       margin-bottom: 30px;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
     }
+    #page2 .title .heart {font-size: 1.5rem; vertical-align: middle;}
     #page2 .countdown-container {
       display: flex;
       justify-content: center;
@@ -170,27 +182,40 @@
       margin-top: 2px;
       margin-bottom: 2px;
     }
-    #page2 .time-emoji { font-size: 1.4rem; margin-top: 4px; }
+    #page2 .time-emoji {
+      font-size: 1.4rem;
+      margin-top: 4px;
+    }
     #page2 .message-box {
       background: #fce3f0;
       border-radius: 16px;
       padding: 20px;
-      margin: 0 auto 10px;
+      margin: 0 auto;
       width: 70%;
       font-size: 1.13rem;
       color: #671b7a;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      margin-bottom: 10px;
+      cursor: default;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
     #page2 .message-box.ready {
       cursor: pointer;
-      animation: pulse 1.2s ease-in-out infinite;
+      box-shadow: 0 6px 20px rgba(222,25,121,0.15);
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(240, 128, 128, 0); }
-      50% { transform: scale(1.02); box-shadow: 0 10px 28px rgba(240, 128, 128, 0.18); }
+    #page2 .message-box.ready:hover { transform: translateY(-2px); }
+    #page2 .dots {
+      text-align: center;
+      margin-top: 6px;
     }
-    #page2 .dots { text-align: center; margin-top: 6px; }
     #page2 .dot-active, #page2 .dot-inactive {
-      height: 12px; width: 12px; margin: 0 2px; background: #ffaad4; border-radius: 50%; display: inline-block; opacity: 0.7;
+      height: 12px;
+      width: 12px;
+      margin: 0 2px;
+      background: #ffaad4;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.7;
     }
     #page2 .dot-inactive { background: #eed1ea; }
 
@@ -199,8 +224,12 @@
       #page2 .countdown-container { gap: 12px; }
       #page2 .time-box { padding: 14px 8px; font-size: 1.2rem; }
     }
+  </style>
 
-    /* ---------- PAGE 3 (Cake intro overlay CSS from your snippet) ---------- */
+  <!-- ===========================
+       3rd Page inline CSS (kept as provided)
+       =========================== -->
+  <style>
     #cake-intro{
       position:fixed; inset:0;
       background:radial-gradient(circle at 50% 30%, #fffaf3 0%, #fecdd3 45%, #d1fefc 110%);
@@ -247,7 +276,10 @@
       letter-spacing:1px;
       box-shadow:0 6px 20px 0 rgba(255,182,193,0.13);
     }
-    #cake-intro.ci-quote .cake-quote{ opacity:1; transform:translateX(-50%) translateY(-7px); }
+    #cake-intro.ci-quote .cake-quote{
+      opacity:1;
+      transform:translateX(-50%) translateY(-7px);
+    }
     .ci-cut-btn{
       position:absolute;top:61%;left:50%;transform:translateX(-50%);
       background:#f08080;color:#fff;font:600 17px/1.1 ui-sans-serif,system-ui;
@@ -277,11 +309,24 @@
 </head>
 <body>
 
-  <!-- Autoplaying audio with user-gesture fallback -->
-  <audio id="birthday-audio" src="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3" autoplay loop style="display:none"></audio>
+  <!-- Background audio with autoplay + fallback -->
+  <audio id="birthday-audio" src="https://raw.githubusercontent.com/jarvisv2/happybirthday/main/music/barbaad.mp3" autoplay loop style="display:none"></audio>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var audio = document.getElementById('birthday-audio');
+      var playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function() {
+          document.body.addEventListener('click', () => { audio.play(); }, { once: true });
+        });
+      }
+    });
+  </script>
 
-  <!-- PAGE 1 -->
-  <section id="page1" class="screen active fade-in" aria-label="Loading something special">
+  <!-- ===========================
+       Page 1
+       =========================== -->
+  <section id="page1" aria-label="Page 1: Loading something special">
     <!-- Floating shapes -->
     <span class="floating heart1" style="left:10%; animation-delay: 0s;">♥</span>
     <span class="floating star" style="left:60%; animation-delay: 3s;">★</span>
@@ -293,30 +338,32 @@
     <div class="center-card">
       <div class="hearts">💗 💗 💜</div>
       <div class="loading-text">Loading something<br>special...</div>
-      <div class="decor" id="emojiRow" aria-label="Click the five emojis to continue">
-        <span class="emoji" data-em="cake"   title="Click me">🎂</span>
-        <span class="emoji" data-em="spark"  title="Click me">✨</span>
-        <span class="emoji" data-em="gift"   title="Click me">🎁</span>
-        <span class="emoji" data-em="heart"  title="Click me">💖</span>
-        <span class="emoji" data-em="balloon" title="Click me">🎈</span>
+      <div class="decor" id="p1-emoji-row">
+        <span class="click-emoji" data-emoji="cake"      aria-label="Cake">🎂</span>
+        <span class="click-emoji" data-emoji="sparkles"  aria-label="Sparkles">✨</span>
+        <span class="click-emoji" data-emoji="gift"      aria-label="Gift">🎁</span>
+        <span class="click-emoji" data-emoji="heart"     aria-label="Heart">💖</span>
+        <span class="click-emoji" data-emoji="balloon"   aria-label="Balloon">🎈</span>
       </div>
     </div>
   </section>
 
-  <!-- PAGE 2 -->
-  <section id="page2" class="screen" aria-label="Your Special Day is Almost Here">
-    <!-- Decorative floating shapes -->
-    <span class="p2-heart" style="left:7%; top:20%;">♥</span>
-    <span class="p2-dot"   style="left:12%; top:80%;">●</span>
-    <span class="p2-star"  style="left:72%; top:14%;">★</span>
-    <span class="p2-dot"   style="left:47%; top:92%;">●</span>
-    <span class="p2-heart" style="left:65%; top:65%;">♥</span>
-    <span class="p2-dot"   style="left:82%; top:36%;">●</span>
-    <span class="p2-star"  style="left:17%; top:55%;">★</span>
+  <!-- ===========================
+       Page 2
+       =========================== -->
+  <section id="page2" aria-label="Page 2: Countdown">
+    <!-- Floating shapes -->
+    <span class="heart" style="left:7%; top:20%;">♥</span>
+    <span class="dot" style="left:12%; top:80%;">●</span>
+    <span class="star" style="left:72%; top:14%;">★</span>
+    <span class="dot" style="left:47%; top:92%;">●</span>
+    <span class="heart" style="left:65%; top:65%;">♥</span>
+    <span class="dot" style="left:82%; top:36%;">●</span>
+    <span class="star" style="left:17%; top:55%;">★</span>
 
     <div class="main-card">
       <div class="title">
-        Your Special Day is Almost Here <span style="font-size:1.5rem; vertical-align: middle;">💕</span>
+        Your Special Day is Almost Here <span class="heart">💕</span>
       </div>
       <div class="countdown-container">
         <div class="time-box">
@@ -351,9 +398,11 @@
     </div>
   </section>
 
-  <!-- PAGE 3 -->
-  <section id="page3" class="screen" aria-label="Happy Birthday page">
-    <!-- Cake intro overlay -->
+  <!-- ===========================
+       Page 3 (kept exactly; wrapped only to control initial visibility)
+       =========================== -->
+  <section id="page3" aria-label="Page 3: Birthday page" style="display:none">
+    <!-- Cake with candles spelling "Supriya" + soft pink quote -->
     <div id="cake-intro" aria-hidden="true">
       <div class="ci-stage" role="img" aria-label="Beautiful birthday cake with candles spelling Supriya">
         <svg class="ci-cake" viewBox="0 0 380 280" width="400" height="300" aria-hidden="true">
@@ -428,7 +477,7 @@
       <button id="ci-skip" class="ci-skip" type="button">Skip</button>
     </div>
 
-    <!-- Your original birthday page content -->
+    <!-- YOUR ORIGINAL BIRTHDAY PAGE CONTENT -->
     <div id="wrapper">
       <div class="flag__birthday">
         <img src="./images/1.png" alt="" width="350" class="flag__left">
@@ -437,7 +486,7 @@
       <div class="content">
         <div class="left">
           <div class="title">
-            <h1 class="happy">
+            <h1 class="happy>
               <span style="--t: 4s;">H</span>
               <span style="--t: 4.2s;">a</span>
               <span style="--t: 4.4s;">p</span>
@@ -507,13 +556,11 @@
           </div>
         </div>
       </div>
-
       <div class="decorate_star star1" style="--t: 15s;"></div>
       <div class="decorate_star star2" style="--t: 15.2s;"></div>
       <div class="decorate_star star3" style="--t: 15.4s;"></div>
       <div class="decorate_star star4" style="--t: 15.6s;"></div>
       <div class="decorate_star star5" style="--t: 15.8s;"></div>
-
       <div class="decorate_flower--one" style="--t: 15s;">
         <img width="20" src="./images/decorate_flower.png" alt="">
       </div>
@@ -523,7 +570,6 @@
       <div class="decorate_flower--three" style="--t: 15.6s;">
         <img width="20" src="./images/decorate_flower.png" alt="">
       </div>
-
       <div class="decorate_bottom">
         <img src="./images/decorate.png" alt="" width="100">
       </div>
@@ -534,7 +580,8 @@
       <div class="box__letter">
         <div class="letter__border">
           <div class="letter">
-            <div class="title__letter"></div>
+            <div class="title__letter">
+            </div>
             <div class="content__letter">
               <div class="left">
                 <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
@@ -562,221 +609,228 @@
     </div>
 
     <div id="copy">
-      <p class="text-center text-white text-sm">Instagram <a href="https://www.instagram.com/aoudumber.dev/reels/#">@darkshadeoflove</a></p>
+      <p class="text-center text-white text-sm">Instagram <a
+        href="https://www.instagram.com/aoudumber.dev/reels/#">@darkshadeoflove</a></p>
     </div>
+
+    <!-- CAKE ANIMATION JAVASCRIPT (kept) -->
+    <script>
+      (function(){
+        const intro = document.getElementById('cake-intro');
+        const cutBtn = document.getElementById('ci-cut-btn');
+        const quote = intro.querySelector('.cake-quote');
+        function burst(n=30){
+          const colors=['#fe8dc6','#fbbf24','#a3e635','#60b5fa','#ab8bfa','#f782b6'];
+          for(let i=0;i<n;i++){
+            const s=document.createElement('span');
+            s.className='confetti';
+            s.style.background = colors[i % colors.length];
+            s.style.setProperty('--x', (Math.random()*260-130)+'px');
+            s.style.setProperty('--d', (1.3+Math.random()*0.8).toFixed(2)+'s');
+            s.style.setProperty('--dl', (0.05+Math.random()*0.35).toFixed(2)+'s');
+            intro.appendChild(s);
+            setTimeout(()=>s.remove(), 2100);
+          }
+        }
+        function playCut(){
+          cutBtn.style.display="none";
+          intro.classList.add('ci-cut');
+          burst(30);
+          setTimeout(()=>{intro.classList.add('ci-quote');},950);
+          setTimeout(hide, 2600);
+        }
+        function hide(){
+          intro.classList.add('ci-fade-out');
+          setTimeout(()=>intro.remove(), 800);
+        }
+        cutBtn.addEventListener('click', playCut);
+        document.getElementById('ci-skip').addEventListener('click', hide);
+      })();
+    </script>
+
+    <!-- YOUR ORIGINAL JAVASCRIPT (kept) -->
+    <script>
+      let datetxt = "2 Nov  1999";
+      let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
+      let titleLetter = "To you";
+      let charArrDate = datetxt.split('');
+      let charArrDateLetter = datatxtletter.split('');
+      let charArrTitle = titleLetter.split('');
+      let currentIndex = 0;
+      let currentIndexLetter = 0;
+      let currentIndexTitle = 0;
+      let date__of__birth = document.querySelector(".date__of__birth span");
+      let text__letter = document.querySelector(".text__letter p");
+      setTimeout(function(){
+          timeDatetxt = setInterval(function(){
+              if(currentIndex < charArrDate.length){
+                  date__of__birth.textContent += charArrDate[currentIndex];
+                  currentIndex++;
+              }
+              else{
+                  let i = document.createElement("i");
+                  i.className = "fa-solid fa-star"
+                  document.querySelector(".date__of__birth").prepend(i)
+                  document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
+                  clearInterval(timeDatetxt)
+              }
+          },100)
+      },12000)
+
+      var intervalContent;
+      var intervalTitle;
+      $("#btn__letter").on("click", function(){
+          $(".box__letter").slideDown()
+          setTimeout(function(){
+              $(".letter__border").slideDown();
+          },1000)
+          setTimeout(function(){
+              intervalTitle = setInterval(function(){
+                  if(currentIndexTitle < charArrTitle.length){
+                      document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                      let i = document.createElement("i");
+                      i.className = "fa-solid fa-heart"
+                      document.querySelector(".title__letter").appendChild(i)
+                      currentIndexTitle++;
+                  }
+                  else{
+                      clearInterval(intervalTitle)
+                  }
+              },100)
+          },2000)
+          setTimeout(function(){
+              document.querySelector("#heart__letter").classList.add("animationOp");
+              document.querySelector(".love__img").classList.add("animationOp");
+              document.querySelector("#mewmew").classList.add("animationOp");
+          },2800)
+          setTimeout(function(){
+              document.querySelectorAll(".heart").forEach((item)=>{
+                  item.classList.add("animation")
+              })
+          },3500)
+          setTimeout(function(){
+              intervalContent = setInterval(function(){
+                  if(currentIndexLetter < charArrDateLetter.length){
+                      text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                      currentIndexLetter++;
+                  }
+                  else{
+                      clearInterval(intervalContent)
+                  }
+              },50)
+          },6000)
+      })
+      $(".close").on("click", function(){
+          clearInterval(intervalContent)
+          document.querySelector(".title__letter").textContent = "";
+          text__letter.textContent = "";
+          currentIndexLetter = 0
+          currentIndexTitle = 0
+          document.querySelector("#heart__letter").classList.remove("animationOp");
+          document.querySelector(".love__img").classList.remove("animationOp");
+          document.querySelector("#mewmew").classList.remove("animationOp");
+          document.querySelectorAll(".heart").forEach((item)=>{
+                  item.classList.remove("animation")
+              })
+          $(".box__letter").slideUp();
+          $(".letter__border").slideUp();
+      })
+    </script>
   </section>
 
-  <!-- Global navigation & behaviors -->
+  <!-- ===========================
+       Flow controller JS (Page1 → Page2 → Page3)
+       =========================== -->
   <script>
-    // Audio autoplay with promise + fallback on first user click
-    window.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('birthday-audio');
-      var playPromise = audio && audio.play && audio.play();
-      if (playPromise && typeof playPromise.then === 'function') {
-        playPromise.catch(function() {
-          document.body.addEventListener('click', function() {
-            audio.play().catch(()=>{ /* ignore */ });
-          }, { once: true });
-        });
-      }
-    });
-
-    // Simple screen navigation helpers
-    function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'fade-in'));
-      var el = document.getElementById(id);
-      if (el) {
-        el.classList.add('active', 'fade-in');
-      }
+    function showPage(id) {
+      document.getElementById('page1').style.display = 'none';
+      document.getElementById('page2').style.display = 'none';
+      document.getElementById('page3').style.display = 'none';
+      document.getElementById(id).style.display = (id === 'page3') ? '' : 'block';
     }
 
-    // PAGE 1: Emoji click-to-disappear -> then go to Page 2
+    // Page 1: emoji click handling
     (function initPage1(){
-      const emojiRow = document.getElementById('emojiRow');
-      if (!emojiRow) return;
-      const emojis = Array.from(emojiRow.querySelectorAll('.emoji'));
-      let gone = 0;
-      emojis.forEach(em => {
-        em.addEventListener('click', function() {
-          if (em.classList.contains('gone')) return;
-          em.classList.add('gone');
-          gone++;
-          if (gone === emojis.length) {
-            setTimeout(()=> showScreen('page2'), 480);
-            startCountdown(); // prepare Page 2 countdown when entering
-          }
+      const row = document.getElementById('p1-emoji-row');
+      if (!row) return;
+      const emojis = row.querySelectorAll('.click-emoji');
+      let remaining = emojis.length;
+      emojis.forEach(el => {
+        el.addEventListener('click', () => {
+          if (el.classList.contains('done')) return;
+          const type = el.getAttribute('data-emoji');
+          const anim = {
+            cake: 'anim-cake',
+            sparkles: 'anim-sparkles',
+            gift: 'anim-gift',
+            heart: 'anim-heart',
+            balloon: 'anim-balloon'
+          }[type] || 'anim-heart';
+          el.classList.add('done', anim);
+          setTimeout(() => {
+            el.style.visibility = 'hidden';
+            remaining--;
+            if (remaining === 0) {
+              // Go to Page 2 and start countdown
+              showPage('page2');
+              startCountdownP2();
+            }
+          }, 700);
         });
       });
     })();
 
-    // PAGE 2: 5-second countdown, then Surprise message; clicking message proceeds to Page 3
-    let countdownStarted = false;
-    function startCountdown() {
-      if (countdownStarted) return;
-      countdownStarted = true;
+    // Page 2: countdown + proceed-on-click after done
+    let totalSecondsP2 = 5;
+    let p2Ready = false;
+    let countdownIntervalP2 = null;
 
-      let totalSeconds = 5;
-      const daysEl = document.getElementById("days");
-      const hoursEl = document.getElementById("hours");
-      const minutesEl = document.getElementById("minutes");
-      const secondsEl = document.getElementById("seconds");
+    function updateCountdownP2() {
+      const d = Math.floor(totalSecondsP2 / (24*3600));
+      const h = Math.floor((totalSecondsP2 % (24*3600)) / 3600);
+      const m = Math.floor((totalSecondsP2 % 3600) / 60);
+      const s = totalSecondsP2 % 60;
+      const byId = id => document.getElementById(id);
+      byId('days').textContent = d;
+      byId('hours').textContent = h;
+      byId('minutes').textContent = m;
+      byId('seconds').textContent = s;
+    }
+
+    function startCountdownP2() {
+      // Reset in case user returns
+      totalSecondsP2 = 5;
+      p2Ready = false;
       const msgBox = document.getElementById('p2-message');
-
-      function updateCountdown() {
-        let days    = Math.floor(totalSeconds / (24*3600));
-        let hours   = Math.floor((totalSeconds % (24*3600)) / 3600);
-        let minutes = Math.floor((totalSeconds % 3600) / 60);
-        let seconds = totalSeconds % 60;
-        daysEl.textContent = days;
-        hoursEl.textContent = hours;
-        minutesEl.textContent = minutes;
-        secondsEl.textContent = seconds;
+      if (msgBox) {
+        msgBox.classList.remove('ready');
+        msgBox.innerHTML = 'Just a little more... A small gift for my favorite person❤️' +
+          '<div class="dots"><span class="dot-active"></span><span class="dot-inactive"></span><span class="dot-inactive"></span></div>';
       }
-      updateCountdown();
-
-      let countdownInterval = setInterval(function(){
-        totalSeconds--;
-        if (totalSeconds < 0) {
-          clearInterval(countdownInterval);
-          msgBox.innerHTML = '🎉 Surprise! The wait is over! 🎁<div style="font-size:.9rem;opacity:.8;margin-top:6px;">Click to continue</div>';
-          msgBox.classList.add('ready');
-          msgBox.addEventListener('click', function go3() {
-            msgBox.removeEventListener('click', go3);
-            showScreen('page3');
-          }, { once: true });
+      updateCountdownP2();
+      if (countdownIntervalP2) clearInterval(countdownIntervalP2);
+      countdownIntervalP2 = setInterval(function(){
+        totalSecondsP2--;
+        if (totalSecondsP2 < 0) {
+          clearInterval(countdownIntervalP2);
+          if (msgBox) {
+            msgBox.innerHTML = '🎉 Surprise! The wait is over! 🎁';
+            msgBox.classList.add('ready');
+          }
+          p2Ready = true;
         } else {
-          updateCountdown();
+          updateCountdownP2();
         }
       }, 1000);
     }
-  </script>
 
-  <!-- CAKE INTRO JS (from your snippet) -->
-  <script>
-  (function(){
-    const intro = document.getElementById('cake-intro');
-    if (!intro) return;
-    const cutBtn = document.getElementById('ci-cut-btn');
-
-    function burst(n=30){
-      const colors=['#fe8dc6','#fbbf24','#a3e635','#60b5fa','#ab8bfa','#f782b6'];
-      for(let i=0;i<n;i++){
-        const s=document.createElement('span');
-        s.className='confetti';
-        s.style.background = colors[i % colors.length];
-        s.style.setProperty('--x', (Math.random()*260-130)+'px');
-        s.style.setProperty('--d', (1.3+Math.random()*0.8).toFixed(2)+'s');
-        s.style.setProperty('--dl', (0.05+Math.random()*0.35).toFixed(2)+'s');
-        intro.appendChild(s);
-        setTimeout(()=>s.remove(), 2100);
+    document.addEventListener('click', function(e){
+      // If Page 2 message box is clicked after ready, proceed to Page 3
+      const target = e.target.closest('#p2-message');
+      if (target && p2Ready) {
+        showPage('page3');
       }
-    }
-    function playCut(){
-      if (!cutBtn) return;
-      cutBtn.style.display="none";
-      intro.classList.add('ci-cut');
-      burst(30);
-      setTimeout(()=>{intro.classList.add('ci-quote');},950);
-      setTimeout(hide, 2600);
-    }
-    function hide(){
-      intro.classList.add('ci-fade-out');
-      setTimeout(()=>intro.remove(), 800);
-    }
-    if (cutBtn) cutBtn.addEventListener('click', playCut);
-    const skip = document.getElementById('ci-skip');
-    if (skip) skip.addEventListener('click', hide);
-  })();
-  </script>
-
-  <!-- PAGE 3 original JS (typed letter, jQuery interactions) -->
-  <script>
-    let datetxt = "2 Nov  1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-
-    setTimeout(function(){
-      timeDatetxt = setInterval(function(){
-        if(currentIndex < charArrDate.length){
-          date__of__birth.textContent += charArrDate[currentIndex];
-          currentIndex++;
-        }
-        else{
-          let i = document.createElement("i");
-          i.className = "fa-solid fa-star"
-          document.querySelector(".date__of__birth").prepend(i)
-          document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-          clearInterval(timeDatetxt)
-        }
-      },100)
-    },12000)
-
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-      $(".box__letter").slideDown()
-      setTimeout(function(){
-        $(".letter__border").slideDown();
-      },1000)
-      setTimeout(function(){
-        intervalTitle = setInterval(function(){
-          if(currentIndexTitle < charArrTitle.length){
-            document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-            let i = document.createElement("i");
-            i.className = "fa-solid fa-heart"
-            document.querySelector(".title__letter").appendChild(i)
-            currentIndexTitle++;
-          }
-          else{
-            clearInterval(intervalTitle)
-          }
-        },100)
-      },2000)
-      setTimeout(function(){
-        document.querySelector("#heart__letter").classList.add("animationOp");
-        document.querySelector(".love__img").classList.add("animationOp");
-        document.querySelector("#mewmew").classList.add("animationOp");
-      },2800)
-      setTimeout(function(){
-        document.querySelectorAll(".heart").forEach((item)=>{
-          item.classList.add("animation")
-        })
-      },3500)
-      setTimeout(function(){
-        intervalContent = setInterval(function(){
-          if(currentIndexLetter < charArrDateLetter.length){
-            text__letter.textContent += charArrDateLetter[currentIndexLetter];
-            currentIndexLetter++;
-          }
-          else{
-            clearInterval(intervalContent)
-          }
-        },50)
-      },6000)
-    })
-    $(".close").on("click", function(){
-      clearInterval(intervalContent)
-      document.querySelector(".title__letter").textContent = "";
-      text__letter.textContent = "";
-      currentIndexLetter = 0
-      currentIndexTitle = 0
-      document.querySelector("#heart__letter").classList.remove("animationOp");
-      document.querySelector(".love__img").classList.remove("animationOp");
-      document.querySelector("#mewmew").classList.remove("animationOp");
-      document.querySelectorAll(".heart").forEach((item)=>{
-          item.classList.remove("animation")
-        })
-      $(".box__letter").slideUp();
-      $(".letter__border").slideUp();
-    })
+    });
   </script>
 </body>
 </html>
