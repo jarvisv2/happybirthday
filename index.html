@@ -1,140 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Loading Something Special</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #ffe5ec 0%, #fdeaff 100%);
-      overflow: hidden;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-      position: relative;
-    }
-    .center-card {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff6fa;
-      border: 3px solid #fecafc;
-      border-radius: 20px;
-      padding: 36px 56px;
-      box-shadow: 0 0 20px #ffd6f7aa;
-      text-align: center;
-    }
-    .hearts {
-      font-size: 28px;
-      color: #f578b5;
-      margin-bottom: 12px;
-    }
-    .loading-text {
-      color: #de1979;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      font-family: 'Comic Sans MS', Arial, sans-serif;
-    }
-    .decor {
-      font-size: 26px;
-      letter-spacing: 5px;
-    }
-    /* Emoji click disappear effect */
-    .emoji {
-      cursor: pointer;
-      transition: opacity 0.5s, transform 0.5s;
-      display: inline-block;
-    }
-    .emoji.disappear {
-      opacity: 0;
-      transform: scale(1.7) rotate(40deg) translateY(-50px);
-      pointer-events: none;
-    }
-    /* Floating shapes */
-    .floating {
-      position: absolute;
-      animation: float 8s linear infinite;
-      opacity: 0.4;
-    }
-    .star { color: #fcdb5a; font-size: 22px; }
-    .heart1, .heart2 { color: #f578b5; }
-    .heart2 { color: #c997e6; }
-    .dot { color: #fff; }
-    @keyframes float {
-      0%   { transform: translateY(100vh);}
-      100% { transform: translateY(-20vh);}
-    }
-  </style>
-  <!-- Optional: Preload audio for faster start -->
-  <!-- Replace USERNAME/REPO/path.mp3 with your actual file path -->
-  <link rel="preload" as="audio" href="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3">
-</head>
-<body>
-  <!-- Background music -->
-  <!-- Replace the src with your audio file; autoplay may be blocked until a user gesture -->
-  <audio id="birthday-audio" src="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3" preload="auto" autoplay loop style="display:none"></audio>
+"use client"
+import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Countdown from "@/components/countdown"
+import BirthdayCelebration from "@/components/birthday-celebration"
+import Confetti from "@/components/confetti"
+import FloatingHearts from "@/components/floating-hearts"
+import Loader from "@/components/Loader"
+import { MoveRight, PartyPopper } from "lucide-react"
 
-  <!-- Floating shapes -->
-  <span class="floating heart1" style="left:10%; animation-delay: 0s;">♥</span>
-  <span class="floating star" style="left:60%; animation-delay: 3s;">★</span>
-  <span class="floating heart2" style="left:27%; animation-delay: 2s;">♥</span>
-  <span class="floating star" style="left:80%; animation-delay: 1s;">★</span>
-  <span class="floating heart1" style="left:50%; animation-delay: 5s;">♥</span>
-  <span class="floating heart2" style="left:80%; animation-delay: 6s;">♥</span>
+export default function Home() {
+  const [isBirthday, setIsBirthday] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [bubbles, setBubbles] = useState([])
+  const [showForYouBtn, setShowForYouBtn] = useState(false)
+  const birthdayDate = new Date("April 28, 2025") // Change this date accordingly
+  const audioRef = useRef(null)
 
-  <div class="center-card">
-    <div class="hearts">💗 💗 💜</div>
-    <div class="loading-text">Loading something<br>special...</div>
-    <div class="decor">
-      <span class="emoji" data-emoji="cake">🎂</span>
-      <span class="emoji" data-emoji="sparkles">✨</span>
-      <span class="emoji" data-emoji="gift">🎁</span>
-      <span class="emoji" data-emoji="heart">💖</span>
-      <span class="emoji" data-emoji="balloon">🎈</span>
-    </div>
-  </div>
+  useEffect(() => { setTimeout(() => { setIsLoading(false) }, 1500); }, [])
 
-  <script>
-    // Robust autoplay attempt with user-gesture fallback
-    (function ensureAudio() {
-      const audio = document.getElementById('birthday-audio');
-      function tryPlay() {
-        const p = audio.play();
-        if (p && typeof p.then === 'function') {
-          p.catch(() => {
-            const resume = () => { audio.play().catch(()=>{}); cleanup(); };
-            const cleanup = () => {
-              ['click','touchstart','keydown','pointerdown'].forEach(evt => {
-                document.removeEventListener(evt, resume, { passive: true });
-              });
-            };
-            ['click','touchstart','keydown','pointerdown'].forEach(evt => {
-              document.addEventListener(evt, resume, { passive: true, once: true });
-            });
-          });
-        }
+  const startCelebration = () => {
+    setShowForYouBtn(false)
+    setIsBirthday(true)
+    if (audioRef.current) {
+      audioRef.current.volume = 0.8;
+      audioRef.current.play().catch((e) => {
+        console.log("Autoplay prevented, user interaction needed", e)
+      })
+    }
+  }
+
+  useEffect(() => {
+    const generated = Array.from({ length: 20 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      color: ["bg-pink-300", "bg-purple-300", "bg-yellow-300", "bg-violet-300", "bg-rose-300"][Math.floor(Math.random() * 3)],
+      size: 16 + Math.floor(Math.random() * 8),
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 5
+    }))
+    setBubbles(generated)
+  }, [])
+
+  if (isLoading) {
+    return (<Loader />)
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-rose-100 to-purple-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+      {isBirthday && <Confetti />}
+      <FloatingHearts />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 w-full max-w-3xl mx-auto"
+      >
+        <motion.div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl shadow-rose-100 p-8 border-2 border-rose-200"
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}>
+          <AnimatePresence mode="wait">
+            {isBirthday ? (
+              <BirthdayCelebration key="celebration" />
+            ) : (
+              <Countdown key="countdown" targetDate={birthdayDate} onCountdownEnd={() => setShowForYouBtn(true)} />
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+      {showForYouBtn &&
+        <motion.div
+          key="start-button"
+          className="flex flex-col items-center justify-center mt-8"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.button
+            onClick={startCelebration}
+            className="bg-gradient-to-r z-10 from-pink-500 to-purple-500 shadow-lg hover:shadow-xl transition-all rounded-full font-medium text-white py-4 px-8 cursor-pointer border-2 border-white flex items-center gap-3"
+            whileTap={{ scale: 0.95 }}
+            animate={{
+              y: [0, -5, 0],
+              scale: [1, 1.03, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+            }}
+          >
+            <PartyPopper className="w-6 h-6" />
+            <span className="text-xl">For you</span>
+            <MoveRight className="w-5 stroke-3 h-6" />
+          </motion.button>
+        </motion.div>
       }
-      if (audio) tryPlay();
-    })();
-
-    // Emoji interactions and redirect to page 2
-    document.addEventListener('DOMContentLoaded', function() {
-      const emojis = document.querySelectorAll('.emoji');
-      let clickedCount = 0;
-      emojis.forEach(function(emoji) {
-        emoji.addEventListener('click', function() {
-          emoji.classList.add('disappear');
-          clickedCount++;
-          if (clickedCount === emojis.length) {
-            setTimeout(function() {
-              window.location.href = "page2.html"; // go to second page
-            }, 700);
-          }
-        });
-      });
-    });
-  </script>
-</body>
-</html>
+      <audio ref={audioRef} src="/birthday.mp3" preload="auto" loop />
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        {bubbles.map((bubble, i) => (
+          <motion.div
+            key={i}
+            className="absolute"
+            style={{ left: bubble.left, top: bubble.top }}
+            animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: bubble.duration,
+              repeat: Infinity,
+              delay: bubble.delay,
+            }}
+          >
+            <div
+              className={`rounded-full ${bubble.color} opacity-60`}
+              style={{ width: `${bubble.size}px`, height: `${bubble.size}px` }}
+            />
+          </motion.div>
+        ))}
+      </div>
+    </main>
+  )
+}
