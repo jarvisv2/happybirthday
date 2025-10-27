@@ -1,604 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday | darkshadeoflove">
-    <meta name="github" content="https://github.com/jarvisv2">
-    <title>Happy Birthday | darkshadeoflove</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="Happy Birthday | darkshadeoflove">
+    <meta name="github" content="https://github.com/jarvisv2">
+    <title>Happy Birthday | darkshadeoflove</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    <!-- Birthday Intro Overlay CSS (self-contained, no changes to your styles) -->
-    <style>
-/* ============ Birthday Intro Overlay (no conflicts, bi- prefix) ============ */
-#birthday-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background:
-    radial-gradient(1200px 600px at 50% 0%, rgba(255,238,247,0.9), rgba(255,214,234,0.85)),
-    linear-gradient(180deg, #ffeaf5 0%, #fff7fc 100%);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity .6s ease, visibility .6s ease;
-  font-family: inherit;
-}
-
-#birthday-intro.bi-hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* Stage */
-.bi-stage {
-  position: relative;
-  width: min(92vw, 520px);
-  height: min(92vh, 520px);
-  display: grid;
-  place-items: end center;
-}
-
-/* Cake */
-.bi-cake {
-  position: relative;
-  width: 320px;
-  height: 260px;
-  transform: translateY(10px);
-}
-
-:root {
-  --bi-cake: #ffb6c1;     /* cake body */
-  --bi-icing: #fff;       /* icing */
-  --bi-plate: #e6e6f2;    /* plate */
-  --bi-shadow: rgba(0,0,0,.15);
-  --bi-flame1: #ffd54a;
-  --bi-flame2: #ff8a00;
-}
-
-/* Plate */
-.bi-plate {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  width: 260px;
-  height: 16px;
-  background: radial-gradient(100% 100% at 50% 30%, #ffffff 20%, #e9e9f6 60%, #d7d7ee 100%);
-  border-radius: 10px 10px 40px 40px;
-  box-shadow: 0 12px 18px var(--bi-shadow);
-}
-
-/* Tiers */
-.bi-tier {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(#ffc5cf, var(--bi-cake));
-  border-radius: 14px;
-  box-shadow: inset 0 -10px 0 rgba(255,255,255,.3), 0 6px 12px var(--bi-shadow);
-}
-
-.bi-tier--bottom {
-  width: 280px;
-  height: 86px;
-  bottom: 40px;
-}
-
-.bi-tier--middle {
-  width: 230px;
-  height: 74px;
-  bottom: 110px;
-}
-
-.bi-tier--top {
-  width: 190px;
-  height: 64px;
-  bottom: 174px;
-}
-
-/* Icing */
-.bi-icing {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -18px;
-  width: calc(100% + 18px);
-  height: 32px;
-  background: radial-gradient(100% 90% at 50% 20%, #fff 50%, #fdf2f6 90%);
-  border-radius: 20px;
-  box-shadow: 0 6px 0 rgba(255,255,255,.7);
-}
-.bi-icing::after {
-  /* simple drip scallops */
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: 20px;
-  height: 18px;
-  background:
-    radial-gradient(12px 10px at 10px 0px, #fff 60%, transparent 61%) 0 0/36px 100% repeat-x;
-}
-
-/* Candles */
-.bi-candles {
-  position: absolute;
-  top: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  height: 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.bi-candle {
-  position: relative;
-  width: 8px;
-  height: 24px;
-  background: repeating-linear-gradient(180deg, #fff, #fff 8px, #f6c 8px, #f6c 12px);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0,0,0,.1);
-}
-.bi-candle::after {
-  /* flame */
-  content: "";
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 10px;
-  height: 16px;
-  background: radial-gradient(50% 60% at 50% 50%, var(--bi-flame1) 40%, var(--bi-flame2) 70%, transparent 72%);
-  border-radius: 50% 50% 50% 50%;
-  filter: drop-shadow(0 0 6px rgba(255,200,0,.8));
-  animation: bi-flame 1.2s ease-in-out infinite;
-}
-@keyframes bi-flame {
-  0%,100% { transform: translateX(-50%) scaleY(1) }
-  50% { transform: translateX(-50%) scaleY(0.85) }
-}
-
-/* Slice (from top tier) */
-.bi-slice {
-  position: absolute;
-  left: 50%;
-  top: -2px;
-  transform: translate(-50%, 0) rotate(0deg);
-  width: 110px;
-  height: 58px;
-  background: linear-gradient(#ffc5cf, var(--bi-cake));
-  border-radius: 10px;
-  clip-path: polygon(8% 0%, 92% 0%, 78% 100%, 22% 100%);
-  box-shadow: inset 0 -8px 0 rgba(255,255,255,.35), 0 2px 4px rgba(0,0,0,.08);
-  opacity: 0;
-  animation: bi-slice-pop 1.2s ease-out 4s forwards;
-}
-.bi-slice::before {
-  /* thin icing top for the slice */
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -10px;
-  width: calc(100% + 12px);
-  height: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 0 rgba(255,255,255,.7);
-}
-@keyframes bi-slice-pop {
-  0%   { opacity: 0; transform: translate(-50%, 0) rotate(0deg) }
-  30%  { opacity: 1; transform: translate(-50%, -10px) rotate(-4deg) }
-  100% { opacity: 1; transform: translate(-10%, -70px) rotate(-18deg) }
-}
-
-/* Knife */
-.bi-knife {
-  position: absolute;
-  top: calc(100% - 190px);
-  right: -220px;
-  width: 200px;
-  height: 14px;
-  background: linear-gradient(90deg, #c9ced8 0%, #eef2f7 40%, #b7bdc8 100%);
-  border-radius: 3px;
-  box-shadow: 0 2px 3px rgba(0,0,0,.2) inset;
-  transform-origin: 15% 50%;
-  animation: bi-knife-swipe 1.8s ease-in-out 2s both;
-}
-.bi-knife::after {
-  /* handle */
-  content: "";
-  position: absolute;
-  left: -36px;
-  top: -5px;
-  width: 42px;
-  height: 24px;
-  background: linear-gradient(180deg, #6b4f3a, #3e2a1f);
-  border-radius: 12px 8px 8px 12px;
-  box-shadow: inset 0 0 0 3px rgba(0,0,0,.15);
-}
-@keyframes bi-knife-swipe {
-  0%   { transform: translateX(0) rotate(6deg) }
-  45%  { transform: translateX(-320px) rotate(-2deg) }
-  60%  { transform: translateX(-360px) rotate(0deg) }
-  100% { transform: translateX(-420px) rotate(4deg) }
-}
-
-/* Confetti */
-.bi-confetti {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.bi-confetti > span {
-  position: absolute;
-  left: var(--x, 50%);
-  top: -10vh;
-  width: 10px;
-  height: 14px;
-  background: hsl(var(--h, 0) 90% 60%);
-  border-radius: 2px;
-  transform: rotate(0deg);
-  opacity: 0;
-  animation: bi-conf-fall 1.4s ease-out calc(5s + var(--d, 0s)) forwards;
-  box-shadow:
-    12px 6px 0 hsl(calc(var(--h,0) + 25) 90% 60%),
-    -12px 12px 0 hsl(calc(var(--h,0) + 50) 90% 60%),
-    8px -10px 0 hsl(calc(var(--h,0) + 75) 90% 60%);
-}
-@keyframes bi-conf-fall {
-  0%   { transform: translateY(-10vh) rotate(0deg); opacity: 0 }
-  10%  { opacity: 1 }
-  100% { transform: translateY(110vh) rotate(360deg); opacity: 1 }
-}
-
-/* Skip button */
-.bi-skip {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 14px;
-  line-height: 1;
-  padding: 10px 14px;
-  background: #ffffffcc;
-  color: #333;
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 999px;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: transform .15s ease, background .15s ease;
-}
-.bi-skip:hover { transform: translateY(-1px) }
-.bi-skip:active { transform: translateY(0) }
-
-/* Intro fade-in on mount for a gentle start */
-#birthday-intro { animation: bi-intro-in .6s ease both }
-@keyframes bi-intro-in {
-  from { opacity: 0 } to { opacity: 1 }
-}
-
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .bi-candle::after,
-  .bi-slice,
-  .bi-knife,
-  .bi-confetti > span,
-  #birthday-intro { animation: none !important }
-}
-    </style>
+    <!-- Charming Cake Cutting Animation Styles -->
+    <style>
+    /** Cake overlay styles (pretty) **/
+    #cake-intro{
+      position:fixed; inset:0;
+      background:radial-gradient(circle at 50% 30%, #fffaf3 0%, #fecdd3 45%, #d1fefc 110%);
+      z-index:2147483647; display:grid; place-items:center; overflow:hidden;
+    }
+    #cake-intro.ci-fade-out{animation:ciFade 700ms ease forwards;}
+    @keyframes ciFade{to{opacity:0; visibility:hidden;}}
+    .ci-stage{position:relative;width:min(96vw,410px);height:min(96vh,340px);display:grid;place-items:center;}
+    .ci-cake{filter:drop-shadow(0 16px 24px #deabf780);}
+    .cakeBottom{fill:#a86a3a;}
+    .cakeMid{fill:#fff1c9;}
+    .cakeTop{fill:#f08080;}
+    .cakeLayer{fill:#ffecb3;}
+    .cakeHeart{fill:#ee649c;}
+    .cakeSparkle{fill:#fffbe2;}
+    /* Flicker candle flames */
+    .ci-flame{transform-origin:center;animation:ciFlicker .23s infinite alternate;}
+    @keyframes ciFlicker{from{transform:scale(.93)translateY(-.7px);}to{transform:scale(1.10)translateY(.7px);}}
+    /* Knife animation */
+    .ci-knife{ position:absolute; width:240px; height:26px; top:22px; left:-65px;
+      transform:rotate(-24deg); pointer-events:none; z-index:2;}
+    .ci-blade{ position:absolute; left:0; top:2px; width:165px; height:9px;
+      background:linear-gradient(90deg,#f1faf8,#e2e4e7 50%,#bbbbbb); border-radius:2px; box-shadow:0 0 8px #e2e4e7;}
+    .ci-handle{ position:absolute; left:165px; top:0; width:75px; height:13.5px;
+      background:#5a3422; border-radius:4px; box-shadow:0 2px #fff8 0;}
+    /* Cut animation */
+    #cake-intro.ci-cut .ci-knife{
+      animation:ciSlice 1.2s cubic-bezier(.3,.7,.2,1) 1 both;
+    }
+    @keyframes ciSlice{
+      0%   { transform: translate(0,0) rotate(-24deg); }
+      50%  { transform: translate(130px,85px) rotate(-19deg); }
+      100% { transform: translate(240px,170px) rotate(-14deg); }
+    }
+    /* Cake halves split after cut */
+    .ci-half{transition:transform .95s cubic-bezier(.3,.9,.2,1);}
+    #cake-intro.ci-cut .ci-left{ transform: translateX(-23px) rotate(-1.5deg);}
+    #cake-intro.ci-cut .ci-right{transform: translateX(23px) rotate(1.5deg);}
+    /* Sparkle on cut */
+    #cake-intro.ci-cut .ci-spark{ animation:ciSpark .8s ease .17s 1 both;}
+    @keyframes ciSpark{0%{opacity:0}14%{opacity:1}87%{opacity:1}100%{opacity:0}}
+    /* Confetti */
+    .confetti{position:absolute;width:9px;height:16px;top:-26px;left:50%;opacity:0;transform:translateX(-50%);border-radius:2px;animation:confFall linear forwards;}
+    #cake-intro.ci-cut .confetti{animation-duration:var(--d,2s); animation-delay:var(--dl,0s);}
+    @keyframes confFall{0%{opacity:1;transform:translate3d(var(--x,0),-24px,0)rotate(0);}100%{opacity:1;transform:translate3d(var(--x,0),120vh,0)rotate(540deg);}}
+    /* Birthday Quote */
+    .cake-quote{
+      position:absolute;top:69%;left:50%;transform:translateX(-50%);
+      background:rgba(255,255,255,.86);padding:18px 22px;border-radius:14px;
+      box-shadow:0 8px 22px #ddd4; font: 700 18px/1.52 'Segoe UI',sans-serif; color:#de4785;
+      opacity:0; transition:opacity .6s cubic-bezier(.5,1,.3,1);
+      z-index:5; text-align:center; letter-spacing:.01em;
+    }
+    #cake-intro.ci-quote .cake-quote{ opacity:1; }
+    .cakeHeart{filter: drop-shadow(0 0 8px #eeb6e1af);}
+    /* Skip Button */
+    .ci-skip{
+      position:absolute;bottom:21px;right:23px;
+      background:rgba(0,0,0,.56);color:#fff;border:none;border-radius:999px;
+      padding:8.5px 15px; font:600 15px/1.1 ui-sans-serif,system-ui;cursor:pointer;
+      box-shadow:0 2px #0002;
+    }
+    .ci-skip:focus{outline:2px solid #fff8;outline-offset:2.5px;}
+    </style>
 </head>
 <body>
 
-  <!-- Birthday intro overlay (added, independent of your content) -->
-  <div id="birthday-intro" aria-hidden="true">
-    <div class="bi-stage">
-      <!-- Cake -->
-      <div class="bi-cake">
-        <div class="bi-plate"></div>
-
-        <div class="bi-tier bi-tier--bottom">
-          <div class="bi-icing"></div>
+    <!-- Charming Cake Cutting Intro -->
+    <div id="cake-intro" aria-hidden="true">
+      <div class="ci-stage" role="img" aria-label="Lovely chocolate cake with heart, knife cut animation">
+        <svg class="ci-cake" viewBox="0 0 330 250" width="340" height="265" aria-hidden="true">
+          <!-- Base layer -->
+          <ellipse cx="163" cy="220" rx="124" ry="18" fill="#eedbe9"/>
+          <!-- Cake layers (left & right groups) -->
+          <g class="ci-half ci-left">
+            <ellipse class="cakeBottom" cx="93" cy="170" rx="47" ry="24"/>
+            <ellipse class="cakeMid" cx="93" cy="154" rx="38" ry="17"/>
+            <ellipse class="cakeLayer" cx="93" cy="144" rx="31" ry="8"/>
+            <!-- Hearts decor -->
+            <ellipse class="cakeHeart" cx="77" cy="170" rx="9" ry="7"/>
+            <ellipse class="cakeHeart" cx="104" cy="158" rx="7" ry="5"/>
+            <ellipse class="cakeHeart" cx="93" cy="186" rx="6.4" ry="6.4"/>
+          </g>
+          <g class="ci-half ci-right">
+            <ellipse class="cakeBottom" cx="233" cy="170" rx="47" ry="24"/>
+            <ellipse class="cakeMid" cx="233" cy="154" rx="38" ry="17"/>
+            <ellipse class="cakeLayer" cx="233" cy="144" rx="31" ry="8"/>
+            <!-- Hearts decor -->
+            <ellipse class="cakeHeart" cx="220" cy="168" rx="7" ry="7"/>
+            <ellipse class="cakeHeart" cx="241" cy="158" rx="8" ry="5.2"/>
+            <ellipse class="cakeHeart" cx="233" cy="186" rx="7.4" ry="6.4"/>
+          </g>
+          <!-- Cake top -->
+          <ellipse class="cakeTop" cx="163" cy="142" rx="72" ry="24"/>
+          <!-- Candles -->
+          <g>
+            <!-- left candle -->
+            <rect x="123" y="100" width="10" height="38" rx="3" fill="#ffe4e6"/>
+            <ellipse class="ci-flame" cx="128" cy="96" rx="4" ry="8" fill="#fde68a"/>
+            <!-- mid candle -->
+            <rect x="160" y="92" width="10" height="46" rx="3" fill="#dbeafe"/>
+            <ellipse class="ci-flame" cx="165" cy="87" rx="4.5" ry="9.3" fill="#fde68a"/>
+            <!-- right candle -->
+            <rect x="197" y="100" width="10" height="38" rx="3" fill="#ffe4e6"/>
+            <ellipse class="ci-flame" cx="202" cy="96" rx="4" ry="8" fill="#fde68a"/>
+          </g>
+          <!-- Sparkle along cut line -->
+          <line class="ci-spark" x1="103" y1="77" x2="231" y2="197" stroke="#ffe271" stroke-width="2.2" stroke-linecap="round" opacity="0"/>
+          <!-- Sparkles (random) -->
+          <ellipse class="cakeSparkle" cx="128" cy="155" rx="3.3" ry="3"/>
+          <ellipse class="cakeSparkle" cx="195" cy="135" rx="2" ry="1.1"/>
+          <ellipse class="cakeSparkle" cx="160" cy="160" rx="2" ry="1.2"/>
+          <ellipse class="cakeSparkle" cx="173" cy="168" rx="1.6" ry="1"/>
+        </svg>
+        <!-- Knife -->
+        <div class="ci-knife" aria-hidden="true">
+          <span class="ci-blade"></span>
+          <span class="ci-handle"></span>
         </div>
-
-        <div class="bi-tier bi-tier--middle">
-          <div class="bi-icing"></div>
-        </div>
-
-        <div class="bi-tier bi-tier--top">
-          <div class="bi-icing"></div>
-          <div class="bi-candles" aria-hidden="true">
-            <span class="bi-candle"></span>
-            <span class="bi-candle"></span>
-            <span class="bi-candle"></span>
-            <span class="bi-candle"></span>
-            <span class="bi-candle"></span>
-          </div>
-          <!-- The slice that will lift out -->
-          <div class="bi-slice" aria-hidden="true"></div>
+        <!-- Birthday Quote -->
+        <div class="cake-quote">
+            "May your birthday cake be as sweet as your journey,<br>
+             and your smile brighter than every candle.<br>
+             Happy Birthday, Supriya! 💖"
         </div>
       </div>
-
-      <!-- Knife -->
-      <div class="bi-knife" aria-hidden="true"></div>
-
-      <!-- Confetti -->
-      <div class="bi-confetti" aria-hidden="true">
-        <span style="--x:5%; --h:0; --d:.0s;"></span>
-        <span style="--x:15%; --h:30; --d:.05s;"></span>
-        <span style="--x:25%; --h:60; --d:.1s;"></span>
-        <span style="--x:35%; --h:90; --d:.15s;"></span>
-        <span style="--x:45%; --h:120; --d:.2s;"></span>
-        <span style="--x:55%; --h:150; --d:.25s;"></span>
-        <span style="--x:65%; --h:180; --d:.3s;"></span>
-        <span style="--x:75%; --h:210; --d:.35s;"></span>
-        <span style="--x:85%; --h:240; --d:.4s;"></span>
-        <span style="--x:50%; --h:270; --d:.45s;"></span>
-        <span style="--x:30%; --h:300; --d:.5s;"></span>
-        <span style="--x:70%; --h:330; --d:.55s;"></span>
-      </div>
-
-      <button class="bi-skip" type="button" aria-label="Skip animation">Skip</button>
+      <button id="ci-skip" class="ci-skip" type="button">Skip</button>
     </div>
-  </div>
 
-    <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="./images/1.png" alt="" width="350" class="flag__left">
-            <img src="./images/1.png" alt="" width="350" class="flag__right">
-        </div>
-        <div class="content">
-            <div class="left">
-                <div class="title">
-                    <h1 class="happy">
-                        <span style="--t: 4s;">H</span>
-                        <span style="--t: 4.2s;">a</span>
-                        <span style="--t: 4.4s;">p</span>
-                        <span style="--t: 4.6s;">p</span>
-                        <span style="--t: 4.8s;">y</span>
-                    </h1>
-                    <h1 class="birthday">
-                        <span style="--t: 5s;">B</span>
-                        <span style="--t: 5.2s;">i</span>
-                        <span style="--t: 5.4s;">r</span>
-                        <span style="--t: 5.6s;">t</span>
-                        <span style="--t: 5.8s;">h</span>
-                        <span style="--t: 6s;">d</span>
-                        <span style="--t: 6.2s;">a</span>
-                        <span style="--t: 6.4s;">y</span>
-                    </h1>
-                    <div class="hat">
-                        <img src="./images/hat.png" alt="" width="130">
-                    </div>
-                </div>
-                <div class="date__of__birth">
-                    <span></span>
-                </div>
-                <div class="btn">
-                    <button id="btn__letter">
-                        Click here Supriya ❤️
-                        <i class="fa-regular fa-envelope"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="right">
-                <div class="box__account">
-                    <div class="image">
-                        <img src="./images/r5.png" alt="">
-                    </div>
-                    <div class="name">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>❤️Supriya❤️</span>
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="balloon_one">
-                        <img width="100px" src="./images/balloon1.png" alt="">
-                    </div>
-                    <div class="balloon_two">
-                        <img width="100px" src="./images/balloon2.png" alt="">
-                    </div>
-                </div>
-                <div class="cricle">
-                    <div class="text__cricle">
-                        <span style="--i: 1;">h</span>
-                        <span style="--i: 2;">a</span>
-                        <span style="--i: 3;">p</span>
-                        <span style="--i: 4;">p</span>
-                        <span style="--i: 5;">y</span>
-                        <span style="--i: 6;">-</span>
-                        <span style="--i: 7;">b</span>
-                        <span style="--i: 8;">i</span>
-                        <span style="--i: 9;">r</span>
-                        <span style="--i: 10;">t</span>
-                        <span style="--i: 11;">h</span>
-                        <span style="--i: 12;">d</span>
-                        <span style="--i: 13;">a</span>
-                        <span style="--i: 14;">y</span>
-                        <span style="--i: 15;">-</span>
-                    </div>
-                    <i class="fa-solid fa-heart"></i>
-                </div>
-            </div>
-        </div>
-        <div class="decorate_star star1" style="--t: 15s;"></div>
-        <div class="decorate_star star2" style="--t: 15.2s;"></div>
-        <div class="decorate_star star3" style="--t: 15.4s;"></div>
-        <div class="decorate_star star4" style="--t: 15.6s;"></div>
-        <div class="decorate_star star5" style="--t: 15.8s;"></div>
-        <div class="decorate_flower--one" style="--t: 15s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--two" style="--t: 15.3s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_flower--three" style="--t: 15.6s;">
-            <img width="20" src="./images/decorate_flower.png" alt="">
-        </div>
-        <div class="decorate_bottom">
-            <img src="./images/decorate.png" alt="" width="100">
-        </div>
-        <div class="smiley__icon">
-            <img src="./images/smiley_icon.png" alt="" width="100">
-        </div>
+    <!-- Your Original Birthday Page Content -->
+    <div id="wrapper">
+        <div class="flag__birthday">
+            <img src="./images/1.png" alt="" width="350" class="flag__left">
+            <img src="./images/1.png" alt="" width="350" class="flag__right">
+        </div>
+        <div class="content">
+            <div class="left">
+                <div class="title">
+                    <h1 class="happy">
+                        <span style="--t: 4s;">H</span>
+                        <span style="--t: 4.2s;">a</span>
+                        <span style="--t: 4.4s;">p</span>
+                        <span style="--t: 4.6s;">p</span>
+                        <span style="--t: 4.8s;">y</span>
+                    </h1>
+                    <h1 class="birthday">
+                        <span style="--t: 5s;">B</span>
+                        <span style="--t: 5.2s;">i</span>
+                        <span style="--t: 5.4s;">r</span>
+                        <span style="--t: 5.6s;">t</span>
+                        <span style="--t: 5.8s;">h</span>
+                        <span style="--t: 6s;">d</span>
+                        <span style="--t: 6.2s;">a</span>
+                        <span style="--t: 6.4s;">y</span>
+                    </h1>
+                    <div class="hat">
+                        <img src="./images/hat.png" alt="" width="130">
+                    </div>
+                </div>
+                <div class="date__of__birth">
+                    <span></span>
+                </div>
+                <div class="btn">
+                    <button id="btn__letter">
+                        Click here Supriya ❤️
+                        <i class="fa-regular fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="right">
+                <div class="box__account">
+                    <div class="image">
+                        <img src="./images/r5.png" alt="">
+                    </div>
+                    <div class="name">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>❤️Supriya❤️</span>
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="balloon_one">
+                        <img width="100px" src="./images/balloon1.png" alt="">
+                    </div>
+                    <div class="balloon_two">
+                        <img width="100px" src="./images/balloon2.png" alt="">
+                    </div>
+                </div>
+                <div class="cricle">
+                    <div class="text__cricle">
+                        <span style="--i: 1;">h</span>
+                        <span style="--i: 2;">a</span>
+                        <span style="--i: 3;">p</span>
+                        <span style="--i: 4;">p</span>
+                        <span style="--i: 5;">y</span>
+                        <span style="--i: 6;">-</span>
+                        <span style="--i: 7;">b</span>
+                        <span style="--i: 8;">i</span>
+                        <span style="--i: 9;">r</span>
+                        <span style="--i: 10;">t</span>
+                        <span style="--i: 11;">h</span>
+                        <span style="--i: 12;">d</span>
+                        <span style="--i: 13;">a</span>
+                        <span style="--i: 14;">y</span>
+                        <span style="--i: 15;">-</span>
+                    </div>
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="decorate_star star1" style="--t: 15s;"></div>
+        <div class="decorate_star star2" style="--t: 15.2s;"></div>
+        <div class="decorate_star star3" style="--t: 15.4s;"></div>
+        <div class="decorate_star star4" style="--t: 15.6s;"></div>
+        <div class="decorate_star star5" style="--t: 15.8s;"></div>
+        <div class="decorate_flower--one" style="--t: 15s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--two" style="--t: 15.3s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--three" style="--t: 15.6s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_bottom">
+            <img src="./images/decorate.png" alt="" width="100">
+        </div>
+        <div class="smiley__icon">
+            <img src="./images/smiley_icon.png" alt="" width="100">
+        </div>
 
+        <div class="box__letter">
+            <div class="letter__border">
+                <div class="letter">
+                    <div class="title__letter">
+                    </div>
+                    <div class="content__letter">
+                        <div class="left">
+                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
+                        </div>
+                        <div class="right">
+                            <div class="love__img">
+                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+                            </div>
+                            <div class="text__letter">
+                                 <p></p>
+                            </div>
+                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        
+    <div id="copy">
+        <p class="text-center text-white text-sm">Instagram <a
+            href="https://www.instagram.com/aoudumber.dev/reels/#">@darkshadeoflove</a></p>
+    </div>
 
+    <!-- Cake Cutting Animation JavaScript -->
+    <script>
+    (function(){
+      const intro = document.getElementById('cake-intro');
+      if(!intro) return;
 
-        <div class="box__letter">
-            <div class="letter__border">
-                <div class="letter">
-                    <div class="title__letter">
-                    </div>
-                    <div class="content__letter">
-                        <div class="left">
-                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
-                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
-                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
-                        </div>
-                        <div class="right">
-                            <div class="love__img">
-                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
-                            </div>
-                            <div class="text__letter">
-                                 <p></p>
-                            </div>
-                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="copy">
-        <p class="text-center text-white text-sm">Instagram <a
-            href="https://www.instagram.com/aoudumber.dev/reels/#">@darkshadeoflove</a></p>
-      </div>
-
-  <!-- Birthday Intro Overlay JS (auto-hide and skip) -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var intro = document.getElementById('birthday-intro');
-      if (!intro) return;
-
-      function hideIntro() {
-        intro.classList.add('bi-hide');
-        intro.addEventListener('transitionend', function () {
-          if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
-        }, { once: true });
+      function burst(n=38){
+        const colors=['#fe8dc6','#fbbf24','#a3e635','#60b5fa','#ab8bfa','#f782b6'];
+        for(let i=0;i<n;i++){
+          const s=document.createElement('span');
+          s.className='confetti';
+          s.style.background = colors[i % colors.length];
+          s.style.setProperty('--x', (Math.random()*260-130)+'px');
+          s.style.setProperty('--d', (1.3+Math.random()*0.8).toFixed(2)+'s');
+          s.style.setProperty('--dl', (0.05+Math.random()*0.35).toFixed(2)+'s');
+          intro.appendChild(s);
+          setTimeout(()=>s.remove(), 2600);
+        }
       }
 
-      var timer = setTimeout(hideIntro, 6500); // total timeline ~6.5s
-
-      var skip = intro.querySelector('.bi-skip');
-      if (skip) {
-        skip.addEventListener('click', function () {
-          clearTimeout(timer);
-          hideIntro();
-        });
+      function play(){
+        intro.classList.add('ci-cut');
+        burst(38);
+        setTimeout(()=>intro.classList.add('ci-quote'), 1500);
+        setTimeout(hide, 3000);
       }
-    });
-  </script>
+
+      function hide(){
+        intro.classList.add('ci-fade-out');
+        setTimeout(()=>intro.remove(), 800);
+      }
+
+      window.addEventListener('load',() => {
+        setTimeout(play, 1500);
+      });
+
+      document.getElementById('ci-skip').addEventListener('click',hide);
+    })();
+    </script>
+
+    <!-- Your Original JavaScript -->
+    <script>
+        let datetxt = "2 Nov  1999";
+        let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
+        let titleLetter = "To you";
+        let charArrDate = datetxt.split('');
+        let charArrDateLetter = datatxtletter.split('');
+        let charArrTitle = titleLetter.split('');
+        let currentIndex = 0;
+        let currentIndexLetter = 0;
+        let currentIndexTitle = 0;
+        let date__of__birth = document.querySelector(".date__of__birth span");
+        let text__letter = document.querySelector(".text__letter p");
+        setTimeout(function(){
+            timeDatetxt = setInterval(function(){
+                if(currentIndex < charArrDate.length){
+                    date__of__birth.textContent += charArrDate[currentIndex];
+                    currentIndex++;
+                }
+                else{
+                    let i = document.createElement("i");
+                    i.className = "fa-solid fa-star"
+                    document.querySelector(".date__of__birth").prepend(i)
+                    document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
+                    clearInterval(timeDatetxt)
+                }
+            },100)
+        },12000)
+
+        var intervalContent;
+        var intervalTitle;
+        $("#btn__letter").on("click", function(){
+            $(".box__letter").slideDown()
+            setTimeout(function(){
+                $(".letter__border").slideDown();
+            },1000)
+            setTimeout(function(){
+                intervalTitle = setInterval(function(){
+                    if(currentIndexTitle < charArrTitle.length){
+                        document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                        let i = document.createElement("i");
+                        i.className = "fa-solid fa-heart"
+                        document.querySelector(".title__letter").appendChild(i)
+                        currentIndexTitle++;
+                    }
+                    else{
+                        clearInterval(intervalTitle)
+                    }
+                },100)
+            },2000)
+            setTimeout(function(){
+                document.querySelector("#heart__letter").classList.add("animationOp");
+                document.querySelector(".love__img").classList.add("animationOp");
+                document.querySelector("#mewmew").classList.add("animationOp");
+            },2800)
+            setTimeout(function(){
+                document.querySelectorAll(".heart").forEach((item)=>{
+                    item.classList.add("animation")
+                })
+            },3500)
+            setTimeout(function(){
+                intervalContent = setInterval(function(){
+                    if(currentIndexLetter < charArrDateLetter.length){
+                        text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                        currentIndexLetter++;
+                    }
+                    else{
+                        clearInterval(intervalContent)
+                    }
+                },50)
+            },6000)
+        })
+        $(".close").on("click", function(){
+            clearInterval(intervalContent)
+            document.querySelector(".title__letter").textContent = "";
+            text__letter.textContent = "";
+            currentIndexLetter = 0
+            currentIndexTitle = 0
+            document.querySelector("#heart__letter").classList.remove("animationOp");
+            document.querySelector(".love__img").classList.remove("animationOp");
+            document.querySelector("#mewmew").classList.remove("animationOp");
+            document.querySelectorAll(".heart").forEach((item)=>{
+                    item.classList.remove("animation")
+                })
+            $(".box__letter").slideUp();
+            $(".letter__border").slideUp();
+        })
+    </script>
 </body>
-<script>
-    let datetxt = "2 Nov  1999";
-    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕";
-    let titleLetter = "To you";
-    let charArrDate = datetxt.split('');
-    let charArrDateLetter = datatxtletter.split('');
-    let charArrTitle = titleLetter.split('');
-    let currentIndex = 0;
-    let currentIndexLetter = 0;
-    let currentIndexTitle = 0;
-    let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
-    setTimeout(function(){
-        timeDatetxt = setInterval(function(){
-            if(currentIndex < charArrDate.length){
-                date__of__birth.textContent += charArrDate[currentIndex];
-                currentIndex++;
-            }
-            else{
-                let i = document.createElement("i");
-                i.className = "fa-solid fa-star"
-                document.querySelector(".date__of__birth").prepend(i)
-                document.querySelector(".date__of__birth").appendChild(i.cloneNode(true))
-                clearInterval(timeDatetxt)
-            }
-        },100)
-    },12000)
-
-
-    var intervalContent;
-    var intervalTitle;
-    $("#btn__letter").on("click", function(){
-        $(".box__letter").slideDown()
-        setTimeout(function(){
-            $(".letter__border").slideDown();
-        },1000)
-        setTimeout(function(){
-            intervalTitle = setInterval(function(){
-                if(currentIndexTitle < charArrTitle.length){
-                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
-                    let i = document.createElement("i");
-                    i.className = "fa-solid fa-heart"
-                    document.querySelector(".title__letter").appendChild(i)
-                    currentIndexTitle++;
-                }
-                else{
-                    clearInterval(intervalTitle)
-                }
-            },100)
-        },2000)
-        setTimeout(function(){
-            document.querySelector("#heart__letter").classList.add("animationOp");
-            document.querySelector(".love__img").classList.add("animationOp");
-            document.querySelector("#mewmew").classList.add("animationOp");
-        },2800)
-        setTimeout(function(){
-            document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.add("animation")
-            })
-        },3500)
-        setTimeout(function(){
-            intervalContent = setInterval(function(){
-                if(currentIndexLetter < charArrDateLetter.length){
-                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
-                    currentIndexLetter++;
-                }
-                else{
-                    clearInterval(intervalContent)
-                }
-            },50)
-        },6000)
-    })
-    $(".close").on("click", function(){
-        clearInterval(intervalContent)
-        document.querySelector(".title__letter").textContent = "";
-        text__letter.textContent = "";
-        currentIndexLetter = 0
-        currentIndexTitle = 0
-        document.querySelector("#heart__letter").classList.remove("animationOp");
-        document.querySelector(".love__img").classList.remove("animationOp");
-        document.querySelector("#mewmew").classList.remove("animationOp");
-        document.querySelectorAll(".heart").forEach((item)=>{
-                item.classList.remove("animation")
-            })
-        $(".box__letter").slideUp();
-        $(".letter__border").slideUp();
-    })
-</script>
 </html>
