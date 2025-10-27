@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Special Day is Almost Here</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ffe5ec 0%, #f6e7fc 100%);
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .confetti, .heart, .star, .dot {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.35;
+      font-size: 28px;
+    }
+    .heart { color: #ea62bc; }
+    .star  { color: #fcdb5a; }
+    .dot   { color: #c7b5f6; }
+    .main-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff6fa;
+      border: 3px solid #fecafc;
+      border-radius: 28px;
+      padding: 40px 40px 32px 40px;
+      box-shadow: 0 0 20px #ffd6f7aa;
+      min-width: 620px;
+      text-align: center;
+    }
+    .title {
+      color: #de1979;
+      font-size: 2.3rem;
+      font-weight: bold;
+      margin-bottom: 30px;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+    }
+    .title .heart {font-size: 1.5rem; vertical-align: middle;}
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-bottom: 26px;
+    }
+    .time-box {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px #efd9ef5e;
+      padding: 16px 28px;
+      min-width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #b370ef;
+    }
+    .time-label {
+      color: #e255a2;
+      font-weight: normal;
+      font-size: 1.05rem;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    .time-emoji {
+      font-size: 1.4rem;
+      margin-top: 4px;
+    }
+    .message-box {
+      background: #fce3f0;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 0 auto;
+      width: 70%;
+      font-size: 1.13rem;
+      color: #671b7a;
+      font-family: 'Comic Sans MS', Arial, sans-serif;
+      margin-bottom: 10px;
+    }
+    .dots {
+      text-align: center;
+      margin-top: 6px;
+    }
+    .dot-active, .dot-inactive {
+      height: 12px;
+      width: 12px;
+      margin: 0 2px;
+      background: #ffaad4;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.7;
+    }
+    .dot-inactive { background: #eed1ea; }
+    @media (max-width: 768px) {
+      .main-card { min-width: 90vw; }
+      .countdown-container { gap: 12px; }
+      .time-box { padding: 14px 8px; font-size: 1.2rem; }
+    }
+  </style>
+  <link rel="preload" as="audio" href="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3">
+</head>
+<body>
+  <!-- Background music (repeat on this page so direct visits still play) -->
+  <audio id="birthday-audio" src="https://raw.githubusercontent.com/USERNAME/REPO/main/music/barbaad.mp3" preload="auto" autoplay loop style="display:none"></audio>
+
+  <span class="heart" style="left:7%; top:20%;">♥</span>
+  <span class="dot" style="left:12%; top:80%;">●</span>
+  <span class="star" style="left:72%; top:14%;">★</span>
+  <span class="dot" style="left:47%; top:92%;">●</span>
+  <span class="heart" style="left:65%; top:65%;">♥</span>
+  <span class="dot" style="left:82%; top:36%;">●</span>
+  <span class="star" style="left:17%; top:55%;">★</span>
+
+  <div class="main-card" id="mainCard">
+    <div class="title">
+      Your Special Day is Almost Here <span class="heart">💕</span>
+    </div>
+    <div class="countdown-container">
+      <div class="time-box">
+        <span id="days">0</span>
+        <span class="time-label">Days</span>
+        <span class="time-emoji">💗</span>
+      </div>
+      <div class="time-box">
+        <span id="hours">0</span>
+        <span class="time-label">Hours</span>
+        <span class="time-emoji">🎁</span>
+      </div>
+      <div class="time-box">
+        <span id="minutes">0</span>
+        <span class="time-label">Minutes</span>
+        <span class="time-emoji">🎂</span>
+      </div>
+      <div class="time-box">
+        <span id="seconds">5</span>
+        <span class="time-label">Seconds</span>
+        <span class="time-emoji">⭐</span>
+      </div>
+    </div>
+    <div class="message-box" id="messageBox">
+      Just a little more... A small gift for my favorite person❤️
+      <div class="dots">
+        <span class="dot-active"></span>
+        <span class="dot-inactive"></span>
+        <span class="dot-inactive"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Robust autoplay attempt with user-gesture fallback
+    (function ensureAudio() {
+      const audio = document.getElementById('birthday-audio');
+      function tryPlay() {
+        const p = audio.play();
+        if (p && typeof p.then === 'function') {
+          p.catch(() => {
+            const resume = () => { audio.play().catch(()=>{}); cleanup(); };
+            const cleanup = () => {
+              ['click','touchstart','keydown','pointerdown'].forEach(evt => {
+                document.removeEventListener(evt, resume, { passive: true });
+              });
+            };
+            ['click','touchstart','keydown','pointerdown'].forEach(evt => {
+              document.addEventListener(evt, resume, { passive: true, once: true });
+            });
+          });
+        }
+      }
+      if (audio) tryPlay();
+    })();
+
+    let totalSeconds = 5, revealed = false;
+    function updateCountdown() {
+      let days    = Math.floor(totalSeconds / (24*3600));
+      let hours   = Math.floor((totalSeconds % (24*3600)) / 3600);
+      let minutes = Math.floor((totalSeconds % 3600) / 60);
+      let seconds = totalSeconds % 60;
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+    function revealSurprise() {
+      if (revealed) return;
+      revealed = true;
+      document.getElementById('messageBox').innerHTML = '🎉 Surprise! The wait is over! 🎁';
+      setTimeout(function(){
+        window.location.href = "page3.html"; // go to third page
+      }, 1000);
+    }
+    updateCountdown();
+    let countdownInterval = setInterval(function(){
+      totalSeconds--;
+      if (totalSeconds < 0) {
+        clearInterval(countdownInterval);
+        revealSurprise();
+      } else {
+        updateCountdown();
+      }
+    }, 1000);
+
+    // Also reveal surprise and redirect when the main card is clicked
+    document.getElementById("mainCard").addEventListener("click", function(){
+      revealSurprise();
+    });
+  </script>
+</body>
+</html>
